@@ -18,10 +18,10 @@
   <section class="pf-card" id="card" hidden>
     <div class="pf-banner">
       <img id="bannerImg" alt="" hidden>
-      <button class="pf-edit" id="bannerBtn" type="button">🖼 Trocar banner</button>
+      <button class="pf-edit" id="bannerBtn" type="button">▣ Trocar banner</button>
       <div class="pf-avatar">
         <span id="initial">?</span><img id="avatarImg" alt="" hidden>
-        <button class="pf-edit" id="avatarBtn" type="button" aria-label="Trocar foto de perfil">📷</button>
+        <button class="pf-edit" id="avatarBtn" type="button" aria-label="Trocar foto de perfil">✎</button>
       </div>
     </div>
 
@@ -29,12 +29,14 @@
       <!-- MODO VISUALIZAÇÃO -->
       <div class="pf-view">
         <div class="pf-head">
-          <div><h1 id="vName"></h1><a class="pf-handle" id="vHandle" target="_blank" rel="noopener noreferrer" hidden></a></div>
+          <div><div class="pf-namerow"><h1 id="vName"></h1><a class="pf-badge" id="vBadge" hidden></a></div><a class="pf-handle" id="vHandle" target="_blank" rel="noopener noreferrer" hidden></a></div>
           <button class="pf-btn" id="editBtn" type="button">✎ Editar perfil</button>
         </div>
         <blockquote class="pf-quote" id="vBio" hidden></blockquote>
         <div class="pf-tags" id="vTags"></div>
         <div class="pf-share" id="vShare" hidden><input id="shareUrl" type="text" readonly aria-label="Link do perfil"><button class="pf-btn" id="copyBtn" type="button">Copiar link</button></div>
+        <section class="pf-about" id="vAboutBox" hidden><h2 class="pf-h2">✦ Sobre mim</h2><div class="pf-aboutrow"><img id="aboutImg" alt="" hidden><p id="vAbout"></p></div></section>
+        <div class="pf-spotify" id="vSpotify" hidden></div>
         <h2 class="pf-h2">✦ Minhas 3 AUs favoritas</h2>
         <div class="pf-podium" id="vAus"></div>
         <div class="pf-stats">
@@ -57,10 +59,25 @@
         <input id="char" type="text" maxlength="40" placeholder="Ex.: Enid Sinclair">
         <label for="xh">Seu @ no X (opcional)</label>
         <input id="xh" type="text" maxlength="16" placeholder="@usuario">
+        <label for="badge">Tag ao lado do nome (opcional) <span class="pf-count" id="badgeCount"></span></label>
+        <input id="badge" type="text" maxlength="24" placeholder="Ex.: Leitora de Wenclair">
+        <label for="badgeAu">@ de um autor na tag (opcional)</label>
+        <input id="badgeAu" type="text" maxlength="40" list="authorList" placeholder="@autor"><datalist id="authorList"></datalist>
+        <p class="pf-hint">Com o @, quem clicar na tag vai para o acervo mostrando só as AUs desse autor.</p>
+        <label for="about">Sobre mim <span class="pf-count" id="aboutCount"></span></label>
+        <textarea id="about" maxlength="600" placeholder="Conte um pouco sobre você…"></textarea>
+        <div class="pf-media"><button class="pf-btn" id="aboutBtn" type="button">▣ Foto do sobre mim</button><button class="pf-btn" id="aboutRm" type="button">Remover foto</button></div>
+        <label for="color">Cor do perfil (botões, destaques e tag)</label>
+        <div class="pf-media"><input id="color" type="color" value="#b794f6"><button class="pf-btn" id="colorRm" type="button">Usar a cor do tema</button></div>
+        <label>Fundo do perfil (imagem ou GIF)</label>
+        <div class="pf-media"><button class="pf-btn" id="bgBtn" type="button">▣ Escolher fundo</button><button class="pf-btn" id="bgRm" type="button">Remover fundo</button></div>
+        <p class="pf-hint">Com fundo, o card do perfil fica translúcido com blur.</p>
+        <label for="spot">Música do Spotify (opcional)</label>
+        <input id="spot" type="text" maxlength="200" placeholder="Cole o link da música, álbum ou playlist">
         <label for="slug">Nome de usuário (vira o link do perfil) <span class="pf-count" id="slugCount"></span></label>
         <input id="slug" type="text" maxlength="20" placeholder="ex.: raven_wenclair" autocomplete="off">
         <label class="pf-check"><input id="pub" type="checkbox"> Tornar meu perfil público (qualquer pessoa com o link pode ver)</label>
-        <p class="pf-hint">Fica visível: nome, bio, foto, banner, ship, personagem, @ do X e as 3 AUs. <b>Nunca</b> aparecem: e-mail, favoritos, notas e status de leitura.</p>
+        <p class="pf-hint">Fica visível: nome, bio, tag, sobre mim, cores, fundo, música, foto, banner, ship, personagem, @ do X e as 3 AUs. <b>Nunca</b> aparecem: e-mail, favoritos, notas e status de leitura.</p>
         <label for="auSearch">Suas 3 AUs favoritas <span class="pf-count" id="auCount"></span></label>
         <div class="pf-sel" id="auSel"></div>
         <input id="auSearch" type="text" placeholder="Buscar AU por título ou autor…" autocomplete="off">
@@ -78,19 +95,23 @@
 </main>
 <input type="file" id="avatarFile" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
 <input type="file" id="bannerFile" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
+<input type="file" id="aboutFile" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
+<input type="file" id="bgFile" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
 
 <script>window.JV_NO_WIDGET = true;</script>
 <script src="../home/data.js"></script>
 <script src="../compartilhados/supabase-config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script src="../compartilhados/supabase-sync.js"></script>
+<script src="perfil-fx.js"></script>
 <script>
 (function(){
   const $ = id => document.getElementById(id);
   const A = window.jvAuth, BUCKET = "profile-media", MAX = 8 * 1024 * 1024;
   const EXT = { "image/png": "png", "image/jpeg": "jpg", "image/webp": "webp", "image/gif": "gif" };
   const AUS = typeof aus !== "undefined" ? aus : [], byId = id => AUS.find(a => a.id === id);
-  let user, profile = {}, favAus = []; const pending = { avatar: null, banner: null };
+  let user, profile = {}, favAus = []; const pending = { avatar: null, banner: null, about: null, bg: null };
+  const page = document.querySelector(".pf-page"); let colorOn = false;
   const msg = (t, c) => { $("msg").textContent = t; $("msg").className = "pf-msg " + (c || ""); };
   const el = (tag, props, kids) => { const n = Object.assign(document.createElement(tag), props || {}); (kids || []).forEach(k => n.append(k)); return n; };
 
@@ -104,8 +125,12 @@
     const name = ($("name").value || profile.display_name || user.email || "?").trim();
     $("initial").textContent = name[0].toUpperCase();
     const show = (img, src) => { img.hidden = !src; if (src) img.src = src; };
-    show($("avatarImg"), pending.avatar ? pending.avatar.preview : pubUrl(profile.avatar_path));
-    show($("bannerImg"), pending.banner ? pending.banner.preview : pubUrl(profile.banner_path));
+    const cur = k => { const q = pending[k]; return q ? (q.remove ? "" : q.preview) : pubUrl(profile[k + "_path"]); };
+    show($("avatarImg"), cur("avatar")); show($("bannerImg"), cur("banner"));
+    const ed = $("card").classList.contains("editing");
+    jvFx.bg(cur("bg")); jvFx.theme(page, ed ? (colorOn ? $("color").value : null) : profile.theme_color);
+    if (ed) jvFx.about($("vAboutBox"), $("aboutImg"), "", "");   // no modo edição a caixa fica escondida
+    else jvFx.about($("vAboutBox"), $("aboutImg"), profile.about, cur("about"));
     $("initial").hidden = !$("avatarImg").hidden;
   }
 
@@ -116,14 +141,16 @@
     $("vBio").hidden = !profile.bio; $("vBio").textContent = profile.bio ? "“" + profile.bio + "”" : "";
     const tags = $("vTags"); tags.textContent = "";
     const tag = (label, v) => tags.append(el("span", { className: "pf-tag" }, [label + " ", el("b", { textContent: v })]));
-    if (profile.fav_ship) tag("💞 Ship:", profile.fav_ship);
-    if (profile.fav_character) tag("⭐ Personagem:", profile.fav_character);
-    tag("🗓 Desde", new Date(user.created_at).toLocaleDateString("pt-BR", { month: "long", year: "numeric" }));
+    if (profile.fav_ship) tag("♥\uFE0E Ship:", profile.fav_ship);
+    if (profile.fav_character) tag("★ Personagem:", profile.fav_character);
+    tag("◆ Desde", new Date(user.created_at).toLocaleDateString("pt-BR", { month: "long", year: "numeric" }));
+    jvFx.badge($("vBadge"), profile.badge_text, profile.badge_author);
+    $("vAbout").textContent = profile.about || ""; jvFx.spotify($("vSpotify"), profile.spotify);
     const box = $("vAus"); box.textContent = "";
     const list = (profile.fav_aus || []).map(byId).filter(Boolean);
     if (!list.length) box.append(el("p", { className: "pf-empty", textContent: "Nenhuma escolhida ainda. Clique em “Editar perfil” para escolher 3 ✦" }));
     list.forEach((a, i) => box.append(el("a", { className: "pf-au", href: a.url, target: "_blank", rel: "noopener noreferrer" }, [
-      el("div", { className: "m", textContent: ["🥇", "🥈", "🥉"][i] }), el("h3", { textContent: a.title }),
+      el("div", { className: "m", textContent: ["①", "②", "③"][i] }), el("h3", { textContent: a.title }),
       el("small", { textContent: (a.author && a.author.display || "") + " · " + a.fandom })])));
     const share = $("vShare"); share.hidden = !(profile.is_public && profile.slug);
     if (!share.hidden) $("shareUrl").value = A.SITE_ROOT + "perfil/ver.html?u=" + profile.slug;
@@ -135,7 +162,7 @@
 
   /* ---------- edição ---------- */
   function counters() {
-    [["name", "nameCount", 40], ["bio", "bioCount", 300], ["ship", "shipCount", 40], ["char", "charCount", 40], ["slug", "slugCount", 20]]
+    [["name", "nameCount", 40], ["badge", "badgeCount", 24], ["about", "aboutCount", 600], ["bio", "bioCount", 300], ["ship", "shipCount", 40], ["char", "charCount", 40], ["slug", "slugCount", 20]]
       .forEach(([i, c, m]) => $(c).textContent = $(i).value.length + "/" + m);
     $("auCount").textContent = favAus.length + "/3";
   }
@@ -143,7 +170,7 @@
   function paintSel() {
     const box = $("auSel"); box.textContent = "";
     favAus.forEach((id, i) => { const a = byId(id); if (!a) return;
-      box.append(el("div", { className: "pf-selitem" }, [["🥇", "🥈", "🥉"][i] + " " + a.title,
+      box.append(el("div", { className: "pf-selitem" }, [["①", "②", "③"][i] + " " + a.title,
         el("button", { type: "button", textContent: "✕", ariaLabel: "Remover", onclick: () => { favAus.splice(i, 1); paintSel(); } })])); });
     counters();
   }
@@ -161,13 +188,16 @@
     $("name").value = profile.display_name || ""; $("bio").value = profile.bio || "";
     $("ship").value = profile.fav_ship || ""; $("char").value = profile.fav_character || "";
     $("xh").value = profile.x_handle ? "@" + profile.x_handle : "";
+    $("badge").value = profile.badge_text || ""; $("badgeAu").value = profile.badge_author ? "@" + profile.badge_author : "";
+    $("about").value = profile.about || ""; $("spot").value = profile.spotify ? "https://open.spotify.com/" + profile.spotify : "";
+    colorOn = !!profile.theme_color; if (colorOn) $("color").value = profile.theme_color;
     $("slug").value = profile.slug || ""; $("pub").checked = !!profile.is_public;
     favAus = (profile.fav_aus || []).filter(byId); msg("");
     $("card").classList.add("editing"); paintSel(); paintMedia();
   }
   function stopEdit() {
     Object.keys(pending).forEach(k => { if (pending[k]) URL.revokeObjectURL(pending[k].preview); pending[k] = null; });
-    $("card").classList.remove("editing"); paintView();
+    $("card").classList.remove("editing"); colorOn = false; paintView();
   }
 
   function pick(kind) {
@@ -198,13 +228,21 @@
     const slug = $("slug").value.trim().toLowerCase(), pub = $("pub").checked;
     if (slug && !/^[a-z0-9_]{3,20}$/.test(slug)) return msg("Usuário: 3 a 20 caracteres, só letras minúsculas, números e _.", "err");
     if (pub && !slug) return msg("Escolha um nome de usuário para tornar o perfil público.", "err");
+    const spRaw = $("spot").value.trim(), spId = jvFx.spotifyId(spRaw);
+    if (spRaw && !spId) return msg("Link do Spotify inválido. Copie o link em Compartilhar > Copiar link.", "err");
     $("save").disabled = true; msg("Salvando…");
     try {
       const row = { user_id: user.id, display_name: $("name").value.trim() || null, bio: $("bio").value.trim() || null,
         fav_ship: $("ship").value.trim() || null, fav_character: $("char").value.trim() || null, x_handle: handle || null,
-        fav_aus: favAus.slice(0, 3), slug: slug || null, is_public: pub, avatar_path: profile.avatar_path || null, banner_path: profile.banner_path || null };
-      if (pending.avatar) row.avatar_path = await upload("avatar", profile.avatar_path);
-      if (pending.banner) row.banner_path = await upload("banner", profile.banner_path);
+        fav_aus: favAus.slice(0, 3), slug: slug || null, is_public: pub, avatar_path: profile.avatar_path || null, banner_path: profile.banner_path || null,
+        about_path: profile.about_path || null, bg_path: profile.bg_path || null, about: $("about").value.trim() || null,
+        badge_text: $("badge").value.trim() || null, badge_author: $("badgeAu").value.trim().replace(/^@/, "") || null,
+        theme_color: colorOn ? $("color").value : null, spotify: spId || null };
+      for (const k of Object.keys(pending)) {
+        const q = pending[k], col = k + "_path"; if (!q) continue;
+        if (q.remove) { if (row[col]) A.client.storage.from(BUCKET).remove([row[col]]); row[col] = null; }
+        else row[col] = await upload(k, profile[col]);
+      }
       const { error } = await A.client.from("profiles").upsert(row, { onConflict: "user_id" });
       if (error) throw error;
       profile = row; stopEdit();
@@ -220,6 +258,8 @@
     const { data, error } = await A.client.from("profiles").select("*").maybeSingle();
     if (error) console.error(error);
     profile = data || {};
+    const names = [...new Set(AUS.map(a => a.author && a.author.display).filter(Boolean).map(n => n.replace(/^@/, "")))];
+    $("authorList").append(...names.map(n => el("option", { value: "@" + n })));
     $("shipList").append(...[...new Set(AUS.map(a => a.fandom))].map(f => el("option", { value: f })));
     $("loading").hidden = true; $("card").hidden = false; $("logout").hidden = false;
     paintView();
@@ -229,6 +269,11 @@
   $("auSearch").addEventListener("input", search);
   $("editBtn").onclick = startEdit; $("cancel").onclick = stopEdit; $("save").onclick = save;
   $("avatarBtn").onclick = () => pick("avatar"); $("bannerBtn").onclick = () => pick("banner");
+  $("aboutBtn").onclick = () => pick("about"); $("bgBtn").onclick = () => pick("bg");
+  const rm = (k, b) => { $(b).onclick = () => { if (pending[k] && pending[k].preview) URL.revokeObjectURL(pending[k].preview); pending[k] = { remove: true }; msg("Não esqueça de salvar ✦"); paintMedia(); }; };
+  rm("about", "aboutRm"); rm("bg", "bgRm");
+  $("color").addEventListener("input", () => { colorOn = true; paintMedia(); });
+  $("colorRm").onclick = () => { colorOn = false; paintMedia(); };
   $("logout").onclick = A.logout;
   $("slug").addEventListener("input", e => { e.target.value = e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ""); });
   $("copyBtn").onclick = async () => { const i = $("shareUrl"); try { await navigator.clipboard.writeText(i.value); } catch (e) { i.select(); document.execCommand("copy"); } $("copyBtn").textContent = "Copiado ✓"; setTimeout(() => $("copyBtn").textContent = "Copiar link", 1800); };

@@ -1,4 +1,4 @@
-const CACHE_NAME = "jemmaverso-app-v23";
+const CACHE_NAME = "jemmaverso-app-v24";
 const APP_SHELL = [
     "./index.html",
     "./sobre/sobre.html",
@@ -25,6 +25,8 @@ const APP_SHELL = [
     "./login/login.html",
     "./perfil/perfil.html",
     "./perfil/ver.html",
+    "./perfil/perfil-fx.js",
+    "./home/autor-url.js",
     "./assets/css/perfil.css",
     "./compartilhados/sparkles.js",
     "./home/data.js",

@@ -52,3 +52,20 @@ body{display:block}
 .pf-check input{margin-top:4px}
 .pf-share{display:flex;gap:8px;margin:12px 0}.pf-share input{flex:1;min-width:0;padding:.55rem .8rem;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font:inherit;font-size:.82rem}
 .pf-cta{display:inline-block;margin-top:24px;text-decoration:none}
+/* ---- personalização ---- */
+.pf-namerow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pf-badge{display:inline-block;padding:.22rem .75rem;border-radius:999px;font-size:.78rem;font-weight:500;text-decoration:none;color:var(--on-accent,#17101f);background:linear-gradient(135deg,var(--accent),var(--accent2,var(--accent)))}
+a.pf-badge:hover{filter:brightness(1.1)}
+.pf-aboutrow{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}
+.pf-aboutrow img{width:120px;height:120px;border-radius:16px;object-fit:cover;border:1px solid var(--line)}
+.pf-aboutrow p{flex:1;min-width:200px;white-space:pre-wrap;word-break:break-word}
+.pf-spotify{margin-top:18px}.pf-spotify iframe{width:100%;border:0;border-radius:14px;display:block}
+.pf-media{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pf-form input[type=color]{width:56px;height:38px;padding:2px;border-radius:10px;border:1px solid var(--line);background:var(--bg);cursor:pointer}
+body.pf-hasbg{background:var(--pf-bg) center/cover fixed no-repeat}
+body.pf-hasbg::before{content:"";position:fixed;inset:0;background:rgba(0,0,0,.3);pointer-events:none}
+body.pf-hasbg .pf-page{position:relative;z-index:1}
+body.pf-hasbg .pf-card{background:color-mix(in srgb,var(--panel) 50%,transparent);-webkit-backdrop-filter:blur(18px) saturate(1.2);backdrop-filter:blur(18px) saturate(1.2);border-color:rgba(255,255,255,.18)}
+body.pf-hasbg .pf-au,body.pf-hasbg .pf-stat,body.pf-hasbg .pf-tag{background:color-mix(in srgb,var(--card) 45%,transparent)}
+body.pf-hasbg .pf-form input[type=text],body.pf-hasbg .pf-form textarea{background:color-mix(in srgb,var(--bg) 60%,transparent)}
+body.pf-hasbg .pf-top a,body.pf-hasbg .pf-link{color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6)}

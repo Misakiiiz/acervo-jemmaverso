@@ -165,7 +165,7 @@
         if (!user) { ui.btn.textContent = "☁ Entrar"; return; }
         const p = cachedProfile();
         if (p && p.a) { const img = document.createElement("img"); img.src = p.a; img.alt = ""; ui.btn.append(img); }
-        else ui.btn.append("👤 ");
+        else ui.btn.append("◉ ");
         ui.btn.append((p && p.n) || "Perfil");
     }
 
