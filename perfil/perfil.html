@@ -121,12 +121,13 @@
   const pubUrl = p => p ? A.client.storage.from(BUCKET).getPublicUrl(p).data.publicUrl : "";
   const local = k => { try { return JSON.parse(localStorage.getItem(k)) || {}; } catch (e) { return {}; } };
 
+  const savedColors = () => profile.theme_colors || (profile.theme_color ? { accent: profile.theme_color } : {});
+
   /* ---------- desenhar ---------- */
   function paintMedia() {
     const name = ($("name").value || profile.display_name || user.email || "?").trim();
     $("initial").textContent = name[0].toUpperCase();
     const show = (img, src) => { img.hidden = !src; if (src) img.src = src; };
-    const savedColors = () => profile.theme_colors || (profile.theme_color ? { accent: profile.theme_color } : {});
     const cur = k => { const q = pending[k]; return q ? (q.remove ? "" : q.preview) : pubUrl(profile[k + "_path"]); };
     show($("avatarImg"), cur("avatar")); show($("bannerImg"), cur("banner"));
     const ed = $("card").classList.contains("editing");
