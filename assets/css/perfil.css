@@ -72,3 +72,4 @@ body.pf-hasbg .pf-top a,body.pf-hasbg .pf-link{color:#fff;text-shadow:0 1px 4px 
 .pf-colors{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
 .pf-crow{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:6px 10px;font-size:.82rem;color:var(--text)}
 .pf-crow span{flex:1}.pf-form .pf-crow input[type=color]{width:40px;height:30px}
+.pf-card.local .pf-onlycloud{display:none!important}.pf-card.local .pf-localnote{display:block}

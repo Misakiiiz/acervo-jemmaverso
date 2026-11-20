@@ -75,14 +75,15 @@
         <p class="pf-hint">Com fundo, o card do perfil fica translúcido com blur.</p>
         <label for="spot">Música do Spotify (opcional)</label>
         <input id="spot" type="text" maxlength="200" placeholder="Cole o link da música, álbum ou playlist">
-        <label for="slug">Nome de usuário (vira o link do perfil) <span class="pf-count" id="slugCount"></span></label>
-        <input id="slug" type="text" maxlength="20" placeholder="ex.: raven_wenclair" autocomplete="off">
-        <label class="pf-check"><input id="pub" type="checkbox"> Tornar meu perfil público (qualquer pessoa com o link pode ver)</label>
-        <p class="pf-hint">Fica visível: nome, bio, tag, sobre mim, cores, fundo, música, foto, banner, ship, personagem, @ do X e as 3 AUs. <b>Nunca</b> aparecem: e-mail, favoritos, notas e status de leitura.</p>
+        <label class="pf-onlycloud" for="slug">Nome de usuário (vira o link do perfil) <span class="pf-count" id="slugCount"></span></label>
+        <input class="pf-onlycloud" id="slug" type="text" maxlength="20" placeholder="ex.: raven_wenclair" autocomplete="off">
+        <label class="pf-check pf-onlycloud"><input id="pub" type="checkbox"> Tornar meu perfil público (qualquer pessoa com o link pode ver)</label>
+        <p class="pf-hint pf-onlycloud">Fica visível: nome, bio, tag, sobre mim, cores, fundo, música, foto, banner, ship, personagem, @ do X e as 3 AUs. <b>Nunca</b> aparecem: e-mail, favoritos, notas e status de leitura.</p>
         <label for="auSearch">Suas 3 AUs favoritas <span class="pf-count" id="auCount"></span></label>
         <div class="pf-sel" id="auSel"></div>
         <input id="auSearch" type="text" placeholder="Buscar AU por título ou autor…" autocomplete="off">
         <div class="pf-res" id="auRes" hidden></div>
+        <p class="pf-hint pf-localnote" hidden>Modo sem conta: este perfil fica salvo só neste navegador e não tem link público.</p>
         <p class="pf-hint">Foto e banner aceitam PNG, JPG, WebP e <b>GIF animado</b> (até 8 MB). O banner é cortado para caber, então prefira imagens largas.</p>
         <div class="pf-actions">
           <button class="pf-btn main" id="save" type="button">Salvar perfil</button>
@@ -111,14 +112,19 @@
   const A = window.jvAuth, BUCKET = "profile-media", MAX = 8 * 1024 * 1024;
   const EXT = { "image/png": "png", "image/jpeg": "jpg", "image/webp": "webp", "image/gif": "gif" };
   const AUS = typeof aus !== "undefined" ? aus : [], byId = id => AUS.find(a => a.id === id);
-  let user, profile = {}, favAus = []; const pending = { avatar: null, banner: null, about: null, bg: null };
+  let user, profile = {}, favAus = [], LOCAL = false; const pending = { avatar: null, banner: null, about: null, bg: null };
   const page = document.querySelector(".pf-page"); let colors = {};
   const msg = (t, c) => { $("msg").textContent = t; $("msg").className = "pf-msg " + (c || ""); };
   const el = (tag, props, kids) => { const n = Object.assign(document.createElement(tag), props || {}); (kids || []).forEach(k => n.append(k)); return n; };
 
   if (!A) { $("loading").textContent = "Perfil indisponível: configure o Supabase em compartilhados/supabase-config.js."; return; }
 
-  const pubUrl = p => p ? A.client.storage.from(BUCKET).getPublicUrl(p).data.publicUrl : "";
+  const localUrls = {};
+  const pubUrl = p => !p ? "" : p.startsWith("local:") ? (localUrls[p.slice(6)] || "") : A.client.storage.from(BUCKET).getPublicUrl(p).data.publicUrl;
+  /* modo "só neste navegador": imagens ficam no IndexedDB, texto no localStorage */
+  const idb = () => new Promise((ok, no) => { const r = indexedDB.open("jv_local", 1); r.onupgradeneeded = () => r.result.createObjectStore("m"); r.onsuccess = () => ok(r.result); r.onerror = () => no(r.error); });
+  const idbSet = async (k, v) => { const d = await idb(); return new Promise((ok, no) => { const t = d.transaction("m", "readwrite"); v ? t.objectStore("m").put(v, k) : t.objectStore("m").delete(k); t.oncomplete = ok; t.onerror = () => no(t.error); }); };
+  const idbLoad = async () => { const d = await idb(), out = {}; return new Promise((ok, no) => { const rq = d.transaction("m").objectStore("m").openCursor(); rq.onsuccess = () => { const c = rq.result; if (c) { out[c.key] = URL.createObjectURL(c.value); c.continue(); } else ok(out); }; rq.onerror = () => no(rq.error); }); };
   const local = k => { try { return JSON.parse(localStorage.getItem(k)) || {}; } catch (e) { return {}; } };
 
   const savedColors = () => profile.theme_colors || (profile.theme_color ? { accent: profile.theme_color } : {});
@@ -232,6 +238,7 @@
   }
 
   async function upload(kind, oldPath) {
+    if (LOCAL) { await idbSet(kind, pending[kind].file); localUrls[kind] = URL.createObjectURL(pending[kind].file); return "local:" + kind; }
     const f = pending[kind].file, path = `${user.id}/${kind}-${Date.now()}.${EXT[f.type]}`;
     const { error } = await A.client.storage.from(BUCKET).upload(path, f, { contentType: f.type, cacheControl: "31536000" });
     if (error) throw error;
@@ -242,7 +249,7 @@
   async function save() {
     const handle = $("xh").value.trim().replace(/^@/, "");
     if (handle && !/^[A-Za-z0-9_]{1,15}$/.test(handle)) return msg("@ do X inválido (letras, números e _, até 15).", "err");
-    const slug = $("slug").value.trim().toLowerCase(), pub = $("pub").checked;
+    const slug = LOCAL ? "" : $("slug").value.trim().toLowerCase(), pub = LOCAL ? false : $("pub").checked;
     if (slug && !/^[a-z0-9_]{3,20}$/.test(slug)) return msg("Usuário: 3 a 20 caracteres, só letras minúsculas, números e _.", "err");
     if (pub && !slug) return msg("Escolha um nome de usuário para tornar o perfil público.", "err");
     const spRaw = $("spot").value.trim(), spId = jvFx.spotifyId(spRaw);
@@ -257,11 +264,11 @@
         theme_colors: Object.keys(colors).length ? colors : null, theme_color: colors.accent || null, spotify: spId || null };
       for (const k of Object.keys(pending)) {
         const q = pending[k], col = k + "_path"; if (!q) continue;
-        if (q.remove) { if (row[col]) A.client.storage.from(BUCKET).remove([row[col]]); row[col] = null; }
+        if (q.remove) { if (LOCAL) { await idbSet(k, null); delete localUrls[k]; } else if (row[col]) A.client.storage.from(BUCKET).remove([row[col]]); row[col] = null; }
         else row[col] = await upload(k, profile[col]);
       }
-      const { error } = await A.client.from("profiles").upsert(row, { onConflict: "user_id" });
-      if (error) throw error;
+      if (LOCAL) localStorage.setItem("jv_local_profile", JSON.stringify(row));
+      else { const { error } = await A.client.from("profiles").upsert(row, { onConflict: "user_id" }); if (error) throw error; }
       profile = row; stopEdit();
       try { localStorage.removeItem("jv_profile_cache"); } catch (e) {}
     } catch (e) { console.error(e); msg(e.code === "23505" ? "Esse nome de usuário já está em uso." : "Erro ao salvar: " + (e.message || e), "err"); }
@@ -270,11 +277,18 @@
 
   /* ---------- início ---------- */
   A.ready.then(async u => {
-    if (!u) return location.replace(A.SITE_ROOT + "login/login.html");
-    user = u;
-    const { data, error } = await A.client.from("profiles").select("*").maybeSingle();
-    if (error) console.error(error);
-    profile = data || {};
+    if (!u && localStorage.getItem("jv_local")) {
+      LOCAL = true; $("card").classList.add("local");
+      user = { id: "local", email: "", created_at: localStorage.getItem("jv_local_since") || new Date().toISOString() };
+      try { profile = JSON.parse(localStorage.getItem("jv_local_profile")) || {}; } catch (e) { profile = {}; }
+      try { Object.assign(localUrls, await idbLoad()); } catch (e) { console.error(e); }
+    } else {
+      if (!u) return location.replace(A.SITE_ROOT + "login/login.html");
+      user = u;
+      const { data, error } = await A.client.from("profiles").select("*").maybeSingle();
+      if (error) console.error(error);
+      profile = data || {};
+    }
     const names = [...new Set(AUS.map(a => a.author && a.author.display).filter(Boolean).map(n => n.replace(/^@/, "")))];
     $("authorList").append(...names.map(n => el("option", { value: "@" + n })));
     $("shipList").append(...[...new Set(AUS.map(a => a.fandom))].map(f => el("option", { value: f })));
@@ -290,7 +304,7 @@
   const rm = (k, b) => { $(b).onclick = () => { if (pending[k] && pending[k].preview) URL.revokeObjectURL(pending[k].preview); pending[k] = { remove: true }; msg("Não esqueça de salvar ✦"); paintMedia(); }; };
   rm("about", "aboutRm"); rm("bg", "bgRm");
   $("colorRm").onclick = () => { colors = {}; paintColors(); paintMedia(); };
-  $("logout").onclick = A.logout;
+  $("logout").onclick = () => { if (LOCAL) { localStorage.removeItem("jv_local"); location.href = A.SITE_ROOT + "login/login.html"; } else A.logout(); };
   $("slug").addEventListener("input", e => { e.target.value = e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ""); });
   $("copyBtn").onclick = async () => { const i = $("shareUrl"); try { await navigator.clipboard.writeText(i.value); } catch (e) { i.select(); document.execCommand("copy"); } $("copyBtn").textContent = "Copiado ✓"; setTimeout(() => $("copyBtn").textContent = "Copiar link", 1800); };
 })();

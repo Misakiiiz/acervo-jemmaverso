@@ -30,8 +30,8 @@ body{display:block;overflow-x:hidden}
 .auth-msg.err{color:#ff8a8a}.auth-msg.ok{color:var(--ok)}
 .auth-back{display:inline-block;margin-top:18px;color:var(--muted);font-size:.85rem;text-decoration:none}
 .auth-back:hover{color:var(--accent)}
-.auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:4px;margin-bottom:20px}
-.auth-tabs button{border:0;background:none;color:var(--muted);padding:.6rem;border-radius:10px;font:500 .9rem Poppins,sans-serif;cursor:pointer}
+.auth-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:4px;margin-bottom:20px}
+.auth-tabs button{border:0;background:none;color:var(--muted);padding:.6rem .3rem;border-radius:10px;font:500 .82rem Poppins,sans-serif;cursor:pointer}
 .auth-tabs button.on{background:linear-gradient(135deg,var(--accent),var(--accent2,var(--accent)));color:var(--on-accent,#17101f);font-weight:600}
 .auth-form{text-align:left}.auth-form[hidden]{display:none}
 .auth-form label{display:block;font-size:.78rem;color:var(--muted);margin:2px 0 4px}
@@ -60,6 +60,7 @@ body{display:block;overflow-x:hidden}
     <div class="auth-tabs" role="tablist">
       <button id="tabIn" class="on" type="button" role="tab">Já tenho conta</button>
       <button id="tabUp" type="button" role="tab">Criar conta</button>
+      <button id="tabLo" type="button" role="tab">Sem conta</button>
     </div>
 
     <!-- JÁ TENHO CONTA -->
@@ -83,6 +84,12 @@ body{display:block;overflow-x:hidden}
       <div class="auth-pw"><input id="upPw" type="password" autocomplete="new-password" placeholder="Mínimo de 8 caracteres"><button class="pw-toggle" type="button" data-for="upPw">Mostrar</button></div>
       <button class="auth-btn primary" type="submit">Criar minha conta</button>
     </form>
+
+    <!-- SÓ NESTE NAVEGADOR -->
+    <div id="fLo" class="auth-form" hidden>
+      <p class="auth-hint" style="font-size:.84rem;margin:0 0 14px">Use o perfil <b>sem criar conta</b>. Tudo (perfil, foto, cores, fundo e música) fica salvo só neste navegador, neste aparelho. Não existe link público e nada é enviado para a nuvem. Se você limpar os dados do navegador, o perfil se perde.</p>
+      <button class="auth-btn primary" id="useLocal" type="button">Usar só neste navegador</button>
+    </div>
 
     <!-- NOVA SENHA (depois do link de recuperação) -->
     <form id="fNew" class="auth-form" hidden novalidate>
@@ -108,8 +115,9 @@ body{display:block;overflow-x:hidden}
   const dest = A.SITE_ROOT + "perfil/perfil.html", recovering = /type=recovery/.test(location.hash);
   A.ready.then(user => { if (user && !recovering) location.replace(dest); });
 
-  function tab(w) { $("fIn").hidden = w !== "In"; $("fUp").hidden = w !== "Up"; $("fNew").hidden = true; $("tabIn").classList.toggle("on", w === "In"); $("tabUp").classList.toggle("on", w === "Up"); msg(""); }
-  $("tabIn").onclick = () => tab("In"); $("tabUp").onclick = () => tab("Up");
+  function tab(w) { ["In", "Up", "Lo"].forEach(n => { $("f" + n).hidden = n !== w; $("tab" + n).classList.toggle("on", n === w); }); $("fNew").hidden = true; msg(""); }
+  $("tabIn").onclick = () => tab("In"); $("tabUp").onclick = () => tab("Up"); $("tabLo").onclick = () => tab("Lo");
+  $("useLocal").onclick = () => { try { localStorage.setItem("jv_local", "1"); if (!localStorage.getItem("jv_local_since")) localStorage.setItem("jv_local_since", new Date().toISOString()); } catch (e) { return msg("Seu navegador bloqueou o armazenamento local.", "err"); } location.replace(dest); };
   if (recovering) { $("fIn").hidden = true; $("fNew").hidden = false; document.querySelector(".auth-tabs").hidden = true; msg("Escolha sua nova senha."); }
 
   document.querySelectorAll(".pw-toggle").forEach(b => b.onclick = () => {

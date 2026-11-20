@@ -162,7 +162,13 @@
         if (!ui.btn) return;
         ui.btn.textContent = "";
         ui.btn.href = SITE_ROOT + (user ? "perfil/perfil.html" : "login/login.html");
-        if (!user) { ui.btn.textContent = "☁ Entrar"; return; }
+        if (!user) {
+            let ln = null;
+            try { ln = localStorage.getItem("jv_local") ? (JSON.parse(localStorage.getItem("jv_local_profile")) || {}) : null; } catch (e) {}
+            if (ln) { ui.btn.href = SITE_ROOT + "perfil/perfil.html"; ui.btn.textContent = "◉ " + (ln.display_name || "Perfil"); }
+            else ui.btn.textContent = "☁ Entrar";
+            return;
+        }
         const p = cachedProfile();
         if (p && p.a) { const img = document.createElement("img"); img.src = p.a; img.alt = ""; ui.btn.append(img); }
         else ui.btn.append("◉ ");
