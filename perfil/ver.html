@@ -15,6 +15,7 @@
 <body>
 <main class="pf-page">
   <div class="pf-top"><a href="../index.html">← Ir ao acervo</a></div>
+  <div class="pf-search"><input id="pfSearch" type="search" maxlength="20" placeholder="Buscar perfil pelo usuário…" autocomplete="off" autocapitalize="none" aria-label="Buscar perfil pelo usuário"><div class="pf-sres" id="pfRes" hidden></div></div>
   <section class="pf-card" id="card" hidden>
     <div class="pf-banner">
       <img id="bannerImg" alt="" hidden>
@@ -46,6 +47,7 @@
   const fail = t => { $("loading").textContent = t; };
   const A = window.jvAuth;
   if (!A) return fail("Perfil indisponível no momento.");
+  jvFx.userSearch(A);
   const slug = (new URLSearchParams(location.search).get("u") || "").toLowerCase();
   if (!/^[a-z0-9_]{3,20}$/.test(slug)) return fail("Link de perfil inválido.");
 

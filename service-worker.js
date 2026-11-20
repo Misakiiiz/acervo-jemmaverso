@@ -1,4 +1,4 @@
-const CACHE_NAME = "jemmaverso-app-v28";
+const CACHE_NAME = "jemmaverso-app-v29";
 const APP_SHELL = [
     "./index.html",
     "./sobre/sobre.html",

@@ -14,6 +14,7 @@
 <body>
 <main class="pf-page">
   <div class="pf-top"><a href="../index.html">← Voltar ao acervo</a><button class="pf-link" id="logout" type="button" hidden>Sair</button></div>
+  <div class="pf-search"><input id="pfSearch" type="search" maxlength="20" placeholder="Buscar perfil pelo usuário…" autocomplete="off" autocapitalize="none" aria-label="Buscar perfil pelo usuário"><div class="pf-sres" id="pfRes" hidden></div></div>
 
   <section class="pf-card" id="card" hidden>
     <div class="pf-banner">
@@ -119,6 +120,7 @@
 
   if (!A) { $("loading").textContent = "Perfil indisponível: configure o Supabase em compartilhados/supabase-config.js."; return; }
 
+  jvFx.userSearch(A);
   const localUrls = {};
   const pubUrl = p => !p ? "" : p.startsWith("local:") ? (localUrls[p.slice(6)] || "") : A.client.storage.from(BUCKET).getPublicUrl(p).data.publicUrl;
   /* modo "só neste navegador": imagens ficam no IndexedDB, texto no localStorage */

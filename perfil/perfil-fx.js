@@ -41,6 +41,38 @@
       f.allow = "encrypted-media; clipboard-write; fullscreen";
       box.append(f);
     },
+    userSearch(A) {
+      const inp = document.getElementById("pfSearch"), box = document.getElementById("pfRes");
+      if (!inp || !box) return;
+      let timer, seq = 0;
+      const pub = x => x ? A.client.storage.from("profile-media").getPublicUrl(x).data.publicUrl : "";
+      const go = s => { location.href = "ver.html?u=" + encodeURIComponent(s); };
+      const note = txt => Object.assign(document.createElement("p"), { className: "pf-snote", textContent: txt });
+      inp.addEventListener("input", () => {
+        inp.value = inp.value.toLowerCase().replace(/^@/, "").replace(/[^a-z0-9_]/g, "");
+        clearTimeout(timer); const q = inp.value;
+        if (q.length < 2) { box.hidden = true; return; }
+        timer = setTimeout(async () => {
+          const my = ++seq, { data, error } = await A.client.rpc("search_public_profiles", { p_q: q });
+          if (my !== seq) return;
+          box.textContent = "";
+          if (error) box.append(note("Busca indisponível no momento."));
+          else if (!data || !data.length) box.append(note("Nenhum perfil público encontrado."));
+          else data.forEach(p => {
+            const b = document.createElement("button"); b.type = "button"; b.className = "pf-sitem";
+            const src = pub(p.avatar_path), nm = p.display_name || p.slug;
+            if (src) { const im = document.createElement("img"); im.src = src; im.alt = ""; b.append(im); }
+            else b.append(Object.assign(document.createElement("i"), { textContent: nm[0].toUpperCase() }));
+            const s = document.createElement("span"); s.textContent = nm + " ";
+            const sm = document.createElement("small"); sm.textContent = "@" + p.slug; s.append(sm); b.append(s);
+            b.onclick = () => go(p.slug); box.append(b);
+          });
+          box.hidden = false;
+        }, 250);
+      });
+      inp.addEventListener("keydown", e => { if (e.key === "Enter" && inp.value.length >= 3) go(inp.value); });
+      document.addEventListener("click", e => { if (e.target !== inp && !box.contains(e.target)) box.hidden = true; });
+    },
     about(box, img, text, src) {
       box.hidden = !(text || src); img.hidden = !src; if (src) img.src = src;
     }
