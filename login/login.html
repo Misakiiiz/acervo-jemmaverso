@@ -30,6 +30,16 @@ body{display:block;overflow-x:hidden}
 .auth-msg.err{color:#ff8a8a}.auth-msg.ok{color:var(--ok)}
 .auth-back{display:inline-block;margin-top:18px;color:var(--muted);font-size:.85rem;text-decoration:none}
 .auth-back:hover{color:var(--accent)}
+.auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:4px;margin-bottom:20px}
+.auth-tabs button{border:0;background:none;color:var(--muted);padding:.6rem;border-radius:10px;font:500 .9rem Poppins,sans-serif;cursor:pointer}
+.auth-tabs button.on{background:linear-gradient(135deg,var(--accent),var(--accent2,var(--accent)));color:var(--on-accent,#17101f);font-weight:600}
+.auth-form{text-align:left}.auth-form[hidden]{display:none}
+.auth-form label{display:block;font-size:.78rem;color:var(--muted);margin:2px 0 4px}
+.auth-pw{position:relative}.auth-pw input{padding-right:5.2rem}
+.pw-toggle{position:absolute;right:8px;top:7px;border:0;background:none;color:var(--accent);font:500 .8rem Poppins,sans-serif;cursor:pointer;padding:.4rem}
+.auth-link{background:none;border:0;color:var(--muted);font:inherit;font-size:.82rem;cursor:pointer;text-decoration:underline;padding:0;margin:0 0 12px}
+.auth-link:hover{color:var(--accent)}
+.auth-hint{font-size:.74rem;color:var(--muted);margin:-4px 0 10px}
 .auth-spark{position:absolute;color:var(--accent);opacity:.55;animation:tw 3s ease-in-out infinite}
 @keyframes tw{50%{opacity:.1;transform:scale(.7)}}
 @media (prefers-reduced-motion:reduce){.auth-spark{animation:none}}
@@ -45,17 +55,42 @@ body{display:block;overflow-x:hidden}
   <section class="auth-card" aria-labelledby="t">
     <img class="auth-logo" src="../assets/imagens/icon.png" alt="">
     <h1 id="t">JemmaVerso</h1>
-    <p class="auth-sub">Entre para guardar seus favoritos, notas e leituras em qualquer aparelho ✦</p>
+    <p class="auth-sub">Guarde seus favoritos, notas e leituras em qualquer aparelho ✦</p>
 
-    <button class="auth-btn primary" id="google" type="button">
-      <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#fff" d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-22 0-1.3-.2-2.7-.5-4z"/></svg>
-      Entrar com Google
-    </button>
+    <div class="auth-tabs" role="tablist">
+      <button id="tabIn" class="on" type="button" role="tab">Já tenho conta</button>
+      <button id="tabUp" type="button" role="tab">Criar conta</button>
+    </div>
 
-    <div class="auth-or">ou</div>
+    <!-- JÁ TENHO CONTA -->
+    <form id="fIn" class="auth-form" novalidate>
+      <label for="inId">Usuário ou e-mail</label>
+      <input id="inId" type="text" autocomplete="username" autocapitalize="none" placeholder="seu_usuario ou seu@email.com">
+      <label for="inPw">Senha</label>
+      <div class="auth-pw"><input id="inPw" type="password" autocomplete="current-password" placeholder="Sua senha"><button class="pw-toggle" type="button" data-for="inPw">Mostrar</button></div>
+      <button class="auth-link" id="forgot" type="button">Esqueci minha senha</button>
+      <button class="auth-btn primary" type="submit">Entrar</button>
+    </form>
 
-    <input id="email" type="email" placeholder="seu@email.com" autocomplete="email">
-    <button class="auth-btn" id="magic" type="button">Receber link de acesso por e-mail</button>
+    <!-- CRIAR CONTA -->
+    <form id="fUp" class="auth-form" hidden novalidate>
+      <label for="upUser">Nome de usuário</label>
+      <input id="upUser" type="text" maxlength="20" autocomplete="username" autocapitalize="none" placeholder="ex.: raven_wenclair">
+      <p class="auth-hint">3 a 20 caracteres: letras minúsculas, números e _</p>
+      <label for="upEmail">E-mail</label>
+      <input id="upEmail" type="email" autocomplete="email" placeholder="seu@email.com">
+      <label for="upPw">Crie uma senha</label>
+      <div class="auth-pw"><input id="upPw" type="password" autocomplete="new-password" placeholder="Mínimo de 8 caracteres"><button class="pw-toggle" type="button" data-for="upPw">Mostrar</button></div>
+      <button class="auth-btn primary" type="submit">Criar minha conta</button>
+    </form>
+
+    <!-- NOVA SENHA (depois do link de recuperação) -->
+    <form id="fNew" class="auth-form" hidden novalidate>
+      <label for="newPw">Nova senha</label>
+      <div class="auth-pw"><input id="newPw" type="password" autocomplete="new-password" placeholder="Mínimo de 8 caracteres"><button class="pw-toggle" type="button" data-for="newPw">Mostrar</button></div>
+      <button class="auth-btn primary" type="submit">Salvar nova senha</button>
+    </form>
+
     <p class="auth-msg" id="msg" role="status"></p>
     <a class="auth-back" href="../index.html">← Continuar sem login</a>
   </section>
@@ -68,23 +103,65 @@ body{display:block;overflow-x:hidden}
 <script>
 (function(){
   const $ = id => document.getElementById(id), msg = (t, c) => { $("msg").textContent = t; $("msg").className = "auth-msg " + (c || ""); };
-  const A = window.jvAuth;
-  if (!A) { msg("Login indisponível: configure o Supabase em compartilhados/supabase-config.js.", "err"); $("google").disabled = $("magic").disabled = true; return; }
-  const dest = A.SITE_ROOT + "perfil/perfil.html";
-  A.ready.then(user => { if (user) location.replace(dest); });
+  const A = window.jvAuth, BAD = "Usuário/e-mail ou senha incorretos.";
+  if (!A) { msg("Login indisponível: configure o Supabase em compartilhados/supabase-config.js.", "err"); document.querySelectorAll("button").forEach(b => { if (b.type !== "button" || b.id.startsWith("tab")) return; b.disabled = true; }); return; }
+  const dest = A.SITE_ROOT + "perfil/perfil.html", recovering = /type=recovery/.test(location.hash);
+  A.ready.then(user => { if (user && !recovering) location.replace(dest); });
 
-  $("google").onclick = async () => {
-    const { error } = await A.client.auth.signInWithOAuth({ provider: "google", options: { redirectTo: dest } });
-    if (error) msg("Erro: " + error.message, "err");
+  function tab(w) { $("fIn").hidden = w !== "In"; $("fUp").hidden = w !== "Up"; $("fNew").hidden = true; $("tabIn").classList.toggle("on", w === "In"); $("tabUp").classList.toggle("on", w === "Up"); msg(""); }
+  $("tabIn").onclick = () => tab("In"); $("tabUp").onclick = () => tab("Up");
+  if (recovering) { $("fIn").hidden = true; $("fNew").hidden = false; document.querySelector(".auth-tabs").hidden = true; msg("Escolha sua nova senha."); }
+
+  document.querySelectorAll(".pw-toggle").forEach(b => b.onclick = () => {
+    const i = $(b.dataset.for), show = i.type === "password"; i.type = show ? "text" : "password"; b.textContent = show ? "Ocultar" : "Mostrar";
+  });
+
+  $("fIn").onsubmit = async e => {
+    e.preventDefault();
+    let id = $("inId").value.trim(); const pw = $("inPw").value;
+    if (!id || !pw) return msg("Preencha usuário ou e-mail e a senha.", "err");
+    msg("Entrando…");
+    if (!id.includes("@")) {
+      const { data } = await A.client.rpc("login_email", { p_user: id.replace(/^@/, "") });
+      if (!data) return msg(BAD, "err");
+      id = data;
+    }
+    const { error } = await A.client.auth.signInWithPassword({ email: id, password: pw });
+    if (!error) return location.replace(dest);
+    msg(/not confirmed/i.test(error.message) ? "Confirme seu e-mail primeiro (veja a caixa de entrada e o spam)." : BAD, "err");
   };
-  $("magic").onclick = async () => {
-    const email = $("email").value.trim();
+
+  $("fUp").onsubmit = async e => {
+    e.preventDefault();
+    const u = $("upUser").value.trim().toLowerCase().replace(/^@/, ""), email = $("upEmail").value.trim(), pw = $("upPw").value;
+    if (!/^[a-z0-9_]{3,20}$/.test(u)) return msg("Usuário: 3 a 20 caracteres, só letras minúsculas, números e _.", "err");
     if (!email) return msg("Digite seu e-mail.", "err");
-    msg("Enviando…");
-    const { error } = await A.client.auth.signInWithOtp({ email, options: { emailRedirectTo: dest } });
-    error ? msg("Erro: " + error.message, "err") : msg("Link enviado! Confira seu e-mail (e o spam) ✦", "ok");
+    if (pw.length < 8) return msg("A senha precisa ter pelo menos 8 caracteres.", "err");
+    msg("Criando conta…");
+    const free = await A.client.rpc("username_available", { p_user: u });
+    if (free.data === false) return msg("Esse nome de usuário já está em uso.", "err");
+    const { data, error } = await A.client.auth.signUp({ email, password: pw, options: { data: { username: u }, emailRedirectTo: dest } });
+    if (error) return msg(/rate limit/i.test(error.message) ? "Limite de e-mails atingido. Tente de novo mais tarde." : "Erro: " + error.message, "err");
+    if (data.session) return location.replace(dest);
+    if (data.user && data.user.identities && !data.user.identities.length) return msg("Esse e-mail já tem conta. Use a aba “Já tenho conta”.", "err");
+    msg("Conta criada! Confirme pelo link que enviamos ao seu e-mail ✦", "ok");
   };
-  $("email").addEventListener("keydown", e => { if (e.key === "Enter") $("magic").click(); });
+
+  $("forgot").onclick = async () => {
+    const id = $("inId").value.trim();
+    if (!id.includes("@")) return msg("Digite seu e-mail no campo acima para recuperar a senha.", "err");
+    msg("Enviando…");
+    const { error } = await A.client.auth.resetPasswordForEmail(id, { redirectTo: location.origin + location.pathname });
+    error ? msg("Erro: " + error.message, "err") : msg("Se existir uma conta com esse e-mail, enviamos o link para criar uma nova senha ✦", "ok");
+  };
+
+  $("fNew").onsubmit = async e => {
+    e.preventDefault();
+    const pw = $("newPw").value;
+    if (pw.length < 8) return msg("A senha precisa ter pelo menos 8 caracteres.", "err");
+    const { error } = await A.client.auth.updateUser({ password: pw });
+    error ? msg("Erro: " + error.message, "err") : location.replace(dest);
+  };
 })();
 </script>
 </body>
