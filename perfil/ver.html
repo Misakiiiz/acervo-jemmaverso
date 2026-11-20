@@ -58,7 +58,7 @@
     document.title = name + " · JemmaVerso";
     $("vName").textContent = name; $("initial").textContent = name[0].toUpperCase();
     show($("avatarImg"), pub(p.avatar_path)); show($("bannerImg"), pub(p.banner_path)); $("initial").hidden = !$("avatarImg").hidden;
-    jvFx.theme(document.querySelector(".pf-page"), p.theme_color); jvFx.bg(pub(p.bg_path));
+    jvFx.theme(document.body, p.theme_colors || (p.theme_color ? { accent: p.theme_color } : {})); jvFx.bg(pub(p.bg_path));
     jvFx.badge($("vBadge"), p.badge_text, p.badge_author);
     $("vAbout").textContent = p.about || ""; jvFx.about($("vAboutBox"), $("aboutImg"), p.about, pub(p.about_path));
     jvFx.spotify($("vSpotify"), p.spotify);

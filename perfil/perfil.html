@@ -67,8 +67,9 @@
         <label for="about">Sobre mim <span class="pf-count" id="aboutCount"></span></label>
         <textarea id="about" maxlength="600" placeholder="Conte um pouco sobre você…"></textarea>
         <div class="pf-media"><button class="pf-btn" id="aboutBtn" type="button">▣ Foto do sobre mim</button><button class="pf-btn" id="aboutRm" type="button">Remover foto</button></div>
-        <label for="color">Cor do perfil (botões, destaques e tag)</label>
-        <div class="pf-media"><input id="color" type="color" value="#b794f6"><button class="pf-btn" id="colorRm" type="button">Usar a cor do tema</button></div>
+        <label>Cores do perfil (valem só nesta página)</label>
+        <div class="pf-colors" id="colorGrid"></div>
+        <div class="pf-media" style="margin-top:8px"><button class="pf-btn" id="colorRm" type="button">Restaurar todas as cores</button></div>
         <label>Fundo do perfil (imagem ou GIF)</label>
         <div class="pf-media"><button class="pf-btn" id="bgBtn" type="button">▣ Escolher fundo</button><button class="pf-btn" id="bgRm" type="button">Remover fundo</button></div>
         <p class="pf-hint">Com fundo, o card do perfil fica translúcido com blur.</p>
@@ -111,7 +112,7 @@
   const EXT = { "image/png": "png", "image/jpeg": "jpg", "image/webp": "webp", "image/gif": "gif" };
   const AUS = typeof aus !== "undefined" ? aus : [], byId = id => AUS.find(a => a.id === id);
   let user, profile = {}, favAus = []; const pending = { avatar: null, banner: null, about: null, bg: null };
-  const page = document.querySelector(".pf-page"); let colorOn = false;
+  const page = document.querySelector(".pf-page"); let colors = {};
   const msg = (t, c) => { $("msg").textContent = t; $("msg").className = "pf-msg " + (c || ""); };
   const el = (tag, props, kids) => { const n = Object.assign(document.createElement(tag), props || {}); (kids || []).forEach(k => n.append(k)); return n; };
 
@@ -125,10 +126,11 @@
     const name = ($("name").value || profile.display_name || user.email || "?").trim();
     $("initial").textContent = name[0].toUpperCase();
     const show = (img, src) => { img.hidden = !src; if (src) img.src = src; };
+    const savedColors = () => profile.theme_colors || (profile.theme_color ? { accent: profile.theme_color } : {});
     const cur = k => { const q = pending[k]; return q ? (q.remove ? "" : q.preview) : pubUrl(profile[k + "_path"]); };
     show($("avatarImg"), cur("avatar")); show($("bannerImg"), cur("banner"));
     const ed = $("card").classList.contains("editing");
-    jvFx.bg(cur("bg")); jvFx.theme(page, ed ? (colorOn ? $("color").value : null) : profile.theme_color);
+    jvFx.bg(cur("bg")); jvFx.theme(document.body, ed ? colors : savedColors());
     if (ed) jvFx.about($("vAboutBox"), $("aboutImg"), "", "");   // no modo edição a caixa fica escondida
     else jvFx.about($("vAboutBox"), $("aboutImg"), profile.about, cur("about"));
     $("initial").hidden = !$("avatarImg").hidden;
@@ -158,6 +160,20 @@
     $("sRead").textContent = Object.values(local("wenclair_status")).filter(s => s === "lido").length;
     $("sRate").textContent = Object.values(local("wenclair_ratings")).filter(Boolean).length;
     paintMedia();
+  }
+
+  /* ---------- cores ---------- */
+  function paintColors() {
+    const box = $("colorGrid"); box.textContent = "";
+    const rs = getComputedStyle(document.documentElement);
+    jvFx.COLORS.forEach(([k, label]) => {
+      const v = rs.getPropertyValue("--" + k).trim(), def = /^#[0-9a-f]{6}$/i.test(v) ? v : "#888888";
+      const inp = el("input", { type: "color", value: colors[k] || def, ariaLabel: label });
+      inp.oninput = () => { colors[k] = inp.value; paintMedia(); };
+      const x = el("button", { type: "button", className: "pf-link", textContent: "×", title: "Voltar ao padrão", ariaLabel: "Voltar ao padrão" });
+      x.onclick = () => { delete colors[k]; paintColors(); paintMedia(); };
+      box.append(el("div", { className: "pf-crow" }, [el("span", { textContent: label }), inp, x]));
+    });
   }
 
   /* ---------- edição ---------- */
@@ -190,14 +206,14 @@
     $("xh").value = profile.x_handle ? "@" + profile.x_handle : "";
     $("badge").value = profile.badge_text || ""; $("badgeAu").value = profile.badge_author ? "@" + profile.badge_author : "";
     $("about").value = profile.about || ""; $("spot").value = profile.spotify ? "https://open.spotify.com/" + profile.spotify : "";
-    colorOn = !!profile.theme_color; if (colorOn) $("color").value = profile.theme_color;
+    colors = { ...savedColors() }; paintColors();
     $("slug").value = profile.slug || ""; $("pub").checked = !!profile.is_public;
     favAus = (profile.fav_aus || []).filter(byId); msg("");
     $("card").classList.add("editing"); paintSel(); paintMedia();
   }
   function stopEdit() {
     Object.keys(pending).forEach(k => { if (pending[k]) URL.revokeObjectURL(pending[k].preview); pending[k] = null; });
-    $("card").classList.remove("editing"); colorOn = false; paintView();
+    $("card").classList.remove("editing"); colors = {}; paintView();
   }
 
   function pick(kind) {
@@ -237,7 +253,7 @@
         fav_aus: favAus.slice(0, 3), slug: slug || null, is_public: pub, avatar_path: profile.avatar_path || null, banner_path: profile.banner_path || null,
         about_path: profile.about_path || null, bg_path: profile.bg_path || null, about: $("about").value.trim() || null,
         badge_text: $("badge").value.trim() || null, badge_author: $("badgeAu").value.trim().replace(/^@/, "") || null,
-        theme_color: colorOn ? $("color").value : null, spotify: spId || null };
+        theme_colors: Object.keys(colors).length ? colors : null, theme_color: colors.accent || null, spotify: spId || null };
       for (const k of Object.keys(pending)) {
         const q = pending[k], col = k + "_path"; if (!q) continue;
         if (q.remove) { if (row[col]) A.client.storage.from(BUCKET).remove([row[col]]); row[col] = null; }
@@ -272,8 +288,7 @@
   $("aboutBtn").onclick = () => pick("about"); $("bgBtn").onclick = () => pick("bg");
   const rm = (k, b) => { $(b).onclick = () => { if (pending[k] && pending[k].preview) URL.revokeObjectURL(pending[k].preview); pending[k] = { remove: true }; msg("Não esqueça de salvar ✦"); paintMedia(); }; };
   rm("about", "aboutRm"); rm("bg", "bgRm");
-  $("color").addEventListener("input", () => { colorOn = true; paintMedia(); });
-  $("colorRm").onclick = () => { colorOn = false; paintMedia(); };
+  $("colorRm").onclick = () => { colors = {}; paintColors(); paintMedia(); };
   $("logout").onclick = A.logout;
   $("slug").addEventListener("input", e => { e.target.value = e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ""); });
   $("copyBtn").onclick = async () => { const i = $("shareUrl"); try { await navigator.clipboard.writeText(i.value); } catch (e) { i.select(); document.execCommand("copy"); } $("copyBtn").textContent = "Copiado ✓"; setTimeout(() => $("copyBtn").textContent = "Copiar link", 1800); };

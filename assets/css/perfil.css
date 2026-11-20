@@ -69,3 +69,6 @@ body.pf-hasbg .pf-card{background:color-mix(in srgb,var(--panel) 50%,transparent
 body.pf-hasbg .pf-au,body.pf-hasbg .pf-stat,body.pf-hasbg .pf-tag{background:color-mix(in srgb,var(--card) 45%,transparent)}
 body.pf-hasbg .pf-form input[type=text],body.pf-hasbg .pf-form textarea{background:color-mix(in srgb,var(--bg) 60%,transparent)}
 body.pf-hasbg .pf-top a,body.pf-hasbg .pf-link{color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6)}
+.pf-colors{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+.pf-crow{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:6px 10px;font-size:.82rem;color:var(--text)}
+.pf-crow span{flex:1}.pf-form .pf-crow input[type=color]{width:40px;height:30px}

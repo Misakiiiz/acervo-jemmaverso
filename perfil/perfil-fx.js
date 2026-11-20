@@ -5,14 +5,18 @@
   const hex = a => "#" + a.map(c => Math.max(0, Math.min(255, Math.round(c))).toString(16).padStart(2, "0")).join("");
   window.jvFx = {
     spotifyId(u) { const m = (u || "").trim().match(SP); return m ? m[1] + "/" + m[2] : ""; },
-    theme(page, color) {
-      const s = page.style, ok = /^#[0-9a-f]{6}$/i.test(color || "");
-      ["--accent", "--accent2", "--on-accent"].forEach(p => s.removeProperty(p));
-      if (!ok) return;
-      const c = rgb(color), l = (.299 * c[0] + .587 * c[1] + .114 * c[2]) / 255;
-      s.setProperty("--accent", color);
-      s.setProperty("--accent2", hex(c.map(v => v * .7)));
-      s.setProperty("--on-accent", l > .6 ? "#17101f" : "#ffffff");
+    COLORS: [["accent", "Destaques, botões e tag"], ["text", "Letras"], ["muted", "Letras secundárias"], ["bg", "Fundo da página"],
+             ["panel", "Quadrado do perfil"], ["card", "Blocos internos"], ["line", "Bordas"]],
+    theme(el, c) {
+      c = c || {}; const s = el.style, map = { accent: "--accent", text: "--text", muted: "--muted", bg: "--bg", panel: "--panel", card: "--card", line: "--line" };
+      Object.values(map).concat(["--accent2", "--on-accent"]).forEach(p => s.removeProperty(p));
+      const ok = v => /^#[0-9a-f]{6}$/i.test(v || "");
+      for (const k in map) if (ok(c[k])) s.setProperty(map[k], c[k]);
+      if (ok(c.accent)) {
+        const a = rgb(c.accent), l = (.299 * a[0] + .587 * a[1] + .114 * a[2]) / 255;
+        s.setProperty("--accent2", hex(a.map(v => v * .7)));
+        s.setProperty("--on-accent", l > .6 ? "#17101f" : "#ffffff");
+      }
     },
     bg(url) {
       document.body.classList.toggle("pf-hasbg", !!url);
