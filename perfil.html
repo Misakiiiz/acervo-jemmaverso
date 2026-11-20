@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meu perfil · JemmaVerso</title>
+<link rel="icon" type="image/png" href="../assets/imagens/icon.png">
+<link rel="stylesheet" href="../assets/css/style.css">
+<link rel="stylesheet" href="../assets/css/extras.css">
+<script src="../compartilhados/theme.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/perfil.css">
+</head>
+<body>
+<main class="pf-page">
+  <div class="pf-top"><a href="../index.html">← Voltar ao acervo</a><button class="pf-link" id="logout" type="button" hidden>Sair</button></div>
+
+  <section class="pf-card" id="card" hidden>
+    <div class="pf-banner">
+      <img id="bannerImg" alt="" hidden>
+      <button class="pf-edit" id="bannerBtn" type="button">🖼 Trocar banner</button>
+      <div class="pf-avatar">
+        <span id="initial">?</span><img id="avatarImg" alt="" hidden>
+        <button class="pf-edit" id="avatarBtn" type="button" aria-label="Trocar foto de perfil">📷</button>
+      </div>
+    </div>
+
+    <div class="pf-body">
+      <!-- MODO VISUALIZAÇÃO -->
+      <div class="pf-view">
+        <div class="pf-head">
+          <div><h1 id="vName"></h1><a class="pf-handle" id="vHandle" target="_blank" rel="noopener noreferrer" hidden></a></div>
+          <button class="pf-btn" id="editBtn" type="button">✎ Editar perfil</button>
+        </div>
+        <blockquote class="pf-quote" id="vBio" hidden></blockquote>
+        <div class="pf-tags" id="vTags"></div>
+        <div class="pf-share" id="vShare" hidden><input id="shareUrl" type="text" readonly aria-label="Link do perfil"><button class="pf-btn" id="copyBtn" type="button">Copiar link</button></div>
+        <h2 class="pf-h2">✦ Minhas 3 AUs favoritas</h2>
+        <div class="pf-podium" id="vAus"></div>
+        <div class="pf-stats">
+          <div class="pf-stat"><b id="sFav">0</b><span>favoritas</span></div>
+          <div class="pf-stat"><b id="sRead">0</b><span>lidas</span></div>
+          <div class="pf-stat"><b id="sRate">0</b><span>avaliadas</span></div>
+        </div>
+      </div>
+
+      <!-- MODO EDIÇÃO -->
+      <div class="pf-form">
+        <label for="name">Nome de exibição <span class="pf-count" id="nameCount"></span></label>
+        <input id="name" type="text" maxlength="40" placeholder="Como quer ser chamada(o)?">
+        <label for="bio">Frase da bio <span class="pf-count" id="bioCount"></span></label>
+        <textarea id="bio" maxlength="300" placeholder="Uma frase que te representa…"></textarea>
+        <label for="ship">Ship favorito <span class="pf-count" id="shipCount"></span></label>
+        <input id="ship" type="text" maxlength="40" list="shipList" placeholder="Ex.: Wenclair">
+        <datalist id="shipList"></datalist>
+        <label for="char">Personagem favorito(a) <span class="pf-count" id="charCount"></span></label>
+        <input id="char" type="text" maxlength="40" placeholder="Ex.: Enid Sinclair">
+        <label for="xh">Seu @ no X (opcional)</label>
+        <input id="xh" type="text" maxlength="16" placeholder="@usuario">
+        <label for="slug">Nome de usuário (vira o link do perfil) <span class="pf-count" id="slugCount"></span></label>
+        <input id="slug" type="text" maxlength="20" placeholder="ex.: raven_wenclair" autocomplete="off">
+        <label class="pf-check"><input id="pub" type="checkbox"> Tornar meu perfil público (qualquer pessoa com o link pode ver)</label>
+        <p class="pf-hint">Fica visível: nome, bio, foto, banner, ship, personagem, @ do X e as 3 AUs. <b>Nunca</b> aparecem: e-mail, favoritos, notas e status de leitura.</p>
+        <label for="auSearch">Suas 3 AUs favoritas <span class="pf-count" id="auCount"></span></label>
+        <div class="pf-sel" id="auSel"></div>
+        <input id="auSearch" type="text" placeholder="Buscar AU por título ou autor…" autocomplete="off">
+        <div class="pf-res" id="auRes" hidden></div>
+        <p class="pf-hint">Foto e banner aceitam PNG, JPG, WebP e <b>GIF animado</b> (até 8 MB). O banner é cortado para caber, então prefira imagens largas.</p>
+        <div class="pf-actions">
+          <button class="pf-btn main" id="save" type="button">Salvar perfil</button>
+          <button class="pf-btn" id="cancel" type="button">Cancelar</button>
+          <span class="pf-msg" id="msg" role="status"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+  <p class="pf-msg" id="loading">Carregando…</p>
+</main>
+<input type="file" id="avatarFile" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
+<input type="file" id="bannerFile" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
+
+<script>window.JV_NO_WIDGET = true;</script>
+<script src="../home/data.js"></script>
+<script src="../compartilhados/supabase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="../compartilhados/supabase-sync.js"></script>
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const A = window.jvAuth, BUCKET = "profile-media", MAX = 8 * 1024 * 1024;
+  const EXT = { "image/png": "png", "image/jpeg": "jpg", "image/webp": "webp", "image/gif": "gif" };
+  const AUS = typeof aus !== "undefined" ? aus : [], byId = id => AUS.find(a => a.id === id);
+  let user, profile = {}, favAus = []; const pending = { avatar: null, banner: null };
+  const msg = (t, c) => { $("msg").textContent = t; $("msg").className = "pf-msg " + (c || ""); };
+  const el = (tag, props, kids) => { const n = Object.assign(document.createElement(tag), props || {}); (kids || []).forEach(k => n.append(k)); return n; };
+
+  if (!A) { $("loading").textContent = "Perfil indisponível: configure o Supabase em compartilhados/supabase-config.js."; return; }
+
+  const pubUrl = p => p ? A.client.storage.from(BUCKET).getPublicUrl(p).data.publicUrl : "";
+  const local = k => { try { return JSON.parse(localStorage.getItem(k)) || {}; } catch (e) { return {}; } };
+
+  /* ---------- desenhar ---------- */
+  function paintMedia() {
+    const name = ($("name").value || profile.display_name || user.email || "?").trim();
+    $("initial").textContent = name[0].toUpperCase();
+    const show = (img, src) => { img.hidden = !src; if (src) img.src = src; };
+    show($("avatarImg"), pending.avatar ? pending.avatar.preview : pubUrl(profile.avatar_path));
+    show($("bannerImg"), pending.banner ? pending.banner.preview : pubUrl(profile.banner_path));
+    $("initial").hidden = !$("avatarImg").hidden;
+  }
+
+  function paintView() {
+    $("vName").textContent = profile.display_name || (user.email || "").split("@")[0];
+    const h = $("vHandle"); h.hidden = !profile.x_handle;
+    if (profile.x_handle) { h.textContent = "@" + profile.x_handle; h.href = "https://x.com/" + profile.x_handle; }
+    $("vBio").hidden = !profile.bio; $("vBio").textContent = profile.bio ? "“" + profile.bio + "”" : "";
+    const tags = $("vTags"); tags.textContent = "";
+    const tag = (label, v) => tags.append(el("span", { className: "pf-tag" }, [label + " ", el("b", { textContent: v })]));
+    if (profile.fav_ship) tag("💞 Ship:", profile.fav_ship);
+    if (profile.fav_character) tag("⭐ Personagem:", profile.fav_character);
+    tag("🗓 Desde", new Date(user.created_at).toLocaleDateString("pt-BR", { month: "long", year: "numeric" }));
+    const box = $("vAus"); box.textContent = "";
+    const list = (profile.fav_aus || []).map(byId).filter(Boolean);
+    if (!list.length) box.append(el("p", { className: "pf-empty", textContent: "Nenhuma escolhida ainda. Clique em “Editar perfil” para escolher 3 ✦" }));
+    list.forEach((a, i) => box.append(el("a", { className: "pf-au", href: a.url, target: "_blank", rel: "noopener noreferrer" }, [
+      el("div", { className: "m", textContent: ["🥇", "🥈", "🥉"][i] }), el("h3", { textContent: a.title }),
+      el("small", { textContent: (a.author && a.author.display || "") + " · " + a.fandom })])));
+    const share = $("vShare"); share.hidden = !(profile.is_public && profile.slug);
+    if (!share.hidden) $("shareUrl").value = A.SITE_ROOT + "perfil/ver.html?u=" + profile.slug;
+    $("sFav").textContent = Object.keys(local("wenclair_favorites")).length;
+    $("sRead").textContent = Object.values(local("wenclair_status")).filter(s => s === "lido").length;
+    $("sRate").textContent = Object.values(local("wenclair_ratings")).filter(Boolean).length;
+    paintMedia();
+  }
+
+  /* ---------- edição ---------- */
+  function counters() {
+    [["name", "nameCount", 40], ["bio", "bioCount", 300], ["ship", "shipCount", 40], ["char", "charCount", 40], ["slug", "slugCount", 20]]
+      .forEach(([i, c, m]) => $(c).textContent = $(i).value.length + "/" + m);
+    $("auCount").textContent = favAus.length + "/3";
+  }
+
+  function paintSel() {
+    const box = $("auSel"); box.textContent = "";
+    favAus.forEach((id, i) => { const a = byId(id); if (!a) return;
+      box.append(el("div", { className: "pf-selitem" }, [["🥇", "🥈", "🥉"][i] + " " + a.title,
+        el("button", { type: "button", textContent: "✕", ariaLabel: "Remover", onclick: () => { favAus.splice(i, 1); paintSel(); } })])); });
+    counters();
+  }
+
+  function search() {
+    const q = $("auSearch").value.trim().toLowerCase(), res = $("auRes"); res.textContent = "";
+    if (q.length < 2 || favAus.length >= 3) { res.hidden = true; return; }
+    const hits = AUS.filter(a => !favAus.includes(a.id) && (a.title + " " + (a.author && a.author.display || "")).toLowerCase().includes(q)).slice(0, 8);
+    hits.forEach(a => res.append(el("button", { type: "button", onclick: () => { favAus.push(a.id); $("auSearch").value = ""; res.hidden = true; paintSel(); } },
+      [a.title + " ", el("small", { textContent: "— " + (a.author && a.author.display || "") })])));
+    res.hidden = !hits.length;
+  }
+
+  function startEdit() {
+    $("name").value = profile.display_name || ""; $("bio").value = profile.bio || "";
+    $("ship").value = profile.fav_ship || ""; $("char").value = profile.fav_character || "";
+    $("xh").value = profile.x_handle ? "@" + profile.x_handle : "";
+    $("slug").value = profile.slug || ""; $("pub").checked = !!profile.is_public;
+    favAus = (profile.fav_aus || []).filter(byId); msg("");
+    $("card").classList.add("editing"); paintSel(); paintMedia();
+  }
+  function stopEdit() {
+    Object.keys(pending).forEach(k => { if (pending[k]) URL.revokeObjectURL(pending[k].preview); pending[k] = null; });
+    $("card").classList.remove("editing"); paintView();
+  }
+
+  function pick(kind) {
+    const input = $(kind + "File");
+    input.onchange = () => {
+      const f = input.files[0]; input.value = "";
+      if (!f) return;
+      if (!EXT[f.type]) return msg("Formato não aceito. Use PNG, JPG, WebP ou GIF.", "err");
+      if (f.size > MAX) return msg("Arquivo grande demais (máx. 8 MB).", "err");
+      if (pending[kind]) URL.revokeObjectURL(pending[kind].preview);
+      pending[kind] = { file: f, preview: URL.createObjectURL(f) };
+      msg("Não esqueça de salvar ✦"); paintMedia();
+    };
+    input.click();
+  }
+
+  async function upload(kind, oldPath) {
+    const f = pending[kind].file, path = `${user.id}/${kind}-${Date.now()}.${EXT[f.type]}`;
+    const { error } = await A.client.storage.from(BUCKET).upload(path, f, { contentType: f.type, cacheControl: "31536000" });
+    if (error) throw error;
+    if (oldPath) A.client.storage.from(BUCKET).remove([oldPath]);   // apaga o arquivo antigo (economiza espaço)
+    return path;
+  }
+
+  async function save() {
+    const handle = $("xh").value.trim().replace(/^@/, "");
+    if (handle && !/^[A-Za-z0-9_]{1,15}$/.test(handle)) return msg("@ do X inválido (letras, números e _, até 15).", "err");
+    const slug = $("slug").value.trim().toLowerCase(), pub = $("pub").checked;
+    if (slug && !/^[a-z0-9_]{3,20}$/.test(slug)) return msg("Usuário: 3 a 20 caracteres, só letras minúsculas, números e _.", "err");
+    if (pub && !slug) return msg("Escolha um nome de usuário para tornar o perfil público.", "err");
+    $("save").disabled = true; msg("Salvando…");
+    try {
+      const row = { user_id: user.id, display_name: $("name").value.trim() || null, bio: $("bio").value.trim() || null,
+        fav_ship: $("ship").value.trim() || null, fav_character: $("char").value.trim() || null, x_handle: handle || null,
+        fav_aus: favAus.slice(0, 3), slug: slug || null, is_public: pub, avatar_path: profile.avatar_path || null, banner_path: profile.banner_path || null };
+      if (pending.avatar) row.avatar_path = await upload("avatar", profile.avatar_path);
+      if (pending.banner) row.banner_path = await upload("banner", profile.banner_path);
+      const { error } = await A.client.from("profiles").upsert(row, { onConflict: "user_id" });
+      if (error) throw error;
+      profile = row; stopEdit();
+      try { localStorage.removeItem("jv_profile_cache"); } catch (e) {}
+    } catch (e) { console.error(e); msg(e.code === "23505" ? "Esse nome de usuário já está em uso." : "Erro ao salvar: " + (e.message || e), "err"); }
+    $("save").disabled = false;
+  }
+
+  /* ---------- início ---------- */
+  A.ready.then(async u => {
+    if (!u) return location.replace(A.SITE_ROOT + "login/login.html");
+    user = u;
+    const { data, error } = await A.client.from("profiles").select("*").maybeSingle();
+    if (error) console.error(error);
+    profile = data || {};
+    $("shipList").append(...[...new Set(AUS.map(a => a.fandom))].map(f => el("option", { value: f })));
+    $("loading").hidden = true; $("card").hidden = false; $("logout").hidden = false;
+    paintView();
+  });
+
+  ["name", "bio", "ship", "char", "slug"].forEach(i => $(i).addEventListener("input", () => { counters(); if (i === "name") paintMedia(); }));
+  $("auSearch").addEventListener("input", search);
+  $("editBtn").onclick = startEdit; $("cancel").onclick = stopEdit; $("save").onclick = save;
+  $("avatarBtn").onclick = () => pick("avatar"); $("bannerBtn").onclick = () => pick("banner");
+  $("logout").onclick = A.logout;
+  $("slug").addEventListener("input", e => { e.target.value = e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ""); });
+  $("copyBtn").onclick = async () => { const i = $("shareUrl"); try { await navigator.clipboard.writeText(i.value); } catch (e) { i.select(); document.execCommand("copy"); } $("copyBtn").textContent = "Copiado ✓"; setTimeout(() => $("copyBtn").textContent = "Copiar link", 1800); };
+})();
+</script>
+</body>
+</html>

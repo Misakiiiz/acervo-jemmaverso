@@ -1,0 +1,40 @@
+const cardsContainer = document.getElementById("cards");
+const READ_LABEL = { naolido: "Não lida", lendo: "Lendo", pausada: "Pausada", lido: "Concluída" };
+
+function esc(s){ return String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+function statusClass(s){ return {"Concluída":"done","Em andamento":"going","Em hiato":"hold","Abandonada":"drop"}[s] || "unk"; }
+
+function renderCards(list){
+    cardsContainer.innerHTML = list.map(au => {
+        const read = getReadingStatus(au.id);
+        return `<article class="card" data-id="${au.id}">
+            <div class="card-top">
+                <span class="ship">${esc(au.fandom)}</span>
+                <span class="heart">${isFavorite(au.id) ? "♥" : ""}</span>
+            </div>
+            <h3>${esc(translateTitle(au))}</h3>
+            <p class="author">${getAuAuthors(au).map(author => esc(author.display)).join(" · ")}</p>
+            ${au.description ? `<p class="card-synopsis">${esc(translateSynopsis(au))}</p>` : ""}
+            <div class="meta">
+                <span class="chip ${statusClass(au.status)}">${esc(translateStatus(au.status))}</span>
+                ${au.size ? `<span class="chip">${esc(translateSize(au.size))}</span>` : ""}
+                ${read && READ_LABEL[read] ? `<span class="chip read">${translateReadingStatus(read)}</span>` : ""}
+            </div>
+        </article>`;
+    }).join("");
+
+    document.getElementById("totalAus").textContent = list.length;
+    document.getElementById("empty").hidden = list.length > 0;
+}
+
+cardsContainer.addEventListener("click", e => {
+    const card = e.target.closest(".card");
+    if (card) {
+        const selectedAu = aus.find(a => a.id === Number(card.dataset.id));
+        const visibleAus = [...cardsContainer.querySelectorAll(".card")]
+            .map(item => aus.find(a => a.id === Number(item.dataset.id)))
+            .filter(Boolean);
+        if (selectedAu) openModal(selectedAu, visibleAus);
+    }
+});
