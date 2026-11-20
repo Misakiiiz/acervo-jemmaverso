@@ -34,6 +34,8 @@ function saveStorage(key, value) {
 
     );
 
+    if (typeof window.onStorageSaved === "function") window.onStorageSaved(key, value);
+
 }
 
 /* ===========================
