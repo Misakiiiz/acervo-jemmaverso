@@ -35,16 +35,17 @@ function renderAod(){
 }
 const shipIntros = {
     "Wenclair": { description: "ship.wenclair", characters: [["Wednesday Addams", "character-wednesday"], ["Enid Sinclair", "character-enid"]] },
-    "SweetCC": { description: "ship.sweetcc", characters: [["Cairo Sweet", "character-cairo"], ["CC Walker", "character-cc"]] },
-    "PipTara": { description: "ship.piptara", characters: [["Pippa Fitz-Amobi", "character-pip"], ["Tara Carpenter", "character-tara"]] },
-    "PipWed": { description: "ship.pipwed", characters: [["Pippa Fitz-Amobi", "character-pip"], ["Wednesday Addams", "character-wednesday"]] },
-    "PipVada": { description: "ship.pipvada", characters: [["Pippa Fitz-Amobi", "character-pip"], ["Vada Cavell", "character-vada"]] },
+    "SweetCC": { description: "ship.sweetcc", characters: [["Cairo Sweet", "character-cairo"], ["CC Walker", "character-cc-walker"]] },
+    "PipTara": { description: "ship.piptara", characters: [["Pippa Fitz-Amobi", "character-pippa-fitz-amobi"], ["Tara Carpenter", "character-tara"]] },
+    "PipWed": { description: "ship.pipwed", characters: [["Pippa Fitz-Amobi", "character-pippa-fitz-amobi"], ["Wednesday Addams", "character-wednesday"]] },
+    "PipVada": { description: "ship.pipvada", characters: [["Pippa Fitz-Amobi", "character-pippa-fitz-amobi"], ["Vada Cavell", "character-vada"]] },
     "Jemmaverse": { description: "ship.jemmaverse", characters: [["Wednesday Addams", "character-wednesday"], ["Enid Sinclair", "character-enid"]] },
     "EnidCairo": { description: "ship.enidcairo", characters: [["Enid Sinclair", "character-enid"], ["Cairo Sweet", "character-cairo"]] },
-    "Animobi": { description: "ship.animobi", characters: [["Pippa Fitz-Amobi", "character-pip"], ["Anima Melinoe", "character-anima"]] },
-    "Wenclair/SweetCC": { description: "ship.wenclairSweetcc", characters: [["Wednesday Addams", "character-wednesday"], ["Enid Sinclair", "character-enid"], ["Cairo Sweet", "character-cairo"], ["CC Walker", "character-cc"]] },
+    "Animobi": { description: "ship.animobi", characters: [["Pippa Fitz-Amobi", "character-pippa-fitz-amobi"], ["Anima", "character-anima"]] },
+    "PipRaviTara": { description: "ship.pipravitara", characters: [["Pippa Fitz-Amobi", "character-pippa-fitz-amobi"], ["Ravi Singh"], ["Tara Carpenter", "character-tara"]] },
+    "Wenclair/SweetCC": { description: "ship.wenclairSweetcc", characters: [["Wednesday Addams", "character-wednesday"], ["Enid Sinclair", "character-enid"], ["Cairo Sweet", "character-cairo"], ["CC Walker", "character-cc-walker"]] },
     "Tara & Natalie": { description: "ship.taranatalie", characters: [["Tara Carpenter", "character-tara"], ["Natalie", "character-natalie"]] },
-    "PipKiki": { description: "ship.pipkiki", characters: [["Pippa Fitz-Amobi", "character-pip"], ["Kiki", "character-kiki"]] }
+    "PipKiki": { description: "ship.pipkiki", characters: [["Pippa Fitz-Amobi", "character-pippa-fitz-amobi"], ["Kiki", "character-kiki"]] }
 };
 function renderShipIntro(){
     const box = $("shipIntro"), ship = document.getElementById("fandom").value, intro = shipIntros[ship];
@@ -52,7 +53,7 @@ function renderShipIntro(){
     if (!ship) { box.innerHTML = ""; return; }
     const description = intro ? t(intro.description) : t("ship.generic");
     const characters = intro ? intro.characters : [];
-    box.innerHTML = `<span class="ship-intro-label">${esc(ship)}</span><p>${description}</p>${characters.length ? `<div class="ship-intro-characters">${characters.map(([name, id]) => `<a href="personagens/personagens.html#${id}">${esc(name)}</a>`).join("")}</div>` : ""}`;
+    box.innerHTML = `<span class="ship-intro-label">${esc(ship)}</span><p>${description}</p>${characters.length ? `<div class="ship-intro-characters">${characters.map(([name, id]) => id ? `<a href="personagens/personagens.html#${id}">${esc(name)}</a>` : `<span>${esc(name)}</span>`).join("")}</div>` : ""}`;
 }
 document.getElementById("fandom").addEventListener("change", renderShipIntro);
 document.getElementById("clearFilters").addEventListener("click", renderShipIntro);

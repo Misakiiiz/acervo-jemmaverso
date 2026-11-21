@@ -743,10 +743,10 @@ const SYNOPSIS_TRANSLATIONS = {
     "it": "Una serie di omicidi mette in allerta la città e la detective Enid Sinclair viene incaricata dell'indagine più importante della sua carriera. Ma quando Wednesday Addams appare come consulente nel caso, Enid si rende conto che alcuni fantasmi del passato possono essere difficili da affrontare quanto l'assassino stesso."
   },
   "81": {
-    "en": "After a body was found, Detective Pippa Fitz-Amobi was assigned to investigate the death of luxury brand owner Anima Melinoe. All the evidence points to a simple resolution, but Pip's instinct tells him something is very wrong.",
-    "es": "Después de que se encontró un cuerpo, se asignó a la detective Pippa Fitz-Amobi para investigar la muerte de la propietaria de la marca de lujo Anima Melinoe. Todas las pruebas apuntan a una solución sencilla, pero el instinto de Pip le dice que algo anda muy mal.",
-    "fr": "Après la découverte d'un corps, la détective Pippa Fitz-Amobi a été chargée d'enquêter sur la mort de la propriétaire de la marque de luxe Anima Melinoe. Toutes les preuves suggèrent une solution simple, mais l'instinct de Pip lui dit que quelque chose ne va vraiment pas.",
-    "it": "Dopo il ritrovamento di un cadavere, la detective Pippa Fitz-Amobi è stata incaricata di indagare sulla morte della proprietaria del marchio di lusso Anima Melinoe. Tutte le prove portano a una soluzione semplice, ma l'istinto di Pip gli dice che qualcosa non va."
+    "en": "After a body was found, Detective Pippa Fitz-Amobi was assigned to investigate the death of luxury brand owner Anima. All the evidence points to a simple resolution, but Pip's instinct tells her something is very wrong.",
+    "es": "Después de que se encontró un cuerpo, se asignó a la detective Pippa Fitz-Amobi para investigar la muerte de la propietaria de la marca de lujo Anima. Todas las pruebas apuntan a una solución sencilla, pero el instinto de Pip le dice que algo anda muy mal.",
+    "fr": "Après la découverte d'un corps, la détective Pippa Fitz-Amobi a été chargée d'enquêter sur la mort de la propriétaire de la marque de luxe Anima. Toutes les preuves suggèrent une solution simple, mais l'instinct de Pip lui dit que quelque chose ne va vraiment pas.",
+    "it": "Dopo il ritrovamento di un cadavere, la detective Pippa Fitz-Amobi è stata incaricata di indagare sulla morte della proprietaria del marchio di lusso Anima. Tutte le prove portano a una soluzione semplice, ma l'istinto di Pip le dice che qualcosa non va."
   },
   "82": {
     "en": "Enid and Wednesday are senior students who haven't gotten along forever, but what they don't know is that on Twitter, with anonymous personalities, the two have a huge crush on each other.",

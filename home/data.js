@@ -1596,7 +1596,7 @@ const aus = [
   "status": "Não informado",
   "size": "",
   "cover": "",
-  "description": "Após um corpo ser encontrado, a detetive Pippa Fitz-Amobi foi designada para investigar a morte da dona de uma marca de luxo, Anima Melinoe. Todas as evidências apontam para uma resolução simples, mas o instinto de Pip diz que algo está muito errado.",
+  "description": "Após um corpo ser encontrado, a detetive Pippa Fitz-Amobi foi designada para investigar a morte da dona de uma marca de luxo, Anima. Todas as evidências apontam para uma resolução simples, mas o instinto de Pip diz que algo está muito errado.",
   "tags": [],
   "tweet": "2054239268629823864",
   "url": "https://x.com/vampmikooo/status/2054239268629823864"
