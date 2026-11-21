@@ -2542,12 +2542,12 @@ const aus = [
  },
  {
   "id": 151,
-  "title": "Prepare",
+  "title": "Love Triangle",
   "author": {
    "name": "rindiminasdss",
    "display": "@rindiminasdss"
   },
-  "fandom": "Jemmaverse",
+  "fandom": "PipRaviTara",
   "status": "Não informado",
   "size": "Short",
   "cover": "",
