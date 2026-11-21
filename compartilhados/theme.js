@@ -53,7 +53,7 @@ function buildFooter(){
     const footer = document.createElement("footer");
     footer.className = "site-footer";
     const siteBase = THEME_SITE_BASE;
-    footer.innerHTML = `<span>© ${new Date().getFullYear()} JemmaVerso Archive · <span data-i18n="footer.made">feito com ♡ por Raven</span></span>
+    footer.innerHTML = `<span>© ${new Date().getFullYear()} JemmaVerso Archive · <span data-i18n="footer.made">Feito por Raven</span></span>
         <nav><a href="${new URL("index.html", siteBase).href}" data-i18n="common.home">✦ Início</a><a href="${new URL("estatisticas/stats.html", siteBase).href}" data-i18n="archive.stats">✦ Estatísticas</a><a href="${new URL("sobre/sobre.html", siteBase).href}" data-i18n="archive.about">✦ Sobre o acervo</a><a href="${new URL("acervo-fanfics/fanfics.html", siteBase).href}" data-i18n="archive.fanfics">✦ Acervo de fanfics</a><a href="${new URL("personagens/personagens.html", siteBase).href}" data-i18n="archive.characters">✦ Conheça os personagens</a><a href="${new URL("sorteador/sorteador.html", siteBase).href}" data-i18n="archive.shipper">✦ Sorteador de plots</a><a href="${new URL("agradecimentos/agradecimentos.html", siteBase).href}" data-i18n="archive.thanks">✦ Agradecimentos</a></nav>`;
     (document.querySelector("main.content") || document.body).appendChild(footer);
 }
