@@ -40,6 +40,7 @@
         <div class="pf-spotify" id="vSpotify" hidden></div>
         <h2 class="pf-h2">✦ Minhas 3 AUs favoritas</h2>
         <div class="pf-podium" id="vAus"></div>
+        <div id="vLists"></div>
         <div class="pf-stats">
           <div class="pf-stat"><b id="sFav">0</b><span>favoritas</span></div>
           <div class="pf-stat"><b id="sRead">0</b><span>lidas</span></div>
@@ -79,7 +80,14 @@
         <label class="pf-onlycloud" for="slug">Nome de usuário (vira o link do perfil) <span class="pf-count" id="slugCount"></span></label>
         <input class="pf-onlycloud" id="slug" type="text" maxlength="20" placeholder="ex.: raven_wenclair" autocomplete="off">
         <label class="pf-check pf-onlycloud"><input id="pub" type="checkbox"> Tornar meu perfil público (qualquer pessoa com o link pode ver)</label>
-        <p class="pf-hint pf-onlycloud">Fica visível: nome, bio, tag, sobre mim, cores, fundo, música, foto, banner, ship, personagem, @ do X e as 3 AUs. <b>Nunca</b> aparecem: e-mail, favoritos, notas e status de leitura.</p>
+        <p class="pf-hint pf-onlycloud">Fica visível: nome, bio, tag, sobre mim, cores, fundo, música, foto, banner, ship, personagem, @ do X e as 3 AUs. <b>Nunca</b> aparecem: e-mail, favoritos, notas e status de leitura (exceto as listas que você marcar abaixo).</p>
+        <div class="pf-onlycloud">
+          <label>Mostrar no perfil público (opcional)</label>
+          <label class="pf-check"><input id="shQ" type="checkbox"> Quero ler</label>
+          <label class="pf-check"><input id="shL" type="checkbox"> Lendo</label>
+          <label class="pf-check"><input id="shD" type="checkbox"> Concluídas</label>
+          <p class="pf-hint">Aparecem só os títulos dessas listas e elas se atualizam sozinhas quando você abre o seu perfil. Notas e favoritos continuam privados.</p>
+        </div>
         <label for="auSearch">Suas 3 AUs favoritas <span class="pf-count" id="auCount"></span></label>
         <div class="pf-sel" id="auSel"></div>
         <input id="auSearch" type="text" placeholder="Buscar AU por título ou autor…" autocomplete="off">
@@ -129,6 +137,12 @@
   const idbLoad = async () => { const d = await idb(), out = {}; return new Promise((ok, no) => { const rq = d.transaction("m").objectStore("m").openCursor(); rq.onsuccess = () => { const c = rq.result; if (c) { out[c.key] = URL.createObjectURL(c.value); c.continue(); } else ok(out); }; rq.onerror = () => no(rq.error); }); };
   const local = k => { try { return JSON.parse(localStorage.getItem(k)) || {}; } catch (e) { return {}; } };
 
+  const LISTS = [["quero-ler", "shQ"], ["lendo", "shL"], ["lido", "shD"]];
+  function snapshot(keys) {
+    const st = local("wenclair_status"), tg = local("wenclair_tags"), out = {};
+    keys.forEach(k => out[k] = AUS.filter(a => k === "quero-ler" ? (tg[a.id] || []).includes("quero-ler") : st[a.id] === k).map(a => a.id));
+    return out;
+  }
   const savedColors = () => profile.theme_colors || (profile.theme_color ? { accent: profile.theme_color } : {});
 
   /* ---------- desenhar ---------- */
@@ -155,6 +169,7 @@
     if (profile.fav_ship) tag("♥\uFE0E Ship:", profile.fav_ship);
     if (profile.fav_character) tag("★ Personagem:", profile.fav_character);
     tag("◆ Desde", new Date(user.created_at).toLocaleDateString("pt-BR", { month: "long", year: "numeric" }));
+    jvFx.lists($("vLists"), profile.shared_lists, byId);
     jvFx.badge($("vBadge"), profile.badge_text, profile.badge_author);
     $("vAbout").textContent = profile.about || ""; jvFx.spotify($("vSpotify"), profile.spotify);
     const box = $("vAus"); box.textContent = "";
@@ -215,6 +230,7 @@
     $("xh").value = profile.x_handle ? "@" + profile.x_handle : "";
     $("badge").value = profile.badge_text || ""; $("badgeAu").value = profile.badge_author ? "@" + profile.badge_author : "";
     $("about").value = profile.about || ""; $("spot").value = profile.spotify ? "https://open.spotify.com/" + profile.spotify : "";
+    LISTS.forEach(([k, id]) => $(id).checked = !!(profile.shared_lists && Array.isArray(profile.shared_lists[k])));
     colors = { ...savedColors() }; paintColors();
     $("slug").value = profile.slug || ""; $("pub").checked = !!profile.is_public;
     favAus = (profile.fav_aus || []).filter(byId); msg("");
@@ -254,6 +270,7 @@
     const slug = LOCAL ? "" : $("slug").value.trim().toLowerCase(), pub = LOCAL ? false : $("pub").checked;
     if (slug && !/^[a-z0-9_]{3,20}$/.test(slug)) return msg("Usuário: 3 a 20 caracteres, só letras minúsculas, números e _.", "err");
     if (pub && !slug) return msg("Escolha um nome de usuário para tornar o perfil público.", "err");
+    const listKeys = LISTS.filter(([, id]) => $(id).checked).map(([k]) => k);
     const spRaw = $("spot").value.trim(), spId = jvFx.spotifyId(spRaw);
     if (spRaw && !spId) return msg("Link do Spotify inválido. Copie o link em Compartilhar > Copiar link.", "err");
     $("save").disabled = true; msg("Salvando…");
@@ -263,7 +280,8 @@
         fav_aus: favAus.slice(0, 3), slug: slug || null, is_public: pub, avatar_path: profile.avatar_path || null, banner_path: profile.banner_path || null,
         about_path: profile.about_path || null, bg_path: profile.bg_path || null, about: $("about").value.trim() || null,
         badge_text: $("badge").value.trim() || null, badge_author: $("badgeAu").value.trim().replace(/^@/, "") || null,
-        theme_colors: Object.keys(colors).length ? colors : null, theme_color: colors.accent || null, spotify: spId || null };
+        theme_colors: Object.keys(colors).length ? colors : null, theme_color: colors.accent || null, spotify: spId || null,
+        shared_lists: !LOCAL && listKeys.length ? snapshot(listKeys) : null };
       for (const k of Object.keys(pending)) {
         const q = pending[k], col = k + "_path"; if (!q) continue;
         if (q.remove) { if (LOCAL) { await idbSet(k, null); delete localUrls[k]; } else if (row[col]) A.client.storage.from(BUCKET).remove([row[col]]); row[col] = null; }
@@ -290,6 +308,13 @@
       const { data, error } = await A.client.from("profiles").select("*").maybeSingle();
       if (error) console.error(error);
       profile = data || {};
+    }
+    if (!LOCAL && profile.shared_lists) {   // mantém as listas públicas em dia com o que está salvo neste aparelho
+      const snap = snapshot(Object.keys(profile.shared_lists));
+      if (JSON.stringify(snap) !== JSON.stringify(profile.shared_lists)) {
+        profile.shared_lists = snap;
+        A.client.from("profiles").update({ shared_lists: snap }).eq("user_id", user.id).then(r => { if (r.error) console.error(r.error); });
+      }
     }
     const names = [...new Set(AUS.map(a => a.author && a.author.display).filter(Boolean).map(n => n.replace(/^@/, "")))];
     $("authorList").append(...names.map(n => el("option", { value: "@" + n })));

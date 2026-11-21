@@ -403,7 +403,7 @@ function renderFavs() {
             return val[id] && localizedValue(category, val[id]);
         }).filter(Boolean).map(esc).join(" · ");
         return `<article class="fav-card" data-id="${fav.id}">
-            <div><h3>${ship}</h3><p>${summary}</p>${val.music ? `<p class="fav-song">🎧 ${esc(val.music.title)} — ${esc(val.music.artist)}</p>` : ""}</div>
+            <div><h3>${ship}</h3><p>${summary}</p>${val.music ? `<p class="fav-song">♪ ${esc(val.music.title)} — ${esc(val.music.artist)}</p>` : ""}</div>
             <div class="fav-buttons">
                 <button class="btn ghost" data-act="image" type="button">${esc(t("shipper.favorites.image"))}</button>
                 <button class="btn ghost" data-act="remove" type="button" aria-label="${esc(t("shipper.favorites.remove"))}" title="${esc(t("shipper.favorites.remove"))}">✕</button>
@@ -456,8 +456,8 @@ function render() {
         return `<article class="plot-card${locked ? " locked" : ""}${category.type ? " wide" : ""}" data-cat="${category.id}">
                 <header><h2>${category.icon} ${esc(label)}</h2>
             <span class="plot-card-buttons">
-                    <button type="button" data-act="roll" title="${esc(rollLabel)}" aria-label="${esc(rollLabel)}: ${esc(label)}">🎲</button>
-                    <button type="button" data-act="lock" aria-pressed="${locked}" title="${esc(lockLabel)}" aria-label="${esc(lockLabel)}">${locked ? "🔒" : "🔓"}</button>
+                    <button type="button" data-act="roll" title="${esc(rollLabel)}" aria-label="${esc(rollLabel)}: ${esc(label)}">⚄</button>
+                    <button type="button" data-act="lock" aria-pressed="${locked}" title="${esc(lockLabel)}" aria-label="${esc(lockLabel)}">${locked ? "◆" : "◇"}</button>
             </span></header>
             ${value ? cardBody(category, value) : ""}</article>`;
     }).join("");

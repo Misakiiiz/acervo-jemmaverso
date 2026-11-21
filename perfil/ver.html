@@ -29,6 +29,7 @@
       <div class="pf-spotify" id="vSpotify" hidden></div>
       <h2 class="pf-h2">✦ AUs favoritas</h2>
       <div class="pf-podium" id="vAus"></div>
+      <div id="vLists"></div>
       <a class="pf-btn main pf-cta" href="../login/login.html">Criar meu perfil ✦</a>
     </div>
   </section>
@@ -75,6 +76,7 @@
     list.forEach((a, i) => $("vAus").append(el("a", { className: "pf-au", href: a.url, target: "_blank", rel: "noopener noreferrer" }, [
       el("div", { className: "m", textContent: ["①", "②", "③"][i] }), el("h3", { textContent: a.title }),
       el("small", { textContent: (a.author && a.author.display || "") + " · " + a.fandom })])));
+    jvFx.lists($("vLists"), p.shared_lists, id => (typeof aus !== "undefined" ? aus : []).find(a => a.id === id));
     $("loading").hidden = true; $("card").hidden = false;
   });
 })();

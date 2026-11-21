@@ -236,3 +236,6 @@ button,.btn,.home-link,.archive-link,.about-link{min-height:44px}
  .sidebar .side-filters{display:flex;flex-direction:column}
  .sidebar .sidebar-links{grid-template-columns:1fr}
 }
+
+.inactive-note{margin:0 0 14px;padding:10px 14px;border:1px solid #fda29b;border-radius:12px;background:#fee4e2;color:#912018;font-size:13px;line-height:1.45}
+.inactive-note a{color:#7a271a;font-weight:600;text-decoration:underline}

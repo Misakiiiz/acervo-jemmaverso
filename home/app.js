@@ -24,6 +24,11 @@ function showAu(au){
     const a = $("modalAuthor");
     a.innerHTML = authorLinks.join(" · ");
     a.removeAttribute("href");
+    const inactive = $("modalInactive");
+    inactive.hidden = !au.inactiveAuthor;
+    inactive.innerHTML = au.inactiveAuthor
+        ? `Conta não mais ativa. Siga este autor em <a href="https://x.com/${encodeURIComponent(au.inactiveAuthor)}" target="_blank" rel="noopener noreferrer">@${esc(au.inactiveAuthor)}</a>`
+        : "";
     $("mShip").textContent = au.fandom;
     $("mStatus").textContent = translateStatus(au.status);
     $("mSize").textContent = translateSize(au.size || "Não informado");
@@ -73,6 +78,9 @@ function updateSeriesNavigation(au){
     const links = $("modalSeriesLinks");
     links.replaceChildren();
     modalSeriesNavigation.hidden = seriesAus.length < 2;
+    const seriesLabel = modalSeriesNavigation.querySelector("p");
+    if (au.series && seriesLabel) seriesLabel.textContent = `Parte da saga "${au.series}"`;
+    modalSeriesNavigation.setAttribute("aria-label", au.series ? `Saga ${au.series}` : "");
     if (seriesAus.length < 2) return;
 
     seriesAus.forEach(seriesAu => {

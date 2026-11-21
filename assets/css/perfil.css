@@ -81,3 +81,7 @@ body.pf-hasbg .pf-top a,body.pf-hasbg .pf-link{color:#fff;text-shadow:0 1px 4px 
 .pf-sitem:last-child{border-bottom:0}.pf-sitem:hover{background:var(--card)}
 .pf-sitem img,.pf-sitem i{width:34px;height:34px;border-radius:50%;object-fit:cover;flex:none;display:grid;place-items:center;background:var(--card);color:var(--accent);font:600 1rem Cinzel,serif;font-style:normal}
 .pf-sitem small{color:var(--muted)}.pf-snote{padding:.7rem .9rem;color:var(--muted);font-size:.85rem}
+.pf-list{border:1px solid var(--line);border-radius:12px;background:var(--card);margin-top:8px;padding:2px 14px}
+.pf-list summary{cursor:pointer;padding:10px 0;font-weight:500;color:var(--accent)}
+.pf-li{display:block;padding:7px 0;border-top:1px solid var(--line);color:var(--text);text-decoration:none;font-size:.88rem;word-break:break-word}
+.pf-li small{color:var(--muted)}.pf-li:hover{color:var(--accent)}

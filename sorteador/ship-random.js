@@ -17,8 +17,8 @@
         dialog.innerHTML = `<h2 id="shipDialogTitle">${t("characters.shipTitle")}</h2>
             <div class="ship-pair">${person(current.a)}<span class="ship-x" aria-hidden="true">×</span>${person(current.b)}</div>
             <div class="ship-dialog-buttons">
-                <button class="btn" type="button" data-act="again">🎲 ${t("characters.shipAgain")}</button>
-                <a class="btn ghost" href="../sorteador/sorteador.html?ship=${current.a.id},${current.b.id}">✨ ${t("characters.shipPlot")}</a>
+                <button class="btn" type="button" data-act="again">⚄ ${t("characters.shipAgain")}</button>
+                <a class="btn ghost" href="../sorteador/sorteador.html?ship=${current.a.id},${current.b.id}">✦ ${t("characters.shipPlot")}</a>
                 <button class="btn ghost" type="button" data-act="close">${t("characters.shipClose")}</button>
             </div>
             <p class="ship-note">${t("characters.shipNote")}</p>`;

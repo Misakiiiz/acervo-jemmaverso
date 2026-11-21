@@ -50,7 +50,7 @@ const PLOT_CATEGORIES = [
         "Uma delas descobre que a outra já sabia de tudo.", "Elas precisam trabalhar juntas contra o tempo.", "Uma mensagem é enviada para todos por engano.",
         "Uma delas escolhe se sacrificar pela outra.", "A outra descobre que a única saída é deixá-la ir."
     ] },
-    { id: "trope", label: "Trope secundário", icon: "⚔", items: [
+    { id: "trope", label: "Trope secundário", icon: "⚔︎", items: [
         "Forced Proximity", "Only One Bed", "Secret Identity", "Marriage of Convenience", "Grumpy x Sunshine", "Touch Her and Die", "Found Family",
         "Secret Letters", "Time Loop", "Bodyguard x Princess", "Roommates", "Academic Rivals", "Unlikely Allies", "Hurt/Comfort", "Jealousy",
         "Enemies with a Common Goal", "Mistaken Identity", "Stuck Together", "Matchmaker Friends", "Caught in the Rain", "Love Triangle", "Amnesia",
@@ -60,7 +60,7 @@ const PLOT_CATEGORIES = [
         "Rival Becomes Ally", "Lie Gets Out of Control", "Public Declaration", "Letters in a Bottle", "Wrong Place, Right Time", "Rescue Scene",
         "Locked Out Together", "Matching Scars", "Hidden Talent Revealed", "Haunted Together", "Cursed Together", "Training Montage"
     ] },
-    { id: "profession", label: "Profissões e ocupações", icon: "⚖", items: [
+    { id: "profession", label: "Profissões e ocupações", icon: "⚖︎", items: [
         "Detetive e jornalista", "Médica e paciente", "Atriz e diretora", "Advogada e promotora", "Professora e escritora", "Cantora e compositora",
         "Chef e crítica gastronômica", "Princesa e guarda real", "Arqueóloga e historiadora", "Fotógrafa e modelo", "Veterinária e dona de abrigo",
         "Duas universitárias", "Duas herdeiras rivais", "Duas vizinhas", "Duas melhores amigas de infância", "Colegas de quarto", "Duas sobreviventes",
@@ -82,14 +82,14 @@ const PLOT_CATEGORIES = [
         "Uma delas tem um irmão ou irmã que as aproxima sem querer.", "Um crime cometido na cidade as envolve.", "Um convite de casamento chega com um nome apagado.",
         "Uma delas descobre um talento que não sabia que tinha.", "Uma delas é contratada para vigiar a outra.", "Uma delas aparece no lugar errado na hora certa."
     ] },
-    { id: "tone", label: "Tom da história", icon: "𓂃🖋", items: [
+    { id: "tone", label: "Tom da história", icon: "𓂃✎", items: [
         "Comédia romântica", "Drama psicológico", "Romance melancólico", "Suspense romântico", "Mistério", "Fantasia sombria", "Romance adolescente",
         "Tragédia", "Slice of Life", "Aventura", "Romance gótico", "Terror leve", "Sátira", "Drama de época", "Fofo e confortável (comfort fic)",
         "Angst pesado", "Noir", "Comédia de erros", "Thriller psicológico", "Romance de verão", "Realismo mágico", "Drama familiar", "Road movie",
         "Fantasia leve", "Ficção científica", "Terror psicológico", "Western", "Melodrama", "Musical", "Coming of age", "Estudo de personagem", "Escapista e açucarado"
     ] },
     { id: "object", label: "Objeto importante", icon: ".ᐟ.ᐟ", items: OBJECTS.flatMap(object => OBJECT_SUFFIX.map(suffix => object + suffix)) },
-    { id: "ending", label: "Final obrigatório", icon: "📽", items: [
+    { id: "ending", label: "Final obrigatório", icon: "▶", items: [
         "Happy Ending", "Tragic Ending", "Bittersweet Ending", "Open Ending", "They Never Meet Again", "Reconciliation", "Sacrifice", "Plot Twist",
         "Full Circle", "A promessa de um reencontro", "Epílogo anos depois", "Casamento", "Uma carta de despedida", "Um beijo na chuva (ou no sol)",
         "Elas se separam, mas se reencontram em outra vida", "Um final em que só uma delas sobrevive", "Final aberto com a última frase cortada", "Final em que tudo era um sonho",
@@ -116,7 +116,7 @@ const PLOT_CATEGORIES = [
         "No telhado de um prédio", "Num campo de futebol", "Em um museu vazio", "Na fila de um show", "Numa entrevista de emprego", "Num cinema com a sessão quase vazia",
         "Em uma noite de karaokê", "Numa cidade onde nenhuma das duas mora", "Numa padaria às 5 da manhã", "Num aplicativo de mensagens, sem se verem"
     ] },
-    { id: "format", label: "Formato", icon: "🕮", items: [
+    { id: "format", label: "Formato", icon: "▤", items: [
         "One-shot", "Fanfic de vários capítulos", "Drabble (100 palavras)", "Narrada em cartas", "Em formato de mensagens/chat", "Narrada em primeira pessoa",
         "Dois pontos de vista alternados", "Narrada fora de ordem cronológica", "Roteiro/script", "Diário", "Capítulo único com cenas curtas", "Fanfic em 5 atos",
         "Série de drabbles", "Entrevistas e reportagens", "Fanfic em formato de playlist (uma cena por música)", "Narrada em segunda pessoa", "Contada em flashbacks", "Fic de 24 horas, hora a hora"
@@ -131,7 +131,7 @@ const PLOT_CATEGORIES = [
         "Uma delas foi contratada para se aproximar da outra.", "Uma delas é a última pessoa que viu alguém desaparecido.", "Uma delas não é quem parece ser por causa de uma maldição.",
         "As duas escondem o mesmo segredo uma da outra.", "Uma delas escreveu uma música sobre a outra e nunca mostrou."
     ] },
-    { id: "obstacle", label: "Obstáculo", icon: "⏱", items: [
+    { id: "obstacle", label: "Obstáculo", icon: "◷", items: [
         "As famílias das duas são inimigas.", "Uma delas vai se mudar em breve.", "Elas moram em países diferentes.", "Uma delas está noiva de outra pessoa.",
         "Fofocas se espalham pela escola ou cidade.", "Há uma cláusula que proíbe as duas de se envolverem.", "O medo de se machucar de novo.", "Ciúmes de uma pessoa do passado.",
         "A fama e os paparazzi.", "Uma maldição que separa quem se ama.", "Uma guerra entre os reinos delas.", "As carreiras exigem que sigam caminhos diferentes.",
@@ -140,7 +140,7 @@ const PLOT_CATEGORIES = [
         "Uma delas trabalha para o inimigo da outra.", "O medo de estragar a amizade.", "O horário de uma é o oposto da outra.", "Uma delas é a pessoa mais difícil de convencer do mundo.",
         "A distância entre cidades e a falta de dinheiro para viajar.", "Uma delas está se escondendo da lei.", "Uma tradição que exige um casamento arranjado.", "Alguém fotografou as duas e ameaça publicar."
     ] },
-    { id: "season", label: "Época do ano", icon: "𓂃⛱", items: [
+    { id: "season", label: "Época do ano", icon: "𓂃☂︎", items: [
         "Véspera de Natal", "Carnaval", "Primeiro dia do verão", "Halloween", "Aniversário de uma delas", "Semana de formatura", "Dia dos Namorados", "Virada do Ano Novo",
         "Festa junina", "Outono de folhas alaranjadas", "Uma semana inteira de chuva", "Noite de eclipse", "Semana de provas finais", "Páscoa", "Temporada de festivais",
         "Último dia de aula", "Dia da mudança", "Noite de lua cheia", "Inverno rigoroso", "Primavera com flores por todo lado", "Madrugada de um sábado", "Feriado prolongado",

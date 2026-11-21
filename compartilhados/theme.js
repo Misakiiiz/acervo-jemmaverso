@@ -5,7 +5,7 @@ const ACTIVE_SEASON = "";
 
 const THEME_KEY = "jv_theme";
 const THEMES = ["padrao", "padrao-escuro", "padrao-claro", "wenclair", "piptara", "pipvada", "sweetcc", "addams", "klara"];
-const DECOR = { natal: ["❄","❅","✦"], halloween: ["🎃","🦇","🕸"], pascoa: ["🐣","🥚","🌷"], carnaval: ["🎉","🎭","✦"], anonovo: ["✦","✧","★"], muertos: ["💀","🕯","☠️"] };
+const DECOR = { natal: ["❄","❅","✦"], halloween: ["☾","✧","✦"], pascoa: ["✿","❀","✦"], carnaval: ["❖","★","✦"], anonovo: ["✦","✧","★"], muertos: ["☾","✧","☠︎"] };
 const AVAILABLE_THEMES = THEMES.concat(DECOR[ACTIVE_SEASON] ? [ACTIVE_SEASON] : []);
 function currentTheme(){ let s = ""; try { s = localStorage.getItem(THEME_KEY); } catch (e) {} return AVAILABLE_THEMES.includes(s) ? s : (DECOR[ACTIVE_SEASON] ? ACTIVE_SEASON : "padrao"); }
 document.documentElement.dataset.theme = currentTheme();

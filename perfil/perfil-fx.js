@@ -73,6 +73,21 @@
       inp.addEventListener("keydown", e => { if (e.key === "Enter" && inp.value.length >= 3) go(inp.value); });
       document.addEventListener("click", e => { if (e.target !== inp && !box.contains(e.target)) box.hidden = true; });
     },
+    lists(box, shared, byId) {
+      box.textContent = "";
+      [["quero-ler", "Quero ler"], ["lendo", "Lendo"], ["lido", "Concluídas"]].forEach(([k, label]) => {
+        if (!shared || !Array.isArray(shared[k])) return;
+        const items = shared[k].map(byId).filter(Boolean);
+        const d = document.createElement("details"); d.className = "pf-list";
+        const s = document.createElement("summary"); s.textContent = label + " (" + items.length + ")"; d.append(s);
+        if (!items.length) d.append(Object.assign(document.createElement("p"), { className: "pf-empty", textContent: "Nada por aqui ainda." }));
+        items.forEach(a => {
+          const l = document.createElement("a"); l.className = "pf-li"; l.href = a.url; l.target = "_blank"; l.rel = "noopener noreferrer"; l.textContent = a.title;
+          const sm = document.createElement("small"); sm.textContent = " · " + ((a.author && a.author.display) || ""); l.append(sm); d.append(l);
+        });
+        box.append(d);
+      });
+    },
     about(box, img, text, src) {
       box.hidden = !(text || src); img.hidden = !src; if (src) img.src = src;
     }

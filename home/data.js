@@ -1007,7 +1007,7 @@ const aus = [
  },
  {
   "id": 142,
-  "title": "actually romantic | 🔞 mini au #wenclair",
+  "title": "actually romantic | +18 mini au #wenclair",
   "author": {
    "name": "vampzjenna",
    "display": "@vampzjenna"
@@ -2405,6 +2405,258 @@ const aus = [
   "tags": ["Não informado"],
   "tweet": "2091768545843548241",
   "url": "https://x.com/wencla1rx/status/2091768545843548241"
+ },
+ {
+  "id": 144,
+  "title": "Script Love",
+  "author": {
+   "name": "dovefair",
+   "display": "@dovefair"
+  },
+  "fandom": "Wenclair",
+  "status": "Não informado",
+  "size": "Não informado",
+  "cover": "",
+  "description": "Enid e Wednesday compartilham uma amizade tão íntima que, para quem observa de fora, é difícil acreditar que sejam apenas amigas. Mas o que acontece quando as duas são escaladas para viver nas telas aquilo que muitos sempre suspeitaram?",
+  "tags": [
+   "Não informado"
+  ],
+  "tweet": "1958870844584632453",
+  "url": "https://x.com/dovefair/status/1958870844584632453"
+ },
+ {
+  "id": 145,
+  "title": "Saint of My Sins",
+  "author": {
+   "name": "lesboclair",
+   "display": "@lesboclair"
+  },
+  "fandom": "Wenclair",
+  "status": "Não informado",
+  "size": "Não informado",
+  "cover": "",
+  "description": "Enid Sinclair se vê atormentada em seus sonhos por uma presença demoníaca que desperta desejos que jamais ousaria confessar. Acreditando ter finalmente se livrado das visitas, encontra a mesma criatura cara a cara, instalada como sua nova vizinha.",
+  "tags": [
+   "Não informado"
+  ],
+  "tweet": "2123488136248414372",
+  "url": "https://x.com/lesboclair/status/2123488136248414372"
+ },
+ {
+  "id": 146,
+  "title": "Filme do Homem-Aranha (mini au)",
+  "author": {
+   "name": "agloveswencl4ir",
+   "display": "@agloveswencl4ir"
+  },
+  "fandom": "SweetCC",
+  "status": "Não informado",
+  "size": "Short",
+  "cover": "",
+  "description": "Mini AU.",
+  "tags": [
+   "Short"
+  ],
+  "tweet": "2122690275101340066",
+  "url": "https://x.com/agloveswencl4ir/status/2122690275101340066"
+ },
+ {
+  "id": 147,
+  "title": "Mamães em crise",
+  "author": {
+   "name": "rindiminasdss",
+   "display": "@rindiminasdss"
+  },
+  "fandom": "SweetCC",
+  "status": "Não informado",
+  "size": "Short",
+  "cover": "",
+  "description": "Mini AU. Parte 1.",
+  "tags": [
+   "Short"
+  ],
+  "tweet": "1930783197589082509",
+  "url": "https://x.com/rindiminasdss/status/1930783197589082509",
+  "series": "Mamães em crise",
+  "seriesOrder": 1,
+  "inactiveAuthor": "enidforbrains"
+ },
+ {
+  "id": 148,
+  "title": "Mamães em crise: no longer in crisis",
+  "author": {
+   "name": "rindiminasdss",
+   "display": "@rindiminasdss"
+  },
+  "fandom": "SweetCC",
+  "status": "Não informado",
+  "size": "Short",
+  "cover": "",
+  "description": "Short AU. Parte 2.",
+  "tags": [
+   "Short"
+  ],
+  "tweet": "2055094031584014661",
+  "url": "https://x.com/rindiminasdss/status/2055094031584014661",
+  "series": "Mamães em crise",
+  "seriesOrder": 2,
+  "inactiveAuthor": "enidforbrains"
+ },
+ {
+  "id": 149,
+  "title": "Especial de Halloween (Animobi)",
+  "author": {
+   "name": "rindiminasdss",
+   "display": "@rindiminasdss"
+  },
+  "fandom": "Animobi",
+  "status": "Não informado",
+  "size": "Short",
+  "cover": "",
+  "description": "Após um ano de seu término com Anima, Pip resolve aproveitar o seu Halloween como todos os outros, mas mal ela sabe que sua ex retornará. Porém, é Halloween, o que pode dar errado? Tudo.",
+  "tags": [
+   "Short"
+  ],
+  "tweet": "1984839284440932450",
+  "url": "https://x.com/rindiminasdss/status/1984839284440932450",
+  "inactiveAuthor": "enidforbrains"
+ },
+ {
+  "id": 150,
+  "title": "Véspera de Dia dos Namorados",
+  "author": {
+   "name": "rindiminasdss",
+   "display": "@rindiminasdss"
+  },
+  "fandom": "PipTara",
+  "status": "Não informado",
+  "size": "Short",
+  "cover": "",
+  "description": "Uma criança de seis anos desaparece nas vésperas do Dia dos Namorados. Com a urgência do caso, devido aos riscos associados, Tara e Pip, veteranas da corporação e também ex-namoradas, são chamadas para cobrir o caso.",
+  "tags": [
+   "Short"
+  ],
+  "tweet": "2065580555140264090",
+  "url": "https://x.com/rindiminasdss/status/2065580555140264090",
+  "inactiveAuthor": "enidforbrains"
+ },
+ {
+  "id": 151,
+  "title": "Prepare",
+  "author": {
+   "name": "rindiminasdss",
+   "display": "@rindiminasdss"
+  },
+  "fandom": "Jemmaverse",
+  "status": "Não informado",
+  "size": "Short",
+  "cover": "",
+  "description": "Mini AU.",
+  "tags": [
+   "Short"
+  ],
+  "tweet": "2069089360973095224",
+  "url": "https://x.com/rindiminasdss/status/2069089360973095224",
+  "inactiveAuthor": "enidforbrains"
+ },
+ {
+  "id": 152,
+  "title": "Dama de Companhia",
+  "author": {
+   "name": "rindiminasdss",
+   "display": "@rindiminasdss"
+  },
+  "fandom": "Wenclair",
+  "status": "Não informado",
+  "size": "Short",
+  "cover": "",
+  "description": "Mini AU.",
+  "tags": [
+   "Short"
+  ],
+  "tweet": "1950304164451410227",
+  "url": "https://x.com/rindiminasdss/status/1950304164451410227",
+  "inactiveAuthor": "enidforbrains"
+ },
+ {
+  "id": 153,
+  "title": "Game Night: parte 1",
+  "author": {
+   "name": "rindiminasdss",
+   "display": "@rindiminasdss"
+  },
+  "fandom": "Wenclair",
+  "status": "Não informado",
+  "size": "Short",
+  "cover": "",
+  "description": "Short AU.",
+  "tags": [
+   "Short"
+  ],
+  "tweet": "1958515872726712485",
+  "url": "https://x.com/rindiminasdss/status/1958515872726712485",
+  "series": "Game Night",
+  "seriesOrder": 1,
+  "inactiveAuthor": "enidforbrains"
+ },
+ {
+  "id": 154,
+  "title": "Game Night: parte 2 (+18)",
+  "author": {
+   "name": "rindiminasdss",
+   "display": "@rindiminasdss"
+  },
+  "fandom": "Wenclair",
+  "status": "Não informado",
+  "size": "Short",
+  "cover": "",
+  "description": "Short AU. Parte 2.",
+  "tags": [
+   "Short"
+  ],
+  "tweet": "1961324447190614018",
+  "url": "https://x.com/rindiminasdss/status/1961324447190614018",
+  "series": "Game Night",
+  "seriesOrder": 2,
+  "inactiveAuthor": "enidforbrains"
+ },
+ {
+  "id": 155,
+  "title": "Venda de Órgãos",
+  "author": {
+   "name": "rindiminasdss",
+   "display": "@rindiminasdss"
+  },
+  "fandom": "Wenclair",
+  "status": "Não informado",
+  "size": "Short",
+  "cover": "",
+  "description": "Mini AU.",
+  "tags": [
+   "Short"
+  ],
+  "tweet": "1924452686683951596",
+  "url": "https://x.com/rindiminasdss/status/1924452686683951596",
+  "inactiveAuthor": "enidforbrains"
+ },
+ {
+  "id": 156,
+  "title": "A Diary",
+  "author": {
+   "name": "rindiminasdss",
+   "display": "@rindiminasdss"
+  },
+  "fandom": "Wenclair",
+  "status": "Não informado",
+  "size": "Short",
+  "cover": "",
+  "description": "Mini AU.",
+  "tags": [
+   "Short"
+  ],
+  "tweet": "1933672910167945705",
+  "url": "https://x.com/rindiminasdss/status/1933672910167945705",
+  "inactiveAuthor": "enidforbrains"
  },
 ];
 
