@@ -30,13 +30,15 @@
       <!-- MODO VISUALIZAÇÃO -->
       <div class="pf-view">
         <div class="pf-head">
-          <div><div class="pf-namerow"><h1 id="vName"></h1><a class="pf-badge" id="vBadge" hidden></a></div><a class="pf-handle" id="vHandle" target="_blank" rel="noopener noreferrer" hidden></a></div>
+          <div><div class="pf-namerow"><h1 id="vName"></h1><a class="pf-badge" id="vBadge" hidden></a></div><a class="pf-handle" id="vHandle" target="_blank" rel="noopener noreferrer" hidden></a><br><a class="pf-biolink" id="vLink" target="_blank" rel="noopener noreferrer nofollow ugc" hidden></a></div>
           <button class="pf-btn" id="editBtn" type="button">✎ Editar perfil</button>
         </div>
         <blockquote class="pf-quote" id="vBio" hidden></blockquote>
         <div class="pf-tags" id="vTags"></div>
         <div class="pf-share" id="vShare" hidden><input id="shareUrl" type="text" readonly aria-label="Link do perfil"><button class="pf-btn" id="copyBtn" type="button">Copiar link</button></div>
+        <section id="vIdentBox" hidden><h2 class="pf-h2">✦ Me identifico com:</h2><div class="pf-chips" id="vIdent"></div></section>
         <section class="pf-about" id="vAboutBox" hidden><h2 class="pf-h2">✦ Sobre mim</h2><div class="pf-aboutrow"><img id="aboutImg" alt="" hidden><p id="vAbout"></p></div></section>
+        <section id="vFeatBox" hidden><h2 class="pf-h2">✦ Destaque</h2><div id="vFeat"></div></section>
         <div class="pf-spotify" id="vSpotify" hidden></div>
         <h2 class="pf-h2">✦ Minhas 3 AUs favoritas</h2>
         <div class="pf-podium" id="vAus"></div>
@@ -75,12 +77,19 @@
         <label>Fundo do perfil (imagem ou GIF)</label>
         <div class="pf-media"><button class="pf-btn" id="bgBtn" type="button">▣ Escolher fundo</button><button class="pf-btn" id="bgRm" type="button">Remover fundo</button></div>
         <p class="pf-hint">Com fundo, o card do perfil fica translúcido com blur.</p>
+        <label for="linkUrl">Link no perfil (opcional)</label>
+        <input id="linkUrl" type="text" maxlength="300" inputmode="url" autocapitalize="none" placeholder="https://seusite.com">
+        <label for="linkLabel">Texto do link (opcional) <span class="pf-count" id="linkCount"></span></label>
+        <input id="linkLabel" type="text" maxlength="30" placeholder="Ex.: meu carrd">
+        <label>Destaque: vídeo ou GIF (opcional)</label>
+        <div class="pf-media"><button class="pf-btn" id="mediaBtn" type="button">▣ Escolher vídeo ou GIF</button><button class="pf-btn" id="mediaRm" type="button">Remover destaque</button></div>
+        <p class="pf-hint">Vídeo MP4 ou WebM (até 15 MB) toca sozinho, sem som e em loop. GIF e imagens: até 8 MB.</p>
         <label for="spot">Música do Spotify (opcional)</label>
         <input id="spot" type="text" maxlength="200" placeholder="Cole o link da música, álbum ou playlist">
         <label class="pf-onlycloud" for="slug">Nome de usuário (vira o link do perfil) <span class="pf-count" id="slugCount"></span></label>
         <input class="pf-onlycloud" id="slug" type="text" maxlength="20" placeholder="ex.: raven_wenclair" autocomplete="off">
         <label class="pf-check pf-onlycloud"><input id="pub" type="checkbox"> Tornar meu perfil público (qualquer pessoa com o link pode ver)</label>
-        <p class="pf-hint pf-onlycloud">Fica visível: nome, bio, tag, sobre mim, cores, fundo, música, foto, banner, ship, personagem, @ do X e as 3 AUs. <b>Nunca</b> aparecem: e-mail, favoritos, notas e status de leitura (exceto as listas que você marcar abaixo).</p>
+        <p class="pf-hint pf-onlycloud">Fica visível: nome, bio, tag, link, destaque, sobre mim, cores, fundo, música, foto, banner, ship, personagem, @ do X e as 3 AUs. <b>Nunca</b> aparecem: e-mail, favoritos, notas e status de leitura (exceto as listas que você marcar abaixo).</p>
         <div class="pf-onlycloud">
           <label>Mostrar no perfil público (opcional)</label>
           <label class="pf-check"><input id="shQ" type="checkbox"> Quero ler</label>
@@ -88,12 +97,17 @@
           <label class="pf-check"><input id="shD" type="checkbox"> Concluídas</label>
           <p class="pf-hint">Aparecem só os títulos dessas listas e elas se atualizam sozinhas quando você abre o seu perfil. Notas e favoritos continuam privados.</p>
         </div>
+        <label for="identSearch">Me identifico com <span class="pf-count" id="identCount"></span></label>
+        <div class="pf-sel" id="identSel"></div>
+        <input id="identSearch" type="text" placeholder="Buscar personagem pelo nome…" autocomplete="off">
+        <div class="pf-res" id="identRes" hidden></div>
+        <p class="pf-hint">Até 5 personagens da página “Conheça os personagens”. Digite parte do nome para buscar.</p>
         <label for="auSearch">Suas 3 AUs favoritas <span class="pf-count" id="auCount"></span></label>
         <div class="pf-sel" id="auSel"></div>
         <input id="auSearch" type="text" placeholder="Buscar AU por título ou autor…" autocomplete="off">
         <div class="pf-res" id="auRes" hidden></div>
         <p class="pf-hint pf-localnote" hidden>Modo sem conta: este perfil fica salvo só neste navegador e não tem link público.</p>
-        <p class="pf-hint">Foto e banner aceitam PNG, JPG, WebP e <b>GIF animado</b> (até 8 MB). O banner é cortado para caber, então prefira imagens largas.</p>
+        <p class="pf-hint">Foto e banner aceitam PNG, JPG, WebP e <b>GIF animado</b> (até 8 MB). Ao escolher a foto ou o banner, abre uma ferramenta para recortar e dar zoom antes de salvar.</p>
         <div class="pf-actions">
           <button class="pf-btn main" id="save" type="button">Salvar perfil</button>
           <button class="pf-btn" id="cancel" type="button">Cancelar</button>
@@ -107,21 +121,37 @@
 <input type="file" id="avatarFile" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
 <input type="file" id="bannerFile" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
 <input type="file" id="aboutFile" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
+<input type="file" id="mediaFile" accept="video/mp4,video/webm,image/png,image/jpeg,image/webp,image/gif" hidden>
 <input type="file" id="bgFile" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
 
+<div class="pf-crop" id="crop" hidden role="dialog" aria-modal="true" aria-labelledby="cropTitle">
+  <div class="pf-crop-box">
+    <h3 id="cropTitle">Recortar</h3>
+    <div class="pf-crop-stage" id="cropStage"><img id="cropImg" alt="" draggable="false"></div>
+    <label class="pf-crop-zoom">Zoom <input id="cropZoom" type="range" min="1" max="4" step="0.01" value="1"></label>
+    <p class="pf-hint" id="cropNote"></p>
+    <div class="pf-actions">
+      <button class="pf-btn main" id="cropOk" type="button">Usar recorte</button>
+      <button class="pf-btn" id="cropRaw" type="button" hidden>Usar GIF original</button>
+      <button class="pf-btn" id="cropCancel" type="button">Cancelar</button>
+    </div>
+  </div>
+</div>
 <script>window.JV_NO_WIDGET = true;</script>
 <script src="../home/data.js"></script>
 <script src="../compartilhados/supabase-config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script src="../compartilhados/supabase-sync.js"></script>
+<script src="../personagens/personagens-lista.js"></script>
 <script src="perfil-fx.js"></script>
+<script src="jv-gif.js"></script>
 <script>
 (function(){
   const $ = id => document.getElementById(id);
-  const A = window.jvAuth, BUCKET = "profile-media", MAX = 8 * 1024 * 1024;
-  const EXT = { "image/png": "png", "image/jpeg": "jpg", "image/webp": "webp", "image/gif": "gif" };
+  const A = window.jvAuth, BUCKET = "profile-media", MAX = 8 * 1024 * 1024, MAXV = 15 * 1024 * 1024;
+  const EXT = { "image/png": "png", "image/jpeg": "jpg", "image/webp": "webp", "image/gif": "gif", "video/mp4": "mp4", "video/webm": "webm" };
   const AUS = typeof aus !== "undefined" ? aus : [], byId = id => AUS.find(a => a.id === id);
-  let user, profile = {}, favAus = [], LOCAL = false; const pending = { avatar: null, banner: null, about: null, bg: null };
+  let user, profile = {}, favAus = [], LOCAL = false; const pending = { avatar: null, banner: null, about: null, bg: null, media: null };
   const page = document.querySelector(".pf-page"); let colors = {};
   const msg = (t, c) => { $("msg").textContent = t; $("msg").className = "pf-msg " + (c || ""); };
   const el = (tag, props, kids) => { const n = Object.assign(document.createElement(tag), props || {}); (kids || []).forEach(k => n.append(k)); return n; };
@@ -137,6 +167,45 @@
   const idbLoad = async () => { const d = await idb(), out = {}; return new Promise((ok, no) => { const rq = d.transaction("m").objectStore("m").openCursor(); rq.onsuccess = () => { const c = rq.result; if (c) { out[c.key] = URL.createObjectURL(c.value); c.continue(); } else ok(out); }; rq.onerror = () => no(rq.error); }); };
   const local = k => { try { return JSON.parse(localStorage.getItem(k)) || {}; } catch (e) { return {}; } };
 
+  /* Personagens ("Me identifico com"): busca por nome, sem desenhar a grade com todas as imagens */
+  let CHARS = [], identIds = [], charsLoading = null;
+  const ensureChars = () => CHARS.length ? Promise.resolve(CHARS) : jvFx.characters().then(c => { CHARS = c; return c; });
+  const norm = s => (s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
+  function paintIdent() {
+    const box = $("identSel"); box.textContent = "";
+    identIds.forEach((id, i) => {
+      const c = CHARS.find(x => x.id === id);
+      box.append(el("div", { className: "pf-selitem" }, [c ? c.name : id,
+        el("button", { type: "button", textContent: "✕", ariaLabel: "Remover", onclick: () => { identIds.splice(i, 1); msg(""); paintIdent(); searchIdent(); } })]));
+    });
+    $("identCount").textContent = identIds.length + "/5";
+  }
+
+  async function searchIdent() {
+    const q = norm($("identSearch").value.trim()), res = $("identRes");
+    if (!q) { res.hidden = true; res.textContent = ""; return; }
+    await ensureChars();
+    if (norm($("identSearch").value.trim()) !== q) return;      // a pessoa continuou digitando enquanto carregava
+    res.textContent = "";
+    if (!CHARS.length) res.append(el("p", { className: "pf-hint", textContent: "Não consegui carregar a lista de personagens. Recarregue a página (Ctrl+F5)." }));
+    else if (identIds.length >= 5) res.append(el("p", { className: "pf-hint", textContent: "Máximo de 5 personagens. Remova um para adicionar outro." }));
+    else {
+      const rank = c => norm(c.name).startsWith(q) ? 0 : 1;
+      const hits = CHARS.filter(c => !identIds.includes(c.id) && norm(c.name + " " + c.id).includes(q))
+        .sort((a, b) => rank(a) - rank(b) || a.name.localeCompare(b.name)).slice(0, 8);
+      hits.forEach(c => res.append(el("button", { type: "button", textContent: c.name,
+        onclick: () => { identIds.push(c.id); $("identSearch").value = ""; res.hidden = true; msg(""); paintIdent(); } })));
+      if (!hits.length) res.append(el("p", { className: "pf-hint", textContent: "Nenhum personagem encontrado." }));
+    }
+    res.hidden = false;
+  }
+
+  function paintIdentView() {
+    const ids = profile.identifies || [];
+    if (ids.length && !CHARS.length) { ensureChars().then(paintIdentView); return; }   // só baixa a lista se houver o que mostrar
+    jvFx.idents($("vIdentBox"), $("vIdent"), ids, CHARS);
+  }
   const LISTS = [["quero-ler", "shQ"], ["lendo", "shL"], ["lido", "shD"]];
   function snapshot(keys) {
     const st = local("wenclair_status"), tg = local("wenclair_tags"), out = {};
@@ -153,6 +222,7 @@
     const cur = k => { const q = pending[k]; return q ? (q.remove ? "" : q.preview) : pubUrl(profile[k + "_path"]); };
     show($("avatarImg"), cur("avatar")); show($("bannerImg"), cur("banner"));
     const ed = $("card").classList.contains("editing");
+    if (!ed) { const mk = pending.media && !pending.media.remove ? pending.media.file.name : profile.media_path; jvFx.featured($("vFeat"), cur("media"), jvFx.mediaKind(mk)); }
     jvFx.bg(cur("bg")); jvFx.theme(document.body, ed ? colors : savedColors());
     if (ed) jvFx.about($("vAboutBox"), $("aboutImg"), "", "");   // no modo edição a caixa fica escondida
     else jvFx.about($("vAboutBox"), $("aboutImg"), profile.about, cur("about"));
@@ -169,7 +239,8 @@
     if (profile.fav_ship) tag("♥\uFE0E Ship:", profile.fav_ship);
     if (profile.fav_character) tag("★ Personagem:", profile.fav_character);
     tag("◆ Desde", new Date(user.created_at).toLocaleDateString("pt-BR", { month: "long", year: "numeric" }));
-    jvFx.lists($("vLists"), profile.shared_lists, byId);
+    jvFx.lists($("vLists"), profile.shared_lists, byId); paintIdentView();
+    jvFx.bioLink($("vLink"), profile.link_url, profile.link_label);
     jvFx.badge($("vBadge"), profile.badge_text, profile.badge_author);
     $("vAbout").textContent = profile.about || ""; jvFx.spotify($("vSpotify"), profile.spotify);
     const box = $("vAus"); box.textContent = "";
@@ -193,10 +264,14 @@
     jvFx.COLORS.forEach(([k, label]) => {
       const v = rs.getPropertyValue("--" + k).trim(), def = /^#[0-9a-f]{6}$/i.test(v) ? v : "#888888";
       const inp = el("input", { type: "color", value: colors[k] || def, ariaLabel: label });
-      inp.oninput = () => { colors[k] = inp.value; paintMedia(); };
+      const hx = el("input", { type: "text", className: "pf-hex", maxLength: 7, value: (colors[k] || def).toUpperCase(), placeholder: "#RRGGBB", spellcheck: false, ariaLabel: label + " em hexadecimal" });
+      const norm = v => { v = v.trim().replace(/^#?/, "#"); if (/^#[0-9a-f]{3}$/i.test(v)) v = "#" + v.slice(1).split("").map(c => c + c).join(""); return /^#[0-9a-f]{6}$/i.test(v) ? v.toLowerCase() : null; };
+      inp.oninput = () => { colors[k] = inp.value; hx.value = inp.value.toUpperCase(); paintMedia(); };
+      hx.oninput = () => { const v = norm(hx.value); if (v) { colors[k] = v; inp.value = v; paintMedia(); } };
+      hx.onblur = () => { hx.value = (colors[k] || inp.value).toUpperCase(); };
       const x = el("button", { type: "button", className: "pf-link", textContent: "×", title: "Voltar ao padrão", ariaLabel: "Voltar ao padrão" });
       x.onclick = () => { delete colors[k]; paintColors(); paintMedia(); };
-      box.append(el("div", { className: "pf-crow" }, [el("span", { textContent: label }), inp, x]));
+      box.append(el("div", { className: "pf-crow" }, [el("span", { textContent: label }), inp, hx, x]));
     });
   }
 
@@ -229,8 +304,10 @@
     $("ship").value = profile.fav_ship || ""; $("char").value = profile.fav_character || "";
     $("xh").value = profile.x_handle ? "@" + profile.x_handle : "";
     $("badge").value = profile.badge_text || ""; $("badgeAu").value = profile.badge_author ? "@" + profile.badge_author : "";
+    $("linkUrl").value = profile.link_url || ""; $("linkLabel").value = profile.link_label || "";
     $("about").value = profile.about || ""; $("spot").value = profile.spotify ? "https://open.spotify.com/" + profile.spotify : "";
     LISTS.forEach(([k, id]) => $(id).checked = !!(profile.shared_lists && Array.isArray(profile.shared_lists[k])));
+    identIds = [...(profile.identifies || [])]; $("identSearch").value = ""; $("identRes").hidden = true; paintIdent(); if (identIds.length) ensureChars().then(paintIdent);
     colors = { ...savedColors() }; paintColors();
     $("slug").value = profile.slug || ""; $("pub").checked = !!profile.is_public;
     favAus = (profile.fav_aus || []).filter(byId); msg("");
@@ -241,16 +318,52 @@
     $("card").classList.remove("editing"); colors = {}; paintView();
   }
 
+  /* ---------- recorte de foto de perfil e banner ---------- */
+  const CROP = { avatar: { w: 1, h: 1, ow: 512, oh: 512, gw: 400, title: "Recortar foto de perfil", round: true }, banner: { w: 3, h: 1, ow: 1500, oh: 500, gw: 900, title: "Recortar banner" } };
+  let cs = null, drag = null, busy = false;
+  function setPending(kind, f) {
+    if (pending[kind] && pending[kind].preview) URL.revokeObjectURL(pending[kind].preview);
+    pending[kind] = { file: f, preview: URL.createObjectURL(f) };
+    msg("Não esqueça de salvar ✦"); paintMedia();
+  }
+  function drawCrop() {
+    const s = cs.s0 * cs.zoom;
+    cs.x = Math.min(0, Math.max(cs.W - cs.nw * s, cs.x)); cs.y = Math.min(0, Math.max(cs.H - cs.nh * s, cs.y));
+    Object.assign($("cropImg").style, { width: cs.nw * s + "px", height: cs.nh * s + "px", left: cs.x + "px", top: cs.y + "px" });
+  }
+  function setZoom(z) {   // mantém o centro do recorte parado
+    const old = cs.s0 * cs.zoom; cs.zoom = Math.min(4, Math.max(1, z)); const s = cs.s0 * cs.zoom;
+    const cx = (cs.W / 2 - cs.x) / old, cy = (cs.H / 2 - cs.y) / old;
+    cs.x = cs.W / 2 - cx * s; cs.y = cs.H / 2 - cy * s; $("cropZoom").value = cs.zoom; drawCrop();
+  }
+  function closeCrop() {
+    if (!cs) return;
+    URL.revokeObjectURL(cs.url); cs = null; drag = null;
+    $("crop").hidden = true; document.body.style.overflow = ""; $("cropImg").removeAttribute("src");
+  }
+  function openCrop(kind, file) {
+    const cfg = CROP[kind], stage = $("cropStage"), img = $("cropImg"), gif = file.type === "image/gif";
+    cs = { kind, file, cfg, url: URL.createObjectURL(file), zoom: 1, x: 0, y: 0 };
+    $("crop").hidden = false; document.body.style.overflow = "hidden";
+    $("cropTitle").textContent = cfg.title; stage.classList.toggle("round", !!cfg.round); stage.style.aspectRatio = cfg.w + " / " + cfg.h;
+    $("cropRaw").hidden = !gif; $("cropZoom").value = 1;
+    $("cropNote").textContent = gif ? "GIF animado: o recorte mantém a animação, mas pode levar alguns segundos. Se preferir, use o GIF original, sem recortar." : "Arraste para posicionar e use o zoom para ajustar.";
+    img.onload = () => {
+      const r = stage.getBoundingClientRect(); cs.W = r.width; cs.H = r.height; cs.nw = img.naturalWidth; cs.nh = img.naturalHeight;
+      cs.s0 = Math.max(cs.W / cs.nw, cs.H / cs.nh); cs.x = (cs.W - cs.nw * cs.s0) / 2; cs.y = (cs.H - cs.nh * cs.s0) / 2; drawCrop();
+    };
+    img.src = cs.url;
+  }
   function pick(kind) {
     const input = $(kind + "File");
     input.onchange = () => {
       const f = input.files[0]; input.value = "";
       if (!f) return;
-      if (!EXT[f.type]) return msg("Formato não aceito. Use PNG, JPG, WebP ou GIF.", "err");
-      if (f.size > MAX) return msg("Arquivo grande demais (máx. 8 MB).", "err");
-      if (pending[kind]) URL.revokeObjectURL(pending[kind].preview);
-      pending[kind] = { file: f, preview: URL.createObjectURL(f) };
-      msg("Não esqueça de salvar ✦"); paintMedia();
+      const vid = f.type.startsWith("video/");
+      if (!EXT[f.type] || (vid && kind !== "media")) return msg(kind === "media" ? "Formato não aceito. Use MP4, WebM, PNG, JPG, WebP ou GIF." : "Formato não aceito. Use PNG, JPG, WebP ou GIF.", "err");
+      if (f.size > (vid ? MAXV : MAX)) return msg("Arquivo grande demais (máx. " + (vid ? "15" : "8") + " MB).", "err");
+      if (kind === "avatar" || kind === "banner") return openCrop(kind, f);
+      setPending(kind, f);
     };
     input.click();
   }
@@ -270,6 +383,9 @@
     const slug = LOCAL ? "" : $("slug").value.trim().toLowerCase(), pub = LOCAL ? false : $("pub").checked;
     if (slug && !/^[a-z0-9_]{3,20}$/.test(slug)) return msg("Usuário: 3 a 20 caracteres, só letras minúsculas, números e _.", "err");
     if (pub && !slug) return msg("Escolha um nome de usuário para tornar o perfil público.", "err");
+    let lk = $("linkUrl").value.trim();
+    if (lk && !/^https?:\/\//i.test(lk)) lk = "https://" + lk;
+    if (lk) { let ok = /^https?:\/\/[^\s]{3,290}$/i.test(lk); try { new URL(lk); } catch (e) { ok = false; } if (!ok) return msg("Link inválido. Use um endereço como https://seusite.com", "err"); }
     const listKeys = LISTS.filter(([, id]) => $(id).checked).map(([k]) => k);
     const spRaw = $("spot").value.trim(), spId = jvFx.spotifyId(spRaw);
     if (spRaw && !spId) return msg("Link do Spotify inválido. Copie o link em Compartilhar > Copiar link.", "err");
@@ -281,7 +397,9 @@
         about_path: profile.about_path || null, bg_path: profile.bg_path || null, about: $("about").value.trim() || null,
         badge_text: $("badge").value.trim() || null, badge_author: $("badgeAu").value.trim().replace(/^@/, "") || null,
         theme_colors: Object.keys(colors).length ? colors : null, theme_color: colors.accent || null, spotify: spId || null,
-        shared_lists: !LOCAL && listKeys.length ? snapshot(listKeys) : null };
+        shared_lists: !LOCAL && listKeys.length ? snapshot(listKeys) : null,
+        identifies: identIds.slice(0, 5),
+        link_url: lk || null, link_label: $("linkLabel").value.trim() || null, media_path: profile.media_path || null };
       for (const k of Object.keys(pending)) {
         const q = pending[k], col = k + "_path"; if (!q) continue;
         if (q.remove) { if (LOCAL) { await idbSet(k, null); delete localUrls[k]; } else if (row[col]) A.client.storage.from(BUCKET).remove([row[col]]); row[col] = null; }
@@ -325,11 +443,79 @@
 
   ["name", "bio", "ship", "char", "slug"].forEach(i => $(i).addEventListener("input", () => { counters(); if (i === "name") paintMedia(); }));
   $("auSearch").addEventListener("input", search);
+  $("identSearch").addEventListener("input", searchIdent);
+  $("identSearch").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); const b = $("identRes").querySelector("button"); if (b) b.click(); } });
   $("editBtn").onclick = startEdit; $("cancel").onclick = stopEdit; $("save").onclick = save;
   $("avatarBtn").onclick = () => pick("avatar"); $("bannerBtn").onclick = () => pick("banner");
+  $("cropZoom").addEventListener("input", e => { if (cs) setZoom(parseFloat(e.target.value)); });
+  $("cropStage").addEventListener("wheel", e => { if (!cs) return; e.preventDefault(); setZoom(cs.zoom * (e.deltaY < 0 ? 1.08 : 1 / 1.08)); }, { passive: false });
+  $("cropStage").addEventListener("pointerdown", e => { if (!cs) return; drag = { px: e.clientX, py: e.clientY, x: cs.x, y: cs.y }; e.currentTarget.setPointerCapture(e.pointerId); });
+  $("cropStage").addEventListener("pointermove", e => { if (!drag || !cs) return; cs.x = drag.x + e.clientX - drag.px; cs.y = drag.y + e.clientY - drag.py; drawCrop(); });
+  ["pointerup", "pointercancel"].forEach(ev => $("cropStage").addEventListener(ev, () => { drag = null; }));
+  $("cropCancel").onclick = closeCrop;
+  $("cropRaw").onclick = () => { const { kind, file } = cs; closeCrop(); setPending(kind, file); };
+  /* recorta GIF animado quadro a quadro (decodifica, recorta cada quadro e codifica de novo) */
+  async function encodeGif(frames, W, H, r, cfg, f) {
+    const G = window.jvGif;
+    const ow = Math.max(16, Math.round(Math.min(cfg.gw, r.sw) * f)), oh = Math.max(16, Math.round(ow * cfg.h / cfg.w));
+    const full = el("canvas", { width: W, height: H }), fx = full.getContext("2d", { willReadFrequently: true });
+    const tmp = el("canvas"), tx = tmp.getContext("2d"), out = el("canvas", { width: ow, height: oh }), ox = out.getContext("2d", { willReadFrequently: true });
+    ox.imageSmoothingQuality = "high";
+    const enc = G.GIFEncoder(), step = Math.max(1, Math.ceil(frames.length / 120));
+    let acc = 0, saved = null;
+    for (let i = 0; i < frames.length; i++) {
+      const fr = frames[i], d = fr.dims;
+      if (fr.disposalType === 3) saved = fx.getImageData(0, 0, W, H);
+      tmp.width = d.width; tmp.height = d.height; tx.putImageData(new ImageData(fr.patch, d.width, d.height), 0, 0);
+      fx.drawImage(tmp, d.left, d.top);
+      acc += fr.delay > 10 ? fr.delay : 100;
+      if (i % step === 0 || i === frames.length - 1) {
+        ox.clearRect(0, 0, ow, oh); ox.drawImage(full, r.sx, r.sy, r.sw, r.sh, 0, 0, ow, oh);
+        const data = ox.getImageData(0, 0, ow, oh).data;
+        const pal = G.quantize(data, 256, { format: "rgba4444", oneBitAlpha: true }), idx = G.applyPalette(data, pal, "rgba4444"), ti = pal.findIndex(c => c[3] === 0);
+        enc.writeFrame(idx, ow, oh, { palette: pal, delay: acc, transparent: ti >= 0, transparentIndex: ti >= 0 ? ti : 0, dispose: ti >= 0 ? 2 : -1 });
+        acc = 0;
+      }
+      if (fr.disposalType === 2) fx.clearRect(d.left, d.top, d.width, d.height);
+      else if (fr.disposalType === 3 && saved) fx.putImageData(saved, 0, 0);
+      if (i % 6 === 0) { $("cropNote").textContent = "Processando GIF… " + Math.round(100 * i / frames.length) + "%"; await new Promise(res => setTimeout(res)); }
+    }
+    enc.finish();
+    return new Blob([enc.bytes()], { type: "image/gif" });
+  }
+  async function cropGif() {
+    if (!window.jvGif) return msg("Não foi possível carregar o recortador de GIF. Use o GIF original.", "err");
+    busy = true; const btns = ["cropOk", "cropRaw", "cropCancel"].map($); btns.forEach(b => b.disabled = true);
+    try {
+      const gif = window.jvGif.parseGIF(await cs.file.arrayBuffer()), frames = window.jvGif.decompressFrames(gif, true);
+      const s = cs.s0 * cs.zoom, r = { sx: -cs.x / s, sy: -cs.y / s, sw: cs.W / s, sh: cs.H / s };
+      let blob = null;
+      for (let f = 1; f > 0.3 && !blob; f *= 0.75) { const b = await encodeGif(frames, gif.lsd.width, gif.lsd.height, r, cs.cfg, f); if (b.size <= MAX) blob = b; }
+      if (!blob) throw new Error("grande demais");
+      const kind = cs.kind, base = cs.file.name.replace(/\.[^.]+$/, "") || kind;
+      busy = false; closeCrop(); setPending(kind, new File([blob], base + ".gif", { type: "image/gif" }));
+    } catch (e) {
+      console.error(e); $("cropNote").textContent = "Não foi possível recortar este GIF (arquivo muito pesado ou fora do padrão). Use o GIF original, sem recortar.";
+    }
+    busy = false; btns.forEach(b => b.disabled = false);
+  }
+  $("cropOk").onclick = async () => {
+    if (busy) return;
+    if (cs.file.type === "image/gif") return cropGif();
+    const s = cs.s0 * cs.zoom, c = el("canvas", { width: cs.cfg.ow, height: cs.cfg.oh }), ctx = c.getContext("2d");
+    ctx.imageSmoothingQuality = "high";
+    ctx.drawImage($("cropImg"), -cs.x / s, -cs.y / s, cs.W / s, cs.H / s, 0, 0, c.width, c.height);
+    const kind = cs.kind, base = cs.file.name.replace(/\.[^.]+$/, "") || kind;
+    c.toBlob(b => {
+      if (!b || !EXT[b.type]) return msg("Não foi possível recortar essa imagem.", "err");
+      closeCrop(); setPending(kind, new File([b], base + "." + EXT[b.type], { type: b.type }));
+    }, "image/webp", 0.92);
+  };
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && cs && !busy) closeCrop(); });
   $("aboutBtn").onclick = () => pick("about"); $("bgBtn").onclick = () => pick("bg");
   const rm = (k, b) => { $(b).onclick = () => { if (pending[k] && pending[k].preview) URL.revokeObjectURL(pending[k].preview); pending[k] = { remove: true }; msg("Não esqueça de salvar ✦"); paintMedia(); }; };
-  rm("about", "aboutRm"); rm("bg", "bgRm");
+  rm("about", "aboutRm"); rm("bg", "bgRm"); rm("media", "mediaRm");
+  $("mediaBtn").onclick = () => pick("media");
   $("colorRm").onclick = () => { colors = {}; paintColors(); paintMedia(); };
   $("logout").onclick = () => { if (LOCAL) { localStorage.removeItem("jv_local"); location.href = A.SITE_ROOT + "login/login.html"; } else A.logout(); };
   $("slug").addEventListener("input", e => { e.target.value = e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ""); });

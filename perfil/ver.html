@@ -22,10 +22,12 @@
       <div class="pf-avatar"><span id="initial">?</span><img id="avatarImg" alt="" hidden></div>
     </div>
     <div class="pf-body">
-      <div class="pf-head"><div><div class="pf-namerow"><h1 id="vName"></h1><a class="pf-badge" id="vBadge" hidden></a></div><a class="pf-handle" id="vHandle" target="_blank" rel="noopener noreferrer" hidden></a></div></div>
+      <div class="pf-head"><div><div class="pf-namerow"><h1 id="vName"></h1><a class="pf-badge" id="vBadge" hidden></a></div><a class="pf-handle" id="vHandle" target="_blank" rel="noopener noreferrer" hidden></a><br><a class="pf-biolink" id="vLink" target="_blank" rel="noopener noreferrer nofollow ugc" hidden></a></div></div>
       <blockquote class="pf-quote" id="vBio" hidden></blockquote>
       <div class="pf-tags" id="vTags"></div>
+      <section id="vIdentBox" hidden><h2 class="pf-h2">✦ Me identifico com:</h2><div class="pf-chips" id="vIdent"></div></section>
       <section class="pf-about" id="vAboutBox" hidden><h2 class="pf-h2">✦ Sobre mim</h2><div class="pf-aboutrow"><img id="aboutImg" alt="" hidden><p id="vAbout"></p></div></section>
+      <section id="vFeatBox" hidden><h2 class="pf-h2">✦ Destaque</h2><div id="vFeat"></div></section>
       <div class="pf-spotify" id="vSpotify" hidden></div>
       <h2 class="pf-h2">✦ AUs favoritas</h2>
       <div class="pf-podium" id="vAus"></div>
@@ -40,6 +42,7 @@
 <script src="../compartilhados/supabase-config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script src="../compartilhados/supabase-sync.js"></script>
+<script src="../personagens/personagens-lista.js"></script>
 <script src="perfil-fx.js"></script>
 <script>
 (function(){
@@ -65,6 +68,7 @@
     jvFx.badge($("vBadge"), p.badge_text, p.badge_author);
     $("vAbout").textContent = p.about || ""; jvFx.about($("vAboutBox"), $("aboutImg"), p.about, pub(p.about_path));
     jvFx.spotify($("vSpotify"), p.spotify);
+    jvFx.bioLink($("vLink"), p.link_url, p.link_label); jvFx.featured($("vFeat"), pub(p.media_path), jvFx.mediaKind(p.media_path));
     if (p.x_handle) { const h = $("vHandle"); h.hidden = false; h.textContent = "@" + p.x_handle; h.href = "https://x.com/" + p.x_handle; }
     if (p.bio) { $("vBio").hidden = false; $("vBio").textContent = "“" + p.bio + "”"; }
     const tag = (l, v) => $("vTags").append(el("span", { className: "pf-tag" }, [l + " ", el("b", { textContent: v })]));
@@ -77,6 +81,7 @@
       el("div", { className: "m", textContent: ["①", "②", "③"][i] }), el("h3", { textContent: a.title }),
       el("small", { textContent: (a.author && a.author.display || "") + " · " + a.fandom })])));
     jvFx.lists($("vLists"), p.shared_lists, id => (typeof aus !== "undefined" ? aus : []).find(a => a.id === id));
+    if ((p.identifies || []).length) jvFx.characters().then(ch => jvFx.idents($("vIdentBox"), $("vIdent"), p.identifies, ch));
     $("loading").hidden = true; $("card").hidden = false;
   });
 })();

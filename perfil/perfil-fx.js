@@ -73,6 +73,65 @@
       inp.addEventListener("keydown", e => { if (e.key === "Enter" && inp.value.length >= 3) go(inp.value); });
       document.addEventListener("click", e => { if (e.target !== inp && !box.contains(e.target)) box.hidden = true; });
     },
+    /* personagens: lidos da própria página "Conheça os personagens" (cards .character-card) */
+    characters() {
+      let cached = null; try { cached = JSON.parse(sessionStorage.getItem("jv_chars")); } catch (e) {}
+      if (cached && cached.length && !this._c) this._c = Promise.resolve(cached);
+      if (!this._c) this._c = fetch("../personagens/personagens.html").then(r => { if (!r.ok) throw 0; return r.text(); }).then(h => {
+        const d = new DOMParser().parseFromString(h, "text/html");
+        return [...d.querySelectorAll(".character-card")].map(c => {
+          const im = c.querySelector("img"), h3 = c.querySelector("h3");
+          return { id: (c.id || "").replace(/^character-/, ""), name: h3 ? h3.textContent.trim() : "", img: im ? im.getAttribute("src") : "" };
+        }).filter(c => c.id && c.name);
+      }).then(list => { if (!list.length) list = window.JV_CHARS || []; try { sessionStorage.setItem("jv_chars", JSON.stringify(list)); } catch (e) {} return list; }).catch(err => { console.warn("[JemmaVerso] Não consegui ler personagens.html:", err); this._c = null; return window.JV_CHARS || []; });
+      return this._c;
+    },
+    idents(wrap, list, ids, chars) {
+      list.textContent = "";
+      const items = (ids || []).map(id => (chars || []).find(c => c.id === id)).filter(Boolean);
+      wrap.hidden = !items.length;
+      items.forEach(c => {
+        const a = document.createElement("a"); a.className = "pf-chip"; a.href = "../personagens/personagens.html#character-" + c.id;
+        if (c.img) { const im = document.createElement("img"); im.loading = "lazy"; im.decoding = "async"; im.src = c.img; im.alt = ""; a.append(im); }
+        a.append(c.name); list.append(a);
+      });
+    },
+    mediaKind(path) { const e = (path || "").split(".").pop().toLowerCase(); return e === "mp4" || e === "webm" ? "video" : e === "gif" ? "gif" : "image"; },
+    bioLink(a, url, label) {
+      a.hidden = !url; a.textContent = ""; a.removeAttribute("href");
+      if (!url) return;
+      let host = url; try { host = new URL(url).hostname.replace(/^www\./, ""); } catch (e) {}
+      a.href = url; a.textContent = "★ | " + (label || host);
+    },
+    featured(holder, src, kind) {   // vídeo (toca sozinho, sem som, em loop) ou GIF/imagem em destaque
+      holder.textContent = ""; holder.parentElement.hidden = !src;
+      if (!src) return;
+      const fig = document.createElement("div"); fig.className = "pf-feat";
+      let m;
+      if (kind === "video") {
+        m = document.createElement("video"); m.src = src; m.muted = true; m.loop = true; m.autoplay = true; m.playsInline = true; m.preload = "metadata";
+        m.setAttribute("playsinline", ""); m.setAttribute("muted", "");
+      } else { m = document.createElement("img"); m.src = src; m.alt = ""; }
+      fig.append(m);
+      if (kind !== "image") {
+        const bar = document.createElement("div"), btn = document.createElement("button"), tag = document.createElement("span");
+        bar.className = "pf-feat-bar"; btn.type = "button"; btn.className = "pf-feat-btn"; tag.textContent = kind === "gif" ? "GIF" : "VÍDEO";
+        const label = paused => { btn.textContent = paused ? "▶" : "❚❚"; btn.setAttribute("aria-label", paused ? "Reproduzir" : "Pausar"); };
+        label(false); bar.append(btn, tag); fig.append(bar);
+        if (kind === "video") {
+          m.addEventListener("play", () => label(false)); m.addEventListener("pause", () => label(true));
+          btn.onclick = () => { if (m.paused) m.play().catch(() => {}); else m.pause(); };
+          m.play && m.play().catch(() => label(true));
+        } else {
+          let snap = null;
+          btn.onclick = () => {
+            if (!snap) { snap = document.createElement("canvas"); snap.width = m.naturalWidth; snap.height = m.naturalHeight; snap.getContext("2d").drawImage(m, 0, 0); snap.className = "pf-feat-snap"; fig.insertBefore(snap, bar); label(true); }
+            else { snap.remove(); snap = null; label(false); }
+          };
+        }
+      }
+      holder.append(fig);
+    },
     lists(box, shared, byId) {
       box.textContent = "";
       [["quero-ler", "Quero ler"], ["lendo", "Lendo"], ["lido", "Concluídas"]].forEach(([k, label]) => {
