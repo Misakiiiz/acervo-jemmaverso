@@ -93,5 +93,22 @@ $("modalTags").addEventListener("click", e => {
     const b = e.target.closest("[data-tag]");
     if (b) { toggleAuTag(openAu.id, b.dataset.tag); renderModalTags(); updateStatistics(); }
 });
+/* ---------- Anotações por AU (só neste navegador, sem nuvem) ---------- */
+const NOTES_KEY = "jv_au_notes";
+function readNotes(){ try { return JSON.parse(localStorage.getItem(NOTES_KEY)) || {}; } catch (e) { return {}; } }
+function renderModalNote(){
+    if (!openAu) return;
+    const box = $("modalNote");
+    box.value = readNotes()[openAu.id] || "";
+    $("modalNoteCount").textContent = box.value.length + "/1000";
+}
+$("modalNote").addEventListener("input", e => {
+    if (!openAu) return;
+    const all = readNotes(), v = e.target.value;
+    if (v.trim()) all[openAu.id] = v; else delete all[openAu.id];
+    try { localStorage.setItem(NOTES_KEY, JSON.stringify(all)); } catch (err) {}
+    $("modalNoteCount").textContent = v.length + "/1000";
+});
+
 const baseShowAu = showAu;
-showAu = function(au){ baseShowAu(au); renderModalTags(); };
+showAu = function(au){ baseShowAu(au); renderModalTags(); renderModalNote(); };

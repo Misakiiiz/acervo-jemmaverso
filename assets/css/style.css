@@ -233,3 +233,13 @@ select:focus,input:focus{border-color:var(--accent)}
     color: inherit;
     text-decoration: none;
 }
+.about-pdf{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:14px}
+.about-pdf object{width:100%;height:70vh;min-height:380px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.about-pdf-soon{margin-top:12px;color:var(--muted);text-align:center}
+@media(max-width:560px){
+  .about-pdf object{height:55vh}
+}
+.au-note{display:block;width:100%;box-sizing:border-box;margin-top:6px;padding:.6rem .8rem;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--text);font:inherit;font-size:13px;resize:vertical;min-height:70px}
+.au-note:focus{outline:2px solid var(--accent);outline-offset:1px}
+.au-note::placeholder{color:var(--muted);opacity:.8}
+.au-note-count{display:block;text-align:right;color:var(--muted);font-size:11px;margin:2px 0 8px}

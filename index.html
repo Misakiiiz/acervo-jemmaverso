@@ -55,6 +55,7 @@
       <select id="tagFilter"><option value="" data-i18n="filter.all">Todos</option>
         <option value="reler" data-i18n="tag.reler">Reler</option><option value="madrugada" data-i18n="tag.madrugada">Ler de madrugada</option>
         <option value="comfort" data-i18n="tag.comfort">Comfort</option><option value="chorar" data-i18n="tag.chorar">Para chorar</option>
+        <option value="tranquila" data-i18n="tag.tranquila">Leitura tranquila</option>
         <option value="quero-ler" data-i18n="tag.quero-ler">Quero ler</option></select>
     </label>
     <button id="clearFilters" class="link-btn" data-i18n="filter.clear">Limpar filtros</button>
@@ -146,6 +147,9 @@
 
     <h4 data-i18n="tags.title">Minhas tags</h4>
     <div class="reading-status" id="modalTags"></div>
+    <h4>Minhas anotações</h4>
+    <textarea id="modalNote" class="au-note" maxlength="1000" rows="3" placeholder="Em qual capítulo parou? Alguma anotação…"></textarea>
+    <small class="au-note-count" id="modalNoteCount">0/1000</small>
 
     <div class="m-row">
       <div class="rating" id="rating">

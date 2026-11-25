@@ -101,10 +101,15 @@ modalSeriesNavigation.addEventListener("click", event => {
     const selectedAu = aus.find(item => item.id === Number(button.dataset.seriesAuId));
     if (!selectedAu) return;
 
-    modalAus = aus
-        .filter(item => item.series === selectedAu.series)
-        .sort((a, b) => a.seriesOrder - b.seriesOrder);
-    openAuIndex = modalAus.findIndex(item => item.id === selectedAu.id);
+    /* mantém a lista original (as setas continuam por todo o acervo / filtro atual) */
+    const idx = modalAus.findIndex(item => item.id === selectedAu.id);
+    if (idx >= 0) {
+        openAuIndex = idx;
+    } else {
+        /* a parte da saga não está na lista filtrada: encaixa logo depois da AU atual */
+        modalAus = [...modalAus.slice(0, openAuIndex + 1), selectedAu, ...modalAus.slice(openAuIndex + 1)];
+        openAuIndex += 1;
+    }
     showAu(selectedAu);
 });
 
