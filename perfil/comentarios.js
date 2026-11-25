@@ -11,6 +11,8 @@ window.jvComments = (function () {
 
       if (!data.logged_in) {
         box.append(el("p", { className: "pf-hint" }, ["Para comentar, ", el("a", { href: "../login/login.html", textContent: "entre na sua conta" }), "."]));
+      } else if (data.enabled === false) {
+        box.append(el("p", { className: "pf-hint", textContent: "Os comentários estão desligados. Ative em “Editar perfil” para as pessoas poderem comentar." }));
       } else if (data.blocked) {
         box.append(el("p", { className: "pf-hint", textContent: "Você não pode comentar neste perfil." }));
       } else {
@@ -65,4 +67,52 @@ window.jvComments = (function () {
     });
   }
   return { mount, blocked };
+})();
+
+/* Curtidas de perfil */
+window.jvLikes = (function () {
+  const el = (tag, props, kids) => { const n = Object.assign(document.createElement(tag), props || {}); (kids || []).forEach(k => n.append(k)); return n; };
+
+  // botão ♥ no perfil público (ver.html)
+  function button(btn, slug, A) {
+    A.client.rpc("get_profile_likes", { p_slug: slug }).then(({ data, error }) => {
+      if (error || !data) return;
+      const paint = () => {
+        btn.hidden = false; btn.textContent = "";
+        btn.classList.toggle("on", !!data.liked);
+        btn.disabled = !!data.is_owner;
+        btn.title = data.is_owner ? "Curtidas que seu perfil recebeu" : data.liked ? "Descurtir perfil" : "Curtir perfil";
+        btn.append(el("span", { textContent: data.liked ? "♥\uFE0E" : "♡\uFE0E" }), el("span", { textContent: String(data.count) }));
+      };
+      paint();
+      btn.onclick = async () => {
+        if (!data.logged_in) { location.href = "../login/login.html"; return; }
+        btn.disabled = true;
+        const r = await A.client.rpc("toggle_profile_like", { p_slug: slug });
+        if (!r.error && r.data) Object.assign(data, r.data);
+        paint();
+      };
+    });
+  }
+
+  // estatísticas na própria página: curtidas recebidas + lista de perfis curtidos
+  function mine(A, pub, refs) {
+    return A.client.rpc("get_my_like_stats").then(({ data }) => {
+      if (!data) return;
+      refs.got.textContent = data.received;
+      refs.n.textContent = data.liked.length;
+      refs.box.textContent = "";
+      refs.box.hidden = !data.liked.length;
+      if (!data.liked.length) return;
+      refs.box.append(el("h2", { className: "pf-h2", textContent: "✦ Perfis que curti" }));
+      const wrap = el("div", { className: "pf-liked" });
+      data.liked.forEach(p => {
+        const name = p.display_name || p.slug;
+        const av = p.avatar_path ? el("img", { className: "pf-cm-av", alt: "", src: pub(p.avatar_path) }) : el("span", { className: "pf-cm-av", textContent: name[0].toUpperCase() });
+        wrap.append(el("a", { className: "pf-likedcard", href: "ver.html?u=" + encodeURIComponent(p.slug) }, [av, el("span", { textContent: name })]));
+      });
+      refs.box.append(wrap);
+    });
+  }
+  return { button, mine };
 })();

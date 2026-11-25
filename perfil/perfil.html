@@ -43,11 +43,15 @@
         <h2 class="pf-h2">✦ Minhas 3 AUs favoritas</h2>
         <div class="pf-podium" id="vAus"></div>
         <div id="vLists"></div>
+        <section id="vComments" hidden></section>
         <div class="pf-stats">
           <div class="pf-stat"><b id="sFav">0</b><span>favoritas</span></div>
           <div class="pf-stat"><b id="sRead">0</b><span>lidas</span></div>
           <div class="pf-stat"><b id="sRate">0</b><span>avaliadas</span></div>
+          <div class="pf-stat"><b id="sLikesGot">0</b><span>curtidas recebidas</span></div>
+          <div class="pf-stat"><b id="sLikedN">0</b><span>perfis curtidos</span></div>
         </div>
+        <section id="vLiked" hidden></section>
       </div>
 
       <!-- MODO EDIÇÃO -->
@@ -217,6 +221,10 @@
     return out;
   }
   const savedColors = () => profile.theme_colors || (profile.theme_color ? { accent: profile.theme_color } : {});
+  if (!LOCAL) {
+      if (profile.slug) jvComments.mount($("vComments"), profile.slug, A, pubUrl);
+      jvLikes.mine(A, pubUrl, { got: $("sLikesGot"), n: $("sLikedN"), box: $("vLiked") });
+    }
 
   /* ---------- desenhar ---------- */
   function paintMedia() {

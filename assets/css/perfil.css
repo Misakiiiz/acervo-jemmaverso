@@ -152,3 +152,18 @@ a.pf-cm-name:hover{text-decoration:underline;text-underline-offset:3px}
 /* quando o perfil tem imagem de fundo */
 body.pf-hasbg .pf-cm,body.pf-hasbg .pf-cm-compose{background:color-mix(in srgb,var(--card) 45%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
 @media(max-width:520px){.pf-cm{padding:12px;gap:10px}.pf-cm-av{flex-basis:36px;width:36px;height:36px}}
+
+/* curtir perfil */
+.pf-likerow{margin:10px 0 4px}
+.pf-like{display:inline-flex;align-items:center;gap:7px;padding:.42rem 1.05rem;border-radius:999px;cursor:pointer;background:color-mix(in srgb,var(--card) 70%,transparent);border:1px solid var(--line);color:var(--text);font:700 .86rem Nunito,Poppins,sans-serif;transition:transform .15s,border-color .2s,color .2s}
+.pf-like[hidden]{display:none}
+.pf-like:hover:not(:disabled){border-color:var(--accent);color:var(--accent);transform:translateY(-1px)}
+.pf-like.on{background:linear-gradient(135deg,var(--accent),var(--accent2,var(--accent)));border-color:transparent;color:var(--on-accent,#17101f)}
+.pf-like:disabled{cursor:default;opacity:.85}
+
+/* perfis curtidos (estatísticas) */
+#vLiked{margin-top:22px}
+.pf-liked{display:flex;flex-wrap:wrap;gap:10px}
+.pf-likedcard{display:flex;align-items:center;gap:10px;padding:7px 16px 7px 7px;border:1px solid var(--line);border-radius:999px;background:color-mix(in srgb,var(--card) 65%,transparent);color:var(--accent);font:700 .88rem Nunito,Poppins,sans-serif;text-decoration:none;transition:border-color .2s,transform .2s}
+.pf-likedcard:hover{border-color:var(--accent);transform:translateY(-1px)}
+.pf-likedcard .pf-cm-av{flex:0 0 32px;width:32px;height:32px;font-size:.85rem;box-shadow:0 0 0 2px var(--accent)}
