@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f0d14">
+<title data-i18n="page.homeTitle">JemmaVerso Acervo</title>
+<link rel="icon" type="image/png" href="assets/imagens/icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/extras.css">
+<script src="compartilhados/theme.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script async src="https://platform.twitter.com/widgets.js"></script>
+</head>
+<body class="sidebar-open">
+<button id="sidebarBackdrop" class="sidebar-backdrop" type="button" aria-label="Fechar menu" data-i18n-aria-label="common.closeMenu"></button>
+<aside class="sidebar open" id="sidebar" aria-label="Menu principal" aria-hidden="false">
+  <button id="closeSidebar" class="sidebar-close" type="button" aria-label="Fechar menu" data-i18n-aria-label="common.closeMenu">×</button>
+  <a class="brand" href="index.html" aria-label="JemmaVerso Acervo - início">JemmaVerso<br>Acervo</a>
+
+  <nav class="nav">
+    <button data-view="" class="active"><span data-i18n="nav.all">Todas</span></button>
+    <button data-view="favorites"><span data-i18n="nav.favorites">♥ Favoritas</span><b id="favoriteCount">0</b></button>
+    <button data-view="quero-ler"><span data-i18n="nav.wishlist">Quero ler</span><b id="wishlistCount">0</b></button>
+    <button data-view="lendo"><span data-i18n="nav.reading">Lendo</span><b id="readingCount">0</b></button>
+    <button data-view="pausada"><span data-i18n="nav.paused">Pausadas</span></button>
+    <button data-view="lido"><span data-i18n="nav.completed">Concluídas</span></button>
+    <button data-view="naolido"><span data-i18n="nav.unread">Não lidas</span></button>
+  </nav>
+
+  <div class="side-filters">
+    <label><span data-i18n="filter.ship">Ship</span><select id="fandom"><option value="" data-i18n="filter.all">Todos</option></select></label>
+    <label><span data-i18n="filter.author">Autor</span><input id="authorFilter" type="text" list="authorOptions" autocomplete="off" placeholder="Digite para pesquisar..." data-i18n-placeholder="filter.authorPlaceholder"><datalist id="authorOptions"></datalist></label>
+    <label><span data-i18n="filter.publication">Andamento</span>
+      <select id="pubStatus">
+        <option value="" data-i18n="filter.all">Todos</option>
+        <option value="Em andamento" data-i18n="status.ongoing">Em andamento</option>
+        <option value="Concluída" data-i18n="status.completed">Concluída</option>
+        <option value="Em hiato" data-i18n="status.hiatus">Em hiato</option>
+        <option value="Abandonada" data-i18n="status.dropped">Abandonada</option>
+        <option value="Não informado" data-i18n="status.unknown">Não informado</option>
+      </select>
+    </label>
+    <label><span data-i18n="filter.size">Tamanho</span>
+      <select id="sizeFilter">
+        <option value="" data-i18n="filter.all">Todos</option>
+        <option>Long</option><option>Short</option><option>One-shot</option>
+      </select>
+    </label>
+    <label data-trope-filter hidden><span data-i18n="filter.trope">Trope</span>
+      <select id="tropeFilter"><option value="" data-i18n="filter.all">Todos</option></select>
+    </label>
+    <label><span data-i18n="filter.tag">Minha tag</span>
+      <select id="tagFilter"><option value="" data-i18n="filter.all">Todos</option>
+        <option value="reler" data-i18n="tag.reler">Reler</option><option value="madrugada" data-i18n="tag.madrugada">Ler de madrugada</option>
+        <option value="comfort" data-i18n="tag.comfort">Comfort</option><option value="chorar" data-i18n="tag.chorar">Para chorar</option>
+        <option value="quero-ler" data-i18n="tag.quero-ler">Quero ler</option></select>
+    </label>
+    <button id="clearFilters" class="link-btn" data-i18n="filter.clear">Limpar filtros</button>
+    <label class="sort-control"><span data-i18n="sort.label">Ordenar por</span>
+      <select id="sortOrder">
+        <option value="" data-i18n="sort.default">Ordem original</option>
+        <option value="title" data-i18n="sort.title">Título (A–Z)</option>
+        <option value="completion" data-i18n="sort.completion">Conclusão</option>
+        <option value="author" data-i18n="sort.author">Autor (A–Z)</option>
+      </select>
+    </label>
+    <label><span data-i18n="theme.label">Tema</span>
+      <select id="themeSelector"><option value="padrao" data-i18n="theme.name.default">Padrão</option><option value="padrao-escuro" data-i18n="theme.name.dark">Padrão escuro</option><option value="padrao-claro" data-i18n="theme.name.light">Padrão claro</option><option value="wenclair">Wenclair</option><option value="piptara">PipTara</option><option value="pipvada">PipVada</option><option value="sweetcc">SweetCC</option><option value="addams">Addams Family</option><option value="klara">Klara</option></select>
+    </label>
+  </div>
+
+  <p class="side-stats"><span id="totalAuthors">0</span> <span data-i18n="archive.authors">autores no acervo</span></p>
+  <div class="sidebar-links">
+    <button id="installAppButton" class="archive-link install-app-button" type="button" data-i18n="install.button">Instalar aplicativo</button>
+    <a class="about-link" href="sobre/sobre.html" data-i18n="archive.about">✦ Sobre o acervo</a>
+    <a class="archive-link" href="estatisticas/stats.html" data-i18n="archive.stats">✦ Estatísticas</a>
+    <a class="archive-link" href="acervo-fanfics/fanfics.html" data-i18n="archive.fanfics">✦ Acervo de fanfics</a>
+    <a class="archive-link" href="personagens/personagens.html" data-i18n="archive.characters">✦ Conheça os personagens</a>
+    <a class="archive-link" href="sorteador/sorteador.html" data-i18n="archive.shipper">✦ Sorteador de plots</a>
+    <a class="archive-link" href="celular-fake/index.html">✦ Celular fake <small>(beta)</small></a>
+    <a class="archive-link" href="agradecimentos/agradecimentos.html" data-i18n="archive.thanks">✦ Agradecimentos</a>
+  </div>
+  <label class="language-control"><span data-i18n="language.label">Idioma</span>
+    <select id="languageSelector" aria-label="Idioma" data-i18n-aria-label="language.label">
+      <option value="pt">Português</option><option value="en">English</option><option value="es">Español</option><option value="fr">Français</option><option value="it">Italiano</option>
+    </select>
+  </label>
+</aside>
+
+<main class="content">
+  <header class="topbar">
+    <button id="menuBtn" class="menu-btn" type="button" aria-label="Fechar menu" data-i18n-aria-label="common.closeMenu" aria-expanded="true">☰</button>
+    <a class="home-link" href="index.html" data-i18n="page.homeTitle">JemmaVerso Archive</a>
+    <input id="search" type="search" placeholder="Buscar por título ou autor..." data-i18n-placeholder="search.placeholder">
+    <span class="count"><b id="totalAus">0</b> <span data-i18n="archive.aus">AUs</span></span>
+    <button id="surpriseBtn" class="btn surprise-btn" type="button" data-i18n="surprise.btn">✦ Me surpreenda</button>
+  </header>
+
+  <section id="aod" class="aod" aria-live="polite"></section>
+  <section id="shipIntro" class="ship-intro" hidden aria-live="polite"></section>
+
+  <section id="cards" class="cards"></section>
+  <p id="empty" class="empty" hidden data-i18n="empty.results">Nenhuma AU encontrada com esses filtros.</p>
+</main>
+
+<div id="modal" class="modal">
+  <button id="prevAu" class="modal-nav prev" type="button" aria-label="AU anterior">‹</button>
+  <button id="nextAu" class="modal-nav next" type="button" aria-label="Próxima AU">›</button>
+  <div class="modal-box">
+    <button id="closeModal" class="close" aria-label="Fechar" data-i18n-aria-label="common.closeMenu">✕</button>
+
+    <div class="m-head">
+      <h2 id="modalTitle"></h2>
+      <a id="modalAuthor" target="_blank" rel="noopener"></a>
+    </div>
+
+    <div id="modalInactive" class="inactive-note" hidden></div>
+
+    <dl class="m-info">
+      <div><dt data-i18n="filter.ship">Ship</dt><dd id="mShip"></dd></div>
+      <div><dt data-i18n="filter.publication">Andamento</dt><dd id="mStatus"></dd></div>
+      <div><dt data-i18n="filter.size">Tamanho</dt><dd id="mSize"></dd></div>
+    </dl>
+
+    <div id="modalReadActions" class="modal-read-actions" hidden>
+      <a id="modalTopReadLink" class="read-btn site-read-btn" target="_blank" rel="noopener noreferrer"></a>
+      <a id="modalExtraReadLink" class="read-btn" target="_blank" rel="noopener noreferrer" hidden></a>
+    </div>
+    <h4 data-i18n="modal.synopsis">Sinopse</h4>
+    <p id="modalDescription" class="m-desc"></p>
+    <nav id="modalSeriesNavigation" class="series-navigation" aria-label="Saga Stab" hidden>
+      <p>Parte da saga "Stab"</p>
+      <div id="modalSeriesLinks" class="series-navigation-links"></div>
+    </nav>
+    <div id="modalTweet"></div>
+
+    <h4 data-i18n="modal.reading">Minha leitura</h4>
+    <div class="reading-status" id="readingButtons">
+      <button class="status-btn" data-status="naolido" data-i18n="nav.unread">Não lida</button>
+      <button class="status-btn" data-status="lendo" data-i18n="nav.reading">Lendo</button>
+      <button class="status-btn" data-status="pausada" data-i18n="nav.paused">Pausada</button>
+      <button class="status-btn" data-status="lido" data-i18n="nav.completed">Concluída</button>
+    </div>
+
+    <h4 data-i18n="tags.title">Minhas tags</h4>
+    <div class="reading-status" id="modalTags"></div>
+
+    <div class="m-row">
+      <div class="rating" id="rating">
+        <span data-rate="1">★</span><span data-rate="2">★</span><span data-rate="3">★</span><span data-rate="4">★</span><span data-rate="5">★</span>
+      </div>
+      <button id="modalFav" class="fav-big" data-i18n="modal.favorite">♡ Favoritar</button>
+      <a id="modalSiteLink" class="read-btn site-read-btn" target="_blank" rel="noopener noreferrer" data-i18n="modal.readSite">Ler no site ↗</a>
+      <a id="modalLink" class="read-btn" target="_blank" rel="noopener" data-i18n="modal.read">Ler no X ↗</a>
+    </div>
+  </div>
+</div>
+
+<div id="surprise" class="modal">
+  <div class="modal-box">
+    <button id="closeSurprise" class="close" type="button" aria-label="Fechar">✕</button>
+    <h2 class="m-head" data-i18n="surprise.title">Me surpreenda</h2>
+    <label class="opt"><input type="radio" name="smode" value="random" checked><span data-i18n="surprise.random">Aleatória (qualquer AU do acervo)</span></label>
+    <label class="opt"><input type="radio" name="smode" value="filtered"><span data-i18n="surprise.filtered">Usar os filtros que estão ativos</span></label>
+    <button id="surpriseDraw" class="btn" type="button" data-i18n="surprise.draw">Sortear</button>
+    <div id="surpriseResult"></div>
+  </div>
+</div>
+
+<script src="home/data.js"></script>
+<script src="compartilhados/translations-extra.js"></script>
+<script src="compartilhados/titulo-traducoes.js"></script>
+<script src="compartilhados/i18n.js"></script>
+<script src="home/storage.js"></script>
+<script src="compartilhados/supabase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="compartilhados/supabase-sync.js"></script>
+<script src="compartilhados/busca.js"></script>
+<script src="compartilhados/common.js"></script>
+<script src="home/cards.js"></script>
+<script src="home/filters.js"></script>
+<script src="home/app.js"></script>
+<script src="home/extras.js"></script>
+<script src="home/aus-admin.js"></script>
+<script src="home/autor-url.js"></script>
+<script src="compartilhados/app-install.js"></script>
+</body>
+</html>

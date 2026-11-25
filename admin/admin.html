@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Admin · JemmaVerso</title>
+<link rel="icon" type="image/png" href="../assets/imagens/icon.png">
+<link rel="stylesheet" href="../assets/css/style.css">
+<link rel="stylesheet" href="../assets/css/extras.css">
+<script src="../compartilhados/theme.js"></script>
+<style>
+body{display:block}
+.ad{max-width:980px;margin:0 auto;padding:24px 16px 60px}
+.ad h1{font:600 22px Cinzel,serif;color:var(--accent);margin-bottom:4px}
+.ad .top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.ad a{color:var(--accent)}
+.ad .tabs{display:flex;gap:6px;margin:14px 0;flex-wrap:wrap}
+.ad .tabs button,.ad .btn{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 14px;cursor:pointer;color:var(--text)}
+.ad .tabs button.on,.ad .btn.main{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.ad .btn.red{border-color:#c0504d;color:#e57373}
+.ad .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:16px}
+.ad label{display:block;font-size:12px;color:var(--muted);margin:12px 0 4px}
+.ad input,.ad select,.ad textarea{width:100%;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:9px 10px;color:var(--text);font:inherit}
+.ad .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.ad .msg{margin:10px 0;padding:9px 12px;border-radius:8px;background:var(--card)}
+.ad .msg.err{border:1px solid #c0504d}.ad .msg.ok{border:1px solid var(--ok)}
+.ad table{width:100%;border-collapse:collapse;font-size:13px}
+.ad td,.ad th{padding:6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.ad td input,.ad td select{padding:5px 7px}
+.ad .acts{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.ad .hint{font-size:12px;color:var(--muted)}
+.ad .pill{font-size:11px;padding:2px 8px;border-radius:99px;border:1px solid var(--line);color:var(--muted)}
+</style>
+</head>
+<body>
+<main class="ad">
+  <div class="top"><div><h1>✦ Painel admin</h1><span class="hint" id="who"></span></div><a href="../index.html">← Voltar ao acervo</a></div>
+  <p class="msg" id="gate">Carregando…</p>
+
+  <div id="app" hidden>
+    <div class="tabs">
+      <button class="on" data-tab="one">Uma AU</button>
+      <button data-tab="bulk">Colar várias</button>
+      <button data-tab="list">AUs do painel <span class="pill" id="count">0</span></button>
+    </div>
+    <p class="msg" id="msg" hidden></p>
+
+    <section class="card" id="tab-one">
+      <h3 id="formTitle">Nova AU</h3>
+      <label>Link do post no X (preenche o resto sozinho)</label>
+      <input id="f_url" type="url" placeholder="https://x.com/usuario/status/1234567890">
+      <div class="row">
+        <div><label>Título</label><input id="f_title" maxlength="160"></div>
+        <div><label>Autor(es) — sem @, separe com " e "</label><input id="f_authors" placeholder="agloveswencl4ir e Lollipop_Raven"></div>
+      </div>
+      <div class="row">
+        <div><label>Fandom / ship</label><input id="f_fandom" list="fandoms" placeholder="Wenclair"><datalist id="fandoms"></datalist></div>
+        <div><label>Status</label><select id="f_status"></select></div>
+        <div><label>Tamanho</label><select id="f_size"></select></div>
+      </div>
+      <label>Sinopse</label><textarea id="f_desc" rows="4" maxlength="2000"></textarea>
+      <div class="row">
+        <div><label>Tags (separe por vírgula)</label><input id="f_tags" placeholder="Slow Burn, Enemies to Lovers"></div>
+        <div><label>Link de leitura (opcional: site, Wattpad, AO3)</label><input id="f_read" type="url"></div>
+      </div>
+      <div class="row">
+        <div><label>Série (opcional)</label><input id="f_series" placeholder="Game Night"></div>
+        <div><label>Ordem na série</label><input id="f_order" type="number" min="1" value="1"></div>
+      </div>
+      <p class="hint" id="dup"></p>
+      <div class="acts"><button class="btn main" id="save">Salvar AU</button><button class="btn" id="clear">Limpar</button></div>
+    </section>
+
+    <section class="card" id="tab-bulk" hidden>
+      <h3>Colar várias de uma vez</h3>
+      <p class="hint">Cole os textos como você copia do X: cada AU termina no link do post. A 1ª linha vira o título e o resto vira a sinopse; o fandom é detectado pelas hashtags (#wenclair, #sweetcc, #piptara…). Uma linha “autores: a e b” troca o autor. Você revisa tudo antes de adicionar.</p>
+      <textarea id="bulk" rows="10" placeholder="mini au #wenclair onde: &quot;Time de vôlei&quot;&#10;https://x.com/usuario/status/123…"></textarea>
+      <div class="acts"><button class="btn" id="parse">Analisar texto</button></div>
+      <div id="preview" style="overflow:auto;margin-top:12px"></div>
+    </section>
+
+    <section class="card" id="tab-list" hidden>
+      <h3>AUs cadastradas pelo painel</h3>
+      <p class="hint">As do <code>data.js</code> continuam no código; aqui aparecem só as que você adicionou pelo painel.</p>
+      <div style="overflow:auto"><table><thead><tr><th>ID</th><th>Título</th><th>Autor</th><th>Fandom</th><th></th></tr></thead><tbody id="rows"></tbody></table></div>
+    </section>
+  </div>
+</main>
+<script src="../home/data.js"></script>
+<script src="../compartilhados/supabase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="../compartilhados/supabase-sync.js"></script>
+<script src="../home/aus-admin.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f0d14">
+<title>Estatísticas | JemmaVerso Archive</title>
+<link rel="icon" type="image/png" href="../assets/imagens/icon.png">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="stylesheet" href="../assets/css/style.css">
+<link rel="stylesheet" href="../assets/css/extras.css">
+<script src="../compartilhados/theme.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body class="about-page stats-page">
+<main class="content">
+  <header class="page-topbar">
+    <a class="home-link" href="../index.html" data-i18n="page.homeTitle">JemmaVerso Archive</a>
+    <label class="language-control"><span data-i18n="language.label">Idioma</span>
+      <select id="languageSelector" aria-label="Idioma">
+        <option value="pt">Português</option><option value="en">English</option><option value="es">Español</option><option value="fr">Français</option><option value="it">Italiano</option>
+      </select>
+    </label>
+  </header>
+  <h1 data-i18n="stats.title">Minhas estatísticas</h1>
+  <div id="stats"></div>
+</main>
+<script src="../home/data.js"></script>
+<script src="../compartilhados/translations-extra.js"></script>
+<script src="../compartilhados/titulo-traducoes.js"></script>
+<script src="../compartilhados/i18n.js"></script>
+<script src="../home/storage.js"></script>
+<script src="../compartilhados/supabase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="../compartilhados/supabase-sync.js"></script>
+<script src="../compartilhados/common.js"></script>
+<script src="stats.js"></script>
+<script src="../compartilhados/app-install.js"></script>
+</body>
+</html>

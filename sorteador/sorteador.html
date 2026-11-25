@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f0d14">
+<title data-i18n="page.shipperTitle">Sorteador de plots | JemmaVerso Acervo</title>
+<link rel="icon" type="image/png" href="../assets/imagens/icon.png">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="stylesheet" href="../assets/css/style.css">
+<link rel="stylesheet" href="../assets/css/extras.css">
+<link rel="stylesheet" href="../assets/css/shipper.css">
+<script src="../compartilhados/theme.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body class="info-page shipper-page">
+<main class="content">
+  <header class="page-topbar">
+    <a class="home-link" href="../index.html" data-i18n="common.backHome">← Voltar ao acervo</a>
+    <a class="home-link" href="../personagens/personagens.html" data-i18n="archive.characters">✦ Conheça os personagens</a>
+    <label class="language-control"><span data-i18n="language.label">Idioma</span>
+      <select id="languageSelector" aria-label="Idioma" data-i18n-aria-label="language.label">
+        <option value="pt">Português</option><option value="en">English</option><option value="es">Español</option><option value="fr">Français</option><option value="it">Italiano</option>
+      </select>
+    </label>
+  </header>
+  <h1 class="info-title" data-i18n="shipper.title">Sorteador de plots</h1>
+  <p class="info-intro" data-i18n="shipper.intro">Sorteie um shipp, um cenário, uma música e tudo o que falta para começar a escrever. Trave o que você gostou e sorteie o resto. Quebre o bloqueio criativo!</p>
+
+  <div class="shipper-actions">
+    <button class="btn" id="rollAll" type="button" data-i18n="shipper.rollAll">⚄ Sortear tudo</button>
+    <button class="btn ghost" id="chaosBtn" type="button" aria-pressed="false" data-i18n="shipper.chaos">⚡︎ Modo caos</button>
+    <button class="btn ghost" id="makeImage" type="button" data-i18n="shipper.makeImage">[◉¯] Gerar imagem</button>
+    <button class="btn ghost" id="saveFav" type="button" data-i18n="shipper.saveFavorite">✮ Salvar favorito</button>
+    <button class="btn ghost" id="unlockAll" type="button" data-i18n="shipper.unlockAll">🔒︎ Destravar tudo</button>
+  </div>
+  <p class="shipper-status" id="status" role="status" aria-live="polite"></p>
+
+  <section id="plotGrid" class="plot-grid" aria-label="Plot sorteado" data-i18n-aria-label="shipper.plotGrid"></section>
+
+  <section class="info-section" aria-labelledby="favTitle">
+    <h2 id="favTitle"><span data-i18n="shipper.favoritesTitle">Favoritos da sessão</span> <span id="favCount" class="chip">0</span></h2>
+    <p class="info-intro" id="favEmpty" data-i18n="shipper.favoritesEmpty">Nenhum plot salvo ainda. Clique em “Salvar favorito” quando sair uma combinação boa. Os favoritos ficam guardados enquanto esta aba estiver aberta.</p>
+    <div id="favList" class="fav-list"></div>
+  </section>
+  <dialog class="ship-dialog poster-options-dialog" id="posterOptionsDialog" aria-labelledby="posterOptionsTitle">
+    <h2 id="posterOptionsTitle" data-i18n="shipper.posterOptions.title">Escolher itens da imagem</h2>
+    <p class="poster-options-intro" data-i18n="shipper.posterOptions.intro">Marque os itens que deseja incluir no pôster. Todos começam selecionados.</p>
+    <div class="poster-options-actions">
+      <button class="btn ghost" id="selectAllPosterOptions" type="button" data-i18n="shipper.posterOptions.selectAll">Marcar todos</button>
+      <button class="btn ghost" id="clearPosterOptions" type="button" data-i18n="shipper.posterOptions.clearAll">Desmarcar todos</button>
+    </div>
+    <div class="poster-options-list" id="posterOptions"></div>
+    <div class="ship-dialog-buttons">
+      <button class="btn ghost" id="cancelPosterOptions" type="button" data-i18n="shipper.posterOptions.cancel">Cancelar</button>
+      <button class="btn" id="generatePoster" type="button" data-i18n="shipper.posterOptions.generate">Gerar pôster</button>
+    </div>
+  </dialog>
+  <dialog class="ship-dialog image-dialog" id="imageDialog" aria-label="Imagem do plot" data-i18n-aria-label="shipper.dialog.imageLabel">
+    <img id="posterPreview" class="poster-preview" alt="Pôster do plot sorteado" data-i18n-alt="shipper.dialog.posterAlt">
+    <div class="ship-dialog-buttons">
+      <a class="btn" id="downloadPoster" href="#" download="plot-jemmaverso.png" data-i18n="shipper.dialog.download">⤿ Baixar imagem</a>
+      <button class="btn ghost" id="sharePoster" type="button" hidden data-i18n="shipper.dialog.share">⌲ Compartilhar</button>
+      <button class="btn ghost" id="copyPoster" type="button" hidden data-i18n="shipper.dialog.copy">⎙ Copiar imagem</button>
+      <button class="btn ghost" id="closePoster" type="button" data-i18n="shipper.dialog.close">Fechar</button>
+    </div>
+  </dialog>
+  <a class="info-back" href="../index.html" data-i18n="common.backHome">← Voltar ao acervo</a>
+</main>
+<script src="../compartilhados/translations-extra.js"></script>
+<script src="../compartilhados/i18n.js"></script>
+<script src="ship-pool.js"></script>
+<script src="sorteador-data.js"></script>
+<script src="sorteador-localization.js"></script>
+<script src="sorteador-descriptions.js"></script>
+<script src="sorteador.js"></script>
+</body>
+</html>

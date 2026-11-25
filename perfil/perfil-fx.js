@@ -1,0 +1,154 @@
+/* Efeitos compartilhados do perfil (perfil.html e ver.html) */
+(function () {
+  const SP = /(?:open\.spotify\.com\/(?:intl-[a-z]+\/)?|^spotify:)(track|album|playlist|episode|show|artist)[\/:]([A-Za-z0-9]{10,30})/;
+  const rgb = h => { const n = parseInt(h.slice(1), 16); return [n >> 16, (n >> 8) & 255, n & 255]; };
+  const hex = a => "#" + a.map(c => Math.max(0, Math.min(255, Math.round(c))).toString(16).padStart(2, "0")).join("");
+  window.jvFx = {
+    spotifyId(u) { const m = (u || "").trim().match(SP); return m ? m[1] + "/" + m[2] : ""; },
+    COLORS: [["accent", "Destaques, botões e tag"], ["text", "Letras"], ["muted", "Letras secundárias"], ["bg", "Fundo da página"],
+             ["panel", "Quadrado do perfil"], ["card", "Blocos internos"], ["line", "Bordas"]],
+    theme(el, c) {
+      c = c || {}; const s = el.style, map = { accent: "--accent", text: "--text", muted: "--muted", bg: "--bg", panel: "--panel", card: "--card", line: "--line" };
+      Object.values(map).concat(["--accent2", "--on-accent"]).forEach(p => s.removeProperty(p));
+      const ok = v => /^#[0-9a-f]{6}$/i.test(v || "");
+      for (const k in map) if (ok(c[k])) s.setProperty(map[k], c[k]);
+      if (ok(c.accent)) {
+        const a = rgb(c.accent), l = (.299 * a[0] + .587 * a[1] + .114 * a[2]) / 255;
+        s.setProperty("--accent2", hex(a.map(v => v * .7)));
+        s.setProperty("--on-accent", l > .6 ? "#17101f" : "#ffffff");
+      }
+    },
+    bg(url) {
+      document.body.classList.toggle("pf-hasbg", !!url);
+      document.body.style.setProperty("--pf-bg", url ? 'url("' + encodeURI(url) + '")' : "none");
+    },
+    badge(a, text, author) {
+      a.hidden = !(text || author); a.textContent = ""; a.removeAttribute("href");
+      if (a.hidden) return;
+      if (text) a.append(text);
+      if (author) {
+        const b = document.createElement("b"); b.textContent = (text ? " " : "") + "@" + author; a.append(b);
+        a.href = "../index.html?autor=" + encodeURIComponent(author);
+        a.title = "Ver só as AUs de @" + author;
+      }
+    },
+    spotify(box, id) {
+      box.textContent = ""; box.hidden = !id;
+      if (!id) return;
+      const f = document.createElement("iframe");
+      f.src = "https://open.spotify.com/embed/" + id; f.title = "Spotify"; f.loading = "lazy";
+      f.height = /^(track|episode)/.test(id) ? 152 : 352;
+      f.allow = "encrypted-media; clipboard-write; fullscreen";
+      box.append(f);
+    },
+    userSearch(A) {
+      const inp = document.getElementById("pfSearch"), box = document.getElementById("pfRes");
+      if (!inp || !box) return;
+      let timer, seq = 0;
+      const pub = x => x ? A.client.storage.from("profile-media").getPublicUrl(x).data.publicUrl : "";
+      const go = s => { location.href = "ver.html?u=" + encodeURIComponent(s); };
+      const note = txt => Object.assign(document.createElement("p"), { className: "pf-snote", textContent: txt });
+      inp.addEventListener("input", () => {
+        inp.value = inp.value.toLowerCase().replace(/^@/, "").replace(/[^a-z0-9_]/g, "");
+        clearTimeout(timer); const q = inp.value;
+        if (q.length < 2) { box.hidden = true; return; }
+        timer = setTimeout(async () => {
+          const my = ++seq, { data, error } = await A.client.rpc("search_public_profiles", { p_q: q });
+          if (my !== seq) return;
+          box.textContent = "";
+          if (error) box.append(note("Busca indisponível no momento."));
+          else if (!data || !data.length) box.append(note("Nenhum perfil público encontrado."));
+          else data.forEach(p => {
+            const b = document.createElement("button"); b.type = "button"; b.className = "pf-sitem";
+            const src = pub(p.avatar_path), nm = p.display_name || p.slug;
+            if (src) { const im = document.createElement("img"); im.src = src; im.alt = ""; b.append(im); }
+            else b.append(Object.assign(document.createElement("i"), { textContent: nm[0].toUpperCase() }));
+            const s = document.createElement("span"); s.textContent = nm + " ";
+            const sm = document.createElement("small"); sm.textContent = "@" + p.slug; s.append(sm); b.append(s);
+            b.onclick = () => go(p.slug); box.append(b);
+          });
+          box.hidden = false;
+        }, 250);
+      });
+      inp.addEventListener("keydown", e => { if (e.key === "Enter" && inp.value.length >= 3) go(inp.value); });
+      document.addEventListener("click", e => { if (e.target !== inp && !box.contains(e.target)) box.hidden = true; });
+    },
+    /* personagens: lidos da própria página "Conheça os personagens" (cards .character-card) */
+    characters() {
+      let cached = null; try { cached = JSON.parse(sessionStorage.getItem("jv_chars")); } catch (e) {}
+      if (cached && cached.length && !this._c) this._c = Promise.resolve(cached);
+      if (!this._c) this._c = fetch("../personagens/personagens.html").then(r => { if (!r.ok) throw 0; return r.text(); }).then(h => {
+        const d = new DOMParser().parseFromString(h, "text/html");
+        return [...d.querySelectorAll(".character-card")].map(c => {
+          const im = c.querySelector("img"), h3 = c.querySelector("h3");
+          return { id: (c.id || "").replace(/^character-/, ""), name: h3 ? h3.textContent.trim() : "", img: im ? im.getAttribute("src") : "" };
+        }).filter(c => c.id && c.name);
+      }).then(list => { if (!list.length) list = window.JV_CHARS || []; try { sessionStorage.setItem("jv_chars", JSON.stringify(list)); } catch (e) {} return list; }).catch(err => { console.warn("[JemmaVerso] Não consegui ler personagens.html:", err); this._c = null; return window.JV_CHARS || []; });
+      return this._c;
+    },
+    idents(wrap, list, ids, chars) {
+      list.textContent = "";
+      const items = (ids || []).map(id => (chars || []).find(c => c.id === id)).filter(Boolean);
+      wrap.hidden = !items.length;
+      items.forEach(c => {
+        const a = document.createElement("a"); a.className = "pf-chip"; a.href = "../personagens/personagens.html#character-" + c.id;
+        if (c.img) { const im = document.createElement("img"); im.loading = "lazy"; im.decoding = "async"; im.src = c.img; im.alt = ""; a.append(im); }
+        a.append(c.name); list.append(a);
+      });
+    },
+    mediaKind(path) { const e = (path || "").split(".").pop().toLowerCase(); return e === "mp4" || e === "webm" ? "video" : e === "gif" ? "gif" : "image"; },
+    bioLink(a, url, label) {
+      a.hidden = !url; a.textContent = ""; a.removeAttribute("href");
+      if (!url) return;
+      let host = url; try { host = new URL(url).hostname.replace(/^www\./, ""); } catch (e) {}
+      a.href = url; a.textContent = "★ | " + (label || host);
+    },
+    featured(holder, src, kind) {   // vídeo (toca sozinho, sem som, em loop) ou GIF/imagem em destaque
+      holder.textContent = ""; holder.parentElement.hidden = !src;
+      if (!src) return;
+      const fig = document.createElement("div"); fig.className = "pf-feat";
+      let m;
+      if (kind === "video") {
+        m = document.createElement("video"); m.src = src; m.muted = true; m.loop = true; m.autoplay = true; m.playsInline = true; m.preload = "metadata";
+        m.setAttribute("playsinline", ""); m.setAttribute("muted", "");
+      } else { m = document.createElement("img"); m.src = src; m.alt = ""; }
+      fig.append(m);
+      if (kind !== "image") {
+        const bar = document.createElement("div"), btn = document.createElement("button"), tag = document.createElement("span");
+        bar.className = "pf-feat-bar"; btn.type = "button"; btn.className = "pf-feat-btn"; tag.textContent = kind === "gif" ? "GIF" : "VÍDEO";
+        const label = paused => { btn.textContent = paused ? "▶" : "❚❚"; btn.setAttribute("aria-label", paused ? "Reproduzir" : "Pausar"); };
+        label(false); bar.append(btn, tag); fig.append(bar);
+        if (kind === "video") {
+          m.addEventListener("play", () => label(false)); m.addEventListener("pause", () => label(true));
+          btn.onclick = () => { if (m.paused) m.play().catch(() => {}); else m.pause(); };
+          m.play && m.play().catch(() => label(true));
+        } else {
+          let snap = null;
+          btn.onclick = () => {
+            if (!snap) { snap = document.createElement("canvas"); snap.width = m.naturalWidth; snap.height = m.naturalHeight; snap.getContext("2d").drawImage(m, 0, 0); snap.className = "pf-feat-snap"; fig.insertBefore(snap, bar); label(true); }
+            else { snap.remove(); snap = null; label(false); }
+          };
+        }
+      }
+      holder.append(fig);
+    },
+    lists(box, shared, byId) {
+      box.textContent = "";
+      [["quero-ler", "Quero ler"], ["lendo", "Lendo"], ["lido", "Concluídas"]].forEach(([k, label]) => {
+        if (!shared || !Array.isArray(shared[k])) return;
+        const items = shared[k].map(byId).filter(Boolean);
+        const d = document.createElement("details"); d.className = "pf-list";
+        const s = document.createElement("summary"); s.textContent = label + " (" + items.length + ")"; d.append(s);
+        if (!items.length) d.append(Object.assign(document.createElement("p"), { className: "pf-empty", textContent: "Nada por aqui ainda." }));
+        items.forEach(a => {
+          const l = document.createElement("a"); l.className = "pf-li"; l.href = a.url; l.target = "_blank"; l.rel = "noopener noreferrer"; l.textContent = a.title;
+          const sm = document.createElement("small"); sm.textContent = " · " + ((a.author && a.author.display) || ""); l.append(sm); d.append(l);
+        });
+        box.append(d);
+      });
+    },
+    about(box, img, text, src) {
+      box.hidden = !(text || src); img.hidden = !src; if (src) img.src = src;
+    }
+  };
+})();

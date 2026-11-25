@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Perfil · JemmaVerso</title>
+<link rel="icon" type="image/png" href="../assets/imagens/icon.png">
+<link rel="stylesheet" href="../assets/css/style.css">
+<link rel="stylesheet" href="../assets/css/extras.css">
+<link rel="stylesheet" href="../assets/css/perfil.css">
+<script src="../compartilhados/theme.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+<main class="pf-page">
+  <div class="pf-top"><a href="../index.html">← Ir ao acervo</a></div>
+  <div class="pf-search"><input id="pfSearch" type="search" maxlength="20" placeholder="Buscar perfil pelo usuário…" autocomplete="off" autocapitalize="none" aria-label="Buscar perfil pelo usuário"><div class="pf-sres" id="pfRes" hidden></div></div>
+  <section class="pf-card" id="card" hidden>
+    <div class="pf-banner">
+      <img id="bannerImg" alt="" hidden>
+      <div class="pf-avatar"><span id="initial">?</span><img id="avatarImg" alt="" hidden></div>
+    </div>
+    <div class="pf-body">
+      <div class="pf-head"><div><div class="pf-namerow"><h1 id="vName"></h1><a class="pf-badge" id="vBadge" hidden></a></div><a class="pf-handle" id="vHandle" target="_blank" rel="noopener noreferrer" hidden></a><br><a class="pf-biolink" id="vLink" target="_blank" rel="noopener noreferrer nofollow ugc" hidden></a></div></div>
+      <blockquote class="pf-quote" id="vBio" hidden></blockquote>
+      <div class="pf-tags" id="vTags"></div>
+      <section id="vIdentBox" hidden><h2 class="pf-h2">✦ Me identifico com:</h2><div class="pf-chips" id="vIdent"></div></section>
+      <section class="pf-about" id="vAboutBox" hidden><h2 class="pf-h2">✦ Sobre mim</h2><div class="pf-aboutrow"><img id="aboutImg" alt="" hidden><p id="vAbout"></p></div></section>
+      <div class="pf-spotify" id="vSpotify" hidden></div>
+      <section id="vFeatBox" hidden><h2 class="pf-h2">✦ Destaque</h2><div id="vFeat"></div></section>
+      <h2 class="pf-h2">✦ AUs favoritas</h2>
+      <div class="pf-podium" id="vAus"></div>
+      <div id="vLists"></div>
+      <section id="vComments" hidden></section>
+      <a class="pf-btn main pf-cta" href="../login/login.html">Criar meu perfil ✦</a>
+    </div>
+  </section>
+  <p class="pf-msg" id="loading">Carregando…</p>
+</main>
+<script>window.JV_NO_WIDGET = true;</script>
+<script src="../home/data.js"></script>
+<script src="../compartilhados/supabase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="../compartilhados/supabase-sync.js"></script>
+<script src="../personagens/personagens-lista.js"></script>
+<script src="perfil-fx.js"></script>
+<script src="comentarios.js"></script>
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const el = (tag, props, kids) => { const n = Object.assign(document.createElement(tag), props || {}); (kids || []).forEach(k => n.append(k)); return n; };
+  const fail = t => { $("loading").textContent = t; };
+  const A = window.jvAuth;
+  if (!A) return fail("Perfil indisponível no momento.");
+  jvFx.userSearch(A);
+  const slug = (new URLSearchParams(location.search).get("u") || "").toLowerCase();
+  if (!/^[a-z0-9_]{3,20}$/.test(slug)) return fail("Link de perfil inválido.");
+
+  A.client.rpc("get_public_profile", { p_slug: slug }).then(({ data, error }) => {
+    const p = data && data[0];
+    if (error || !p) return fail("Perfil não encontrado, ou não é público.");
+    const pub = x => x ? A.client.storage.from("profile-media").getPublicUrl(x).data.publicUrl : "";
+    const show = (img, src) => { img.hidden = !src; if (src) img.src = src; };
+    const name = p.display_name || p.slug;
+    document.title = name + " · JemmaVerso";
+    $("vName").textContent = name; $("initial").textContent = name[0].toUpperCase();
+    show($("avatarImg"), pub(p.avatar_path)); show($("bannerImg"), pub(p.banner_path)); $("initial").hidden = !$("avatarImg").hidden;
+    jvFx.theme(document.body, p.theme_colors || (p.theme_color ? { accent: p.theme_color } : {})); jvFx.bg(pub(p.bg_path));
+    jvFx.badge($("vBadge"), p.badge_text, p.badge_author);
+    $("vAbout").textContent = p.about || ""; jvFx.about($("vAboutBox"), $("aboutImg"), p.about, pub(p.about_path));
+    jvFx.spotify($("vSpotify"), p.spotify);
+    jvFx.bioLink($("vLink"), p.link_url, p.link_label); jvFx.featured($("vFeat"), pub(p.media_path), jvFx.mediaKind(p.media_path));
+    if (p.x_handle) { const h = $("vHandle"); h.hidden = false; h.textContent = "@" + p.x_handle; h.href = "https://x.com/" + p.x_handle; }
+    if (p.bio) { $("vBio").hidden = false; $("vBio").textContent = "“" + p.bio + "”"; }
+    const tag = (l, v) => $("vTags").append(el("span", { className: "pf-tag" }, [l + " ", el("b", { textContent: v })]));
+    if (p.fav_ship) tag("♥\uFE0E Ship:", p.fav_ship);
+    if (p.fav_character) tag("★ Personagem:", p.fav_character);
+    tag("◆ Desde", new Date(p.created_at).toLocaleDateString("pt-BR", { month: "long", year: "numeric" }));
+    const list = (p.fav_aus || []).map(id => (typeof aus !== "undefined" ? aus : []).find(a => a.id === id)).filter(Boolean);
+    if (!list.length) $("vAus").append(el("p", { className: "pf-empty", textContent: "Ainda não escolheu." }));
+    list.forEach((a, i) => $("vAus").append(el("a", { className: "pf-au", href: a.url, target: "_blank", rel: "noopener noreferrer" }, [
+      el("div", { className: "m", textContent: ["①", "②", "③"][i] }), el("h3", { textContent: a.title }),
+      el("small", { textContent: (a.author && a.author.display || "") + " · " + a.fandom })])));
+    jvFx.lists($("vLists"), p.shared_lists, id => (typeof aus !== "undefined" ? aus : []).find(a => a.id === id));
+    if ((p.identifies || []).length) jvFx.characters().then(ch => jvFx.idents($("vIdentBox"), $("vIdent"), p.identifies, ch));
+    jvComments.mount($("vComments"), p.slug, A, pub);
+    $("loading").hidden = true; $("card").hidden = false;
+  });
+})();
+</script>
+</body>
+</html>

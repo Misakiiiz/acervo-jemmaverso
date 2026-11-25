@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#08070d">
+<title>Gerador de Chat Fake</title>
+<link rel="stylesheet" href="style.css"><link rel="stylesheet" href="tema.css"><script src="../compartilhados/theme.js"></script></head><body>
+<div class="cf-warn" id="cfWarn" role="status"><span>🚧 Ainda em construção e testes — algumas coisas podem não funcionar direito.</span><button type="button" id="cfWarnX" aria-label="Fechar aviso">Fechar ✕</button></div>
+
+<div class="col" id="left"><section class="card"><h4>Celular</h4>
+<label>Celular ativo</label><select id="psel"></select>
+<div class="tiles t2"><button id="pnew">Novo celular</button><button class="r" id="pdel">Excluir</button></div>
+<label>Nome do dono</label><input type="text" data-p="owner">
+<div class="row"><div><label>Horário</label><input type="time" data-p="time"></div><div><label>Bateria %</label><input type="number" min="1" max="100" data-p="battery"></div></div>
+<div class="row"><div><label>Operadora</label><input type="text" data-p="carrier"></div><div><label>Rede</label><select data-p="net"><option>5G</option><option>4G</option><option>3G</option><option>Wi-Fi</option></select></div></div>
+<label>Foto do dono</label><input type="file" accept="image/*" id="pph">
+<label><input type="checkbox" data-p="dark"> Modo escuro</label><h5>Aparência</h5>
+<label>Wallpaper (imagem)</label><input type="file" accept="image/*" id="wall">
+<div class="row c3"><div><label>Cor de fundo</label><input type="color" data-p="wallColor"></div><div><label>Balão enviado</label><input type="color" data-p="out"></div><div><label>Balão recebido</label><input type="color" data-p="inn"></div></div>
+<label>Tamanho da fonte</label><input type="range" min="11" max="20" data-p="font" style="width:100%">
+<label>Cor do horário das mensagens</label><div class="row"><input type="color" id="tcol" value="#667781"><button class="g" id="tcauto" style="margin:0">Automática</button></div><button class="g" id="wreset">Restaurar padrão</button></section><section class="card" data-for="wa,ms,tw"><h4>Contatos e grupos</h4>
+<h5>Novo contato</h5>
+<label>Nome</label><input type="text" id="cn"><label>Número</label><input type="text" id="cnum" placeholder="+55 11 90000-0000">
+<label>Foto</label><input type="file" accept="image/*" id="cph"><button id="cadd">Adicionar contato</button>
+<div data-for="wa,ms"><h5>Novo grupo</h5>
+<label>Nome do grupo</label><input type="text" id="gn"><label>Foto do grupo</label><input type="file" accept="image/*" id="gph">
+<label>Membros (contatos)</label><div class="chk" id="gm"></div>
+<label>Membros extras (separe por vírgula)</label><input type="text" id="gx"><button id="gadd">Criar grupo</button></div></section><section class="card" data-for="tw"><h4>Perfil do X</h4><label>Nome de exibição</label><input type="text" data-t="name"><label>Nome de usuário</label><input type="text" data-t="user"><label>Bio</label><textarea data-t="bio" rows="3"></textarea><div class="row"><div><label>Local</label><input type="text" data-t="loc"></div><div><label>Entrada</label><input type="text" data-t="joined"></div></div><div class="row"><div><label>Seguindo</label><input type="number" data-t="following"></div><div><label>Seguidores</label><input type="number" data-t="followers"></div></div><label><input type="checkbox" data-t="verified"> Conta verificada</label><label>Foto de perfil</label><input type="file" accept="image/*" id="tph"><label>Banner</label><input type="file" accept="image/*" id="tbn"><label>Assuntos em alta (um por linha)</label><textarea data-t="trends" rows="4"></textarea></section></div>
+<div id="stage"><div class="seg" id="seg"><button data-m="pc">Modo PC</button><button data-m="phone">Modo celular</button></div><div id="pw"><div class="phone" id="ph"><div id="sc"></div><div id="gb"><span data-nav="back" title="Voltar">◁</span><span data-nav="home" title="Início">○</span><span data-nav="rec" title="Trocar app">▢</span><span id="hmb" class="gbm" title="Menu">☰</span></div></div><div id="xs" title="Rolagem"><div id="xt"></div></div></div>
+<div class="bar"><button class="g" id="homeb">Tela inicial</button><button class="g" id="cropb">✂ Recorte</button><button id="shot">Copiar print</button><select id="fmt" style="width:auto"><option value="png">PNG</option><option value="jpg">JPG</option><option value="jpeg">JPEG</option><option value="gif">GIF</option></select><button class="g" id="dl">Salvar</button><button class="g" id="exp">Exportar</button><button class="g" id="imp">Importar</button><a class="g bk" id="backb" href="../index.html">← Acervo</a><input type="file" id="impf" accept=".json" hidden></div></div>
+<div class="col" id="right"><section class="card" data-for="home"><h4>Tela inicial</h4><small>Toque num app no celular. O painel muda para o conteúdo daquele app.</small></section><section class="card" data-for="wa,ms,tw"><h4>Conversa aberta</h4>
+<select id="csel"></select>
+<div id="cedit"><label>Nome</label><input type="text" id="ce_n"><label>Status (online, digitando…, visto por último…)</label><input type="text" id="ce_s"><label>Cor do subtítulo (online, membros…)</label><input type="color" id="ce_sc" value="#ffffff">
+<div class="row"><div><label>Não lidas</label><input type="number" min="0" id="ce_u"></div><div><label>Foto</label><input type="file" accept="image/*" id="ce_p"></div></div>
+<div class="tiles t2"><button class="g" id="cclr">Limpar mensagens</button><button class="r" id="cdel">Excluir conversa</button></div></div></section><section class="card" data-for="wa"><h4>Status do WhatsApp</h4><label>De quem</label><select id="stw"></select><label>Status existente</label><select id="stsel"></select>
+<label>Texto</label><textarea id="stx" rows="2"></textarea><div class="row"><div><label>Horário</label><input type="text" id="sth" placeholder="Hoje, 10:07"></div><div><label>Cor de fundo</label><input type="color" id="stc" value="#128c7e"></div></div>
+<label>Foto (opcional)</label><input type="file" accept="image/*" id="stimgf"><button id="stadd">Adicionar status</button><div class="tiles t2"><button class="g" id="stsave">Salvar edição</button><button class="r" id="stdel">Excluir</button></div></section><section class="card" data-for="wa,ms,tw" data-need="chat"><h4>Mensagem</h4>
+<div class="row"><div><label>Quem envia</label><select id="mf"></select></div><div><label>Hora</label><input type="time" id="mt"></div><div><label>Status</label><select id="ms"><option value="1">✓ Enviada</option><option value="2">✓✓ Entregue</option><option value="3" selected>✓✓ Lida (azul)</option><option value="0">Sem ticks</option></select></div></div>
+<label>Reação (emoji na mensagem selecionada)</label><input type="text" id="mre" placeholder="❤️"><label>Duração (ligação ou áudio)</label><input type="text" id="md" placeholder="4 min  ou  0:34"><label>Texto</label><input type="text" id="mx" placeholder="Digite a mensagem">
+<div class="tiles"><button id="msend">Enviar texto</button><button class="g" id="mimg">Imagem</button><button class="g" id="mstk">Figurinha</button><button class="g" id="memo">Emoji grande</button><button class="g" id="mgif">GIF</button><button class="g" id="maud">Áudio</button><input type="file" accept="image/*" id="mimgf" hidden><input type="file" accept="image/*" id="mstkf" hidden><input type="file" accept="image/gif,image/webp" id="mgiff" hidden>
+<button class="g" id="medit">Salvar edição</button><button class="r" id="mdel">Excluir selecionada</button></div>
+<small style="display:block;color:var(--mu);margin-top:4px">Clique numa mensagem no celular para selecioná-la.</small>
+<div data-for="wa"><hr><label>Bloco de ligação</label>
+<div class="row"><select id="ck"><option value="in">Ligação recebida</option><option value="missed">Ligação perdida</option><option value="refused">Ligação recusada</option><option value="out">Ligação realizada</option><option value="noans">Sem resposta</option></select><select id="cv"><option value="0">Voz</option><option value="1">Vídeo</option></select><input type="text" id="cd" placeholder="Duração (2 min)"></div>
+<button id="cadd2">Inserir ligação</button>
+<label>Bloco de sistema</label>
+<select id="sk"><option value="blk">Você bloqueou este contato</option><option value="unb">Você desbloqueou este contato</option><option value="enc">Aviso de criptografia</option><option value="del">Mensagem apagada</option><option value="join">Entrou no grupo</option><option value="left">Saiu do grupo</option><option value="rem">Você removeu alguém</option><option value="add">Você adicionou alguém</option><option value="custom">Texto personalizado…</option></select>
+<input type="text" id="sx" placeholder="Texto/nome (opcional)"><button id="sadd">Inserir bloco</button></div>
+<label>Divisor de data</label><input type="text" id="dx" value="HOJE"><button id="dadd">Inserir data</button></section><section class="card" data-for="tw"><h4>Posts do X</h4><small id="thint"></small>
+<div class="row"><div><label>Autor (vazio = eu)</label><input type="text" id="tn" placeholder="Nome"></div><div><label>@usuário</label><input type="text" id="tu"></div></div>
+<label><input type="checkbox" id="tvf"> Autor verificado</label><label>Foto do autor</label><input type="file" accept="image/*" id="tap">
+<label>Texto do post</label><textarea id="tt" rows="3"></textarea><label>Imagem do post</label><input type="file" accept="image/*" id="timgf">
+<div class="row"><div><label>Tempo</label><input type="text" id="th"></div><div><label>Respostas</label><input type="number" id="tc" value="0"></div></div>
+<div class="row"><div><label>Reposts</label><input type="number" id="tr" value="0"></div><div><label>Curtidas</label><input type="number" id="tl" value="0"></div><div><label>Views</label><input type="number" id="tv2" value="0"></div></div>
+<label>É resposta a</label><select id="tp"></select>
+<label>Tipo de post</label><select id="tkind"><option value="">Post normal</option><option value="rt">Repost (de outra pessoa)</option><option value="quote">Citação (quote)</option></select>
+<div id="tkrt" hidden><label>Repostado por</label><input type="text" id="trt" placeholder="Nome de quem repostou"></div>
+<div id="tkq" hidden><h5>Post citado</h5><div class="row"><div><label>Nome</label><input type="text" id="tqn"></div><div><label>@usuário</label><input type="text" id="tqu"></div></div>
+<label><input type="checkbox" id="tqv"> Verificado</label><label>Foto do autor citado</label><input type="file" accept="image/*" id="tqph">
+<label>Texto do post citado</label><textarea id="tqt" rows="3"></textarea><label>Imagem do post citado (opcional)</label><input type="file" accept="image/*" id="tqimg"><label>Tempo</label><input type="text" id="tqh" placeholder="23 de nov."></div>
+<button id="tadd">Publicar post</button><div class="tiles t2"><button class="g" id="tsave">Salvar edição</button><button class="r" id="tdel">Excluir post</button></div></section></div>
+<div id="mback"></div><div id="toast"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>var exports={}</script>
+<script src="https://cdn.jsdelivr.net/npm/omggif@1.0.10/omggif.js"></script>
+<input type="file" id="af" accept="image/*" hidden><input type="file" id="stf" accept="image/*" hidden>
+<script src="script.js"></script>
+<script>document.getElementById("cfWarnX").onclick=function(){document.getElementById("cfWarn").remove();}</script>
+</body></html>

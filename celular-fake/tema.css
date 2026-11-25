@@ -1,0 +1,23 @@
+/* Temas do site (copiados de assets/css/extras.css) */
+html[data-theme=padrao]{--bg:#0f0d14;--panel:#17141f;--card:#1c1827;--line:#2a2538;--text:#ece8f3;--muted:#9a93ab;--accent:#b794f6;--accent2:#b794f6;--on-accent:#17101f;--ok:#6fcf97;--warn:#f2c46d}
+html[data-theme=padrao-escuro]{--bg:#000;--panel:#080808;--card:#111;--line:#232323;--text:#f2f2f2;--muted:#999;--accent:#dcdcdc;--accent2:#8a8a8a;--on-accent:#000;--ok:#8fd9a8;--warn:#e6c46e}
+html[data-theme=padrao-claro]{--bg:#f6f5f9;--panel:#fff;--card:#fff;--line:#dcd8e6;--text:#1c1a24;--muted:#6b6679;--accent:#6b4fc4;--accent2:#b05fc0;--on-accent:#fff;--ok:#2e7d4f;--warn:#a96a12}
+html[data-theme=wenclair]{--bg:#0b0a10;--panel:#13111b;--card:#1a1724;--line:#2d2842;--text:#f1edf7;--muted:#a59db8;--accent:#ff8fc7;--accent2:#7cc4ff;--on-accent:#1a0d15;--ok:#6fcf97;--warn:#f2c46d}
+html[data-theme=piptara]{--bg:#1c261a;--panel:#232f20;--card:#2b3928;--line:#3b4c36;--text:#f7e9ec;--muted:#b8c4a6;--accent:#f6b9cb;--accent2:#c9d98f;--on-accent:#2a1519;--ok:#b5e08a;--warn:#f2d27a}
+html[data-theme=pipvada]{--bg:#0b1710;--panel:#10221a;--card:#162d21;--line:#26412f;--text:#f2ecdf;--muted:#a9b8a3;--accent:#ff8a2b;--accent2:#ffc27a;--on-accent:#1f0f02;--ok:#7fd69b;--warn:#ffd27a}
+html[data-theme=sweetcc]{--bg:#172b45;--panel:#263d4c;--card:#405a54;--line:#758b83;--text:#f4eee4;--muted:#c0c6b7;--accent:#b08a66;--accent2:#8ba0aa;--on-accent:#172b45;--ok:#8b9b88;--warn:#b08a66}
+html[data-theme=addams]{--bg:#000;--panel:#0a0a0a;--card:#131313;--line:#4a4a4a;--text:#fff;--muted:#c4c4c4;--accent:#fff;--accent2:#9d9d9d;--on-accent:#000;--ok:#d8d8d8;--warn:#fff}
+html[data-theme=klara]{--bg:#dff3ef;--panel:#c9e8e2;--card:#f1f8f3;--line:#91c9c0;--text:#204846;--muted:#527a74;--accent:#e6c94e;--accent2:#a56a43;--on-accent:#263b36;--ok:#477b52;--warn:#a56a43}
+html[data-theme=natal]{--bg:#0c1a14;--panel:#12261c;--card:#183226;--line:#2a4a39;--text:#f4efe6;--muted:#a8bfae;--accent:#ff5a5f;--accent2:#5fd38d;--on-accent:#fff}
+html[data-theme=halloween]{--bg:#110a05;--panel:#1a1109;--card:#241811;--line:#3d2b1c;--text:#f6ece0;--muted:#b9a58f;--accent:#ff7a1a;--accent2:#a66bff;--on-accent:#1a0c02}
+html[data-theme=pascoa]{--bg:#fbf4ff;--panel:#fff;--card:#fff8fd;--line:#e6d3f0;--text:#3b2a4a;--muted:#7d6a8c;--accent:#a96ad6;--accent2:#f59ec0;--on-accent:#fff;--ok:#2e8b57;--warn:#b7791f}
+html[data-theme=carnaval]{--bg:#120b1f;--panel:#1b1030;--card:#25163f;--line:#3d2a63;--text:#fff4e8;--muted:#c0aee0;--accent:#ff2fa0;--accent2:#ffd400;--on-accent:#fff}
+html[data-theme=anonovo]{--bg:#080a18;--panel:#0f1226;--card:#161a33;--line:#2a2f57;--text:#f6f1e3;--muted:#a9aed0;--accent:#ffd86b;--accent2:#9fb4ff;--on-accent:#1b1500}
+html[data-theme=muertos]{--bg:#130a1b;--panel:#1b1026;--card:#25162f;--line:#42285a;--text:#fff1dc;--muted:#c4a9d6;--accent:#ff9f1c;--accent2:#ff4fa3;--on-accent:#1f1000}
+
+/* Ponte: o painel do celular fake usa as cores do tema já escolhido no site (não há seletor aqui) */
+html[data-theme]{--pg:var(--bg);--pn:var(--panel);--in:var(--card);--tx:var(--text);--mu:var(--muted);--bd:var(--line);--bd2:var(--line);--ac:var(--accent);--ac2:var(--accent2)}
+html[data-theme=padrao-claro],html[data-theme=klara],html[data-theme=pascoa]{color-scheme:light}
+body{background:var(--pg)}
+/* o rodapé do site não entra nesta ferramenta (o botão "← Acervo" fica na barra de ações) */
+.site-footer{display:none!important}

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Entrar · JemmaVerso</title>
+<link rel="icon" type="image/png" href="../assets/imagens/icon.png">
+<link rel="stylesheet" href="../assets/css/style.css">
+<link rel="stylesheet" href="../assets/css/extras.css">
+<script src="../compartilhados/theme.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+body{display:block;overflow-x:hidden}
+.auth-wrap{min-height:100vh;display:grid;place-items:center;padding:24px;position:relative;
+  background:radial-gradient(60% 50% at 15% 10%,color-mix(in srgb,var(--accent) 28%,transparent),transparent),
+             radial-gradient(55% 45% at 90% 90%,color-mix(in srgb,var(--accent2,var(--accent)) 24%,transparent),transparent),var(--bg)}
+.auth-card{width:100%;max-width:400px;background:color-mix(in srgb,var(--panel) 88%,transparent);backdrop-filter:blur(10px);
+  border:1px solid var(--line);border-radius:22px;padding:32px 28px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.auth-logo{width:84px;height:84px;border-radius:50%;object-fit:cover;border:2px solid var(--accent);box-shadow:0 0 0 6px color-mix(in srgb,var(--accent) 18%,transparent);margin-bottom:14px}
+.auth-card h1{font:600 1.6rem Cinzel,serif;letter-spacing:.04em}
+.auth-sub{color:var(--muted);margin:6px 0 22px}
+.auth-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:.8rem;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--text);font:500 .95rem Poppins,sans-serif;cursor:pointer;transition:transform .15s,border-color .15s}
+.auth-btn:hover{transform:translateY(-1px);border-color:var(--accent)}
+.auth-btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2,var(--accent)));color:var(--on-accent,#17101f);border:0;font-weight:600}
+.auth-or{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:.8rem;margin:18px 0}
+.auth-or::before,.auth-or::after{content:"";flex:1;height:1px;background:var(--line)}
+.auth-card input{width:100%;padding:.8rem 1rem;margin-bottom:10px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--text);font:inherit}
+.auth-card input:focus{outline:2px solid var(--accent);outline-offset:1px}
+.auth-msg{min-height:1.4em;margin-top:12px;font-size:.85rem;color:var(--muted)}
+.auth-msg.err{color:#ff8a8a}.auth-msg.ok{color:var(--ok)}
+.auth-back{display:inline-block;margin-top:18px;color:var(--muted);font-size:.85rem;text-decoration:none}
+.auth-back:hover{color:var(--accent)}
+.auth-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:4px;margin-bottom:20px}
+.auth-tabs button{border:0;background:none;color:var(--muted);padding:.6rem .3rem;border-radius:10px;font:500 .82rem Poppins,sans-serif;cursor:pointer}
+.auth-tabs button.on{background:linear-gradient(135deg,var(--accent),var(--accent2,var(--accent)));color:var(--on-accent,#17101f);font-weight:600}
+.auth-form{text-align:left}.auth-form[hidden]{display:none}
+.auth-form label{display:block;font-size:.78rem;color:var(--muted);margin:2px 0 4px}
+.auth-pw{position:relative}.auth-pw input{padding-right:5.2rem}
+.pw-toggle{position:absolute;right:8px;top:7px;border:0;background:none;color:var(--accent);font:500 .8rem Poppins,sans-serif;cursor:pointer;padding:.4rem}
+.auth-link{background:none;border:0;color:var(--muted);font:inherit;font-size:.82rem;cursor:pointer;text-decoration:underline;padding:0;margin:0 0 12px}
+.auth-link:hover{color:var(--accent)}
+.auth-hint{font-size:.74rem;color:var(--muted);margin:-4px 0 10px}
+.auth-spark{position:absolute;color:var(--accent);opacity:.55;animation:tw 3s ease-in-out infinite}
+@keyframes tw{50%{opacity:.1;transform:scale(.7)}}
+@media (prefers-reduced-motion:reduce){.auth-spark{animation:none}}
+</style>
+</head>
+<body>
+<main class="auth-wrap">
+  <span class="auth-spark" style="top:12%;left:14%">✦</span>
+  <span class="auth-spark" style="top:70%;left:9%;animation-delay:1s">✧</span>
+  <span class="auth-spark" style="top:20%;right:12%;animation-delay:.5s">✧</span>
+  <span class="auth-spark" style="bottom:12%;right:18%;animation-delay:1.6s">✦</span>
+
+  <section class="auth-card" aria-labelledby="t">
+    <img class="auth-logo" src="../assets/imagens/icon.png" alt="">
+    <h1 id="t">JemmaVerso</h1>
+    <p class="auth-sub">Guarde seus favoritos, notas e leituras em qualquer aparelho ✦</p>
+
+    <div class="auth-tabs" role="tablist">
+      <button id="tabIn" class="on" type="button" role="tab">Já tenho conta</button>
+      <button id="tabUp" type="button" role="tab">Criar conta</button>
+      <button id="tabLo" type="button" role="tab">Sem conta</button>
+    </div>
+
+    <!-- JÁ TENHO CONTA -->
+    <form id="fIn" class="auth-form" novalidate>
+      <label for="inId">Usuário ou e-mail</label>
+      <input id="inId" type="text" autocomplete="username" autocapitalize="none" placeholder="seu_usuario ou seu@email.com">
+      <label for="inPw">Senha</label>
+      <div class="auth-pw"><input id="inPw" type="password" autocomplete="current-password" placeholder="Sua senha"><button class="pw-toggle" type="button" data-for="inPw">Mostrar</button></div>
+      <button class="auth-link" id="forgot" type="button">Esqueci minha senha</button>
+      <button class="auth-btn primary" type="submit">Entrar</button>
+    </form>
+
+    <!-- CRIAR CONTA -->
+    <form id="fUp" class="auth-form" hidden novalidate>
+      <label for="upUser">Nome de usuário</label>
+      <input id="upUser" type="text" maxlength="20" autocomplete="username" autocapitalize="none" placeholder="ex.: wenclair_endgame">
+      <p class="auth-hint">3 a 20 caracteres: letras minúsculas, números e _</p>
+      <label for="upEmail">E-mail</label>
+      <input id="upEmail" type="email" autocomplete="email" placeholder="seu@email.com">
+      <label for="upPw">Crie uma senha</label>
+      <div class="auth-pw"><input id="upPw" type="password" autocomplete="new-password" placeholder="Mínimo de 8 caracteres"><button class="pw-toggle" type="button" data-for="upPw">Mostrar</button></div>
+      <button class="auth-btn primary" type="submit">Criar minha conta</button>
+    </form>
+
+    <!-- SÓ NESTE NAVEGADOR -->
+    <div id="fLo" class="auth-form" hidden>
+      <p class="auth-hint" style="font-size:.84rem;margin:0 0 14px">Use o perfil <b>sem criar conta</b>. Tudo (perfil, foto, cores, fundo e música) fica salvo só neste navegador, neste aparelho. Não existe link público e nada é enviado para a nuvem. Se você limpar os dados do navegador, o perfil se perde.</p>
+      <button class="auth-btn primary" id="useLocal" type="button">Usar só neste navegador</button>
+    </div>
+
+    <!-- NOVA SENHA (depois do link de recuperação) -->
+    <form id="fNew" class="auth-form" hidden novalidate>
+      <label for="newPw">Nova senha</label>
+      <div class="auth-pw"><input id="newPw" type="password" autocomplete="new-password" placeholder="Mínimo de 8 caracteres"><button class="pw-toggle" type="button" data-for="newPw">Mostrar</button></div>
+      <button class="auth-btn primary" type="submit">Salvar nova senha</button>
+    </form>
+
+    <p class="auth-msg" id="msg" role="status"></p>
+    <a class="auth-back" href="../index.html">← Continuar sem login</a>
+  </section>
+</main>
+
+<script>window.JV_NO_WIDGET = true;</script>
+<script src="../compartilhados/supabase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="../compartilhados/supabase-sync.js"></script>
+<script>
+(function(){
+  const $ = id => document.getElementById(id), msg = (t, c) => { $("msg").textContent = t; $("msg").className = "auth-msg " + (c || ""); };
+  const A = window.jvAuth, BAD = "Usuário/e-mail ou senha incorretos.";
+  if (!A) { msg("Login indisponível: configure o Supabase em compartilhados/supabase-config.js.", "err"); document.querySelectorAll("button").forEach(b => { if (b.type !== "button" || b.id.startsWith("tab")) return; b.disabled = true; }); return; }
+  const dest = A.SITE_ROOT + "perfil/perfil.html", recovering = /type=recovery/.test(location.hash);
+  A.ready.then(user => { if (user && !recovering) location.replace(dest); });
+
+  function tab(w) { ["In", "Up", "Lo"].forEach(n => { $("f" + n).hidden = n !== w; $("tab" + n).classList.toggle("on", n === w); }); $("fNew").hidden = true; msg(""); }
+  $("tabIn").onclick = () => tab("In"); $("tabUp").onclick = () => tab("Up"); $("tabLo").onclick = () => tab("Lo");
+  $("useLocal").onclick = () => { try { localStorage.setItem("jv_local", "1"); if (!localStorage.getItem("jv_local_since")) localStorage.setItem("jv_local_since", new Date().toISOString()); } catch (e) { return msg("Seu navegador bloqueou o armazenamento local.", "err"); } location.replace(dest); };
+  if (recovering) { $("fIn").hidden = true; $("fNew").hidden = false; document.querySelector(".auth-tabs").hidden = true; msg("Escolha sua nova senha."); }
+
+  document.querySelectorAll(".pw-toggle").forEach(b => b.onclick = () => {
+    const i = $(b.dataset.for), show = i.type === "password"; i.type = show ? "text" : "password"; b.textContent = show ? "Ocultar" : "Mostrar";
+  });
+
+  $("fIn").onsubmit = async e => {
+    e.preventDefault();
+    let id = $("inId").value.trim(); const pw = $("inPw").value;
+    if (!id || !pw) return msg("Preencha usuário ou e-mail e a senha.", "err");
+    msg("Entrando…");
+    if (!id.includes("@")) {
+      const { data } = await A.client.rpc("login_email", { p_user: id.replace(/^@/, "") });
+      if (!data) return msg(BAD, "err");
+      id = data;
+    }
+    const { error } = await A.client.auth.signInWithPassword({ email: id, password: pw });
+    if (!error) return location.replace(dest);
+    msg(/not confirmed/i.test(error.message) ? "Confirme seu e-mail primeiro (veja a caixa de entrada e o spam)." : BAD, "err");
+  };
+
+  $("fUp").onsubmit = async e => {
+    e.preventDefault();
+    const u = $("upUser").value.trim().toLowerCase().replace(/^@/, ""), email = $("upEmail").value.trim(), pw = $("upPw").value;
+    if (!/^[a-z0-9_]{3,20}$/.test(u)) return msg("Usuário: 3 a 20 caracteres, só letras minúsculas, números e _.", "err");
+    if (!email) return msg("Digite seu e-mail.", "err");
+    if (pw.length < 8) return msg("A senha precisa ter pelo menos 8 caracteres.", "err");
+    msg("Criando conta…");
+    const free = await A.client.rpc("username_available", { p_user: u });
+    if (free.data === false) return msg("Esse nome de usuário já está em uso.", "err");
+    const { data, error } = await A.client.auth.signUp({ email, password: pw, options: { data: { username: u }, emailRedirectTo: dest } });
+    if (error) return msg(/rate limit/i.test(error.message) ? "Limite de e-mails atingido. Tente de novo mais tarde." : "Erro: " + error.message, "err");
+    if (data.session) return location.replace(dest);
+    if (data.user && data.user.identities && !data.user.identities.length) return msg("Esse e-mail já tem conta. Use a aba “Já tenho conta”.", "err");
+    msg("Conta criada! Confirme pelo link que enviamos ao seu e-mail ✦", "ok");
+  };
+
+  $("forgot").onclick = async () => {
+    const id = $("inId").value.trim();
+    if (!id.includes("@")) return msg("Digite seu e-mail no campo acima para recuperar a senha.", "err");
+    msg("Enviando…");
+    const { error } = await A.client.auth.resetPasswordForEmail(id, { redirectTo: location.origin + location.pathname });
+    error ? msg("Erro: " + error.message, "err") : msg("Se existir uma conta com esse e-mail, enviamos o link para criar uma nova senha ✦", "ok");
+  };
+
+  $("fNew").onsubmit = async e => {
+    e.preventDefault();
+    const pw = $("newPw").value;
+    if (pw.length < 8) return msg("A senha precisa ter pelo menos 8 caracteres.", "err");
+    const { error } = await A.client.auth.updateUser({ password: pw });
+    error ? msg("Erro: " + error.message, "err") : location.replace(dest);
+  };
+})();
+</script>
+</body>
+</html>
