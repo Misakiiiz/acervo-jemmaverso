@@ -31,7 +31,11 @@
       <div class="pf-view">
         <div class="pf-head">
           <div><div class="pf-namerow"><h1 id="vName"></h1><a class="pf-badge" id="vBadge" hidden></a></div><a class="pf-handle" id="vHandle" target="_blank" rel="noopener noreferrer" hidden></a><br><a class="pf-biolink" id="vLink" target="_blank" rel="noopener noreferrer nofollow ugc" hidden></a></div>
-          <button class="pf-btn" id="editBtn" type="button">✎ Editar perfil</button>
+          <div class="pf-headside">
+            <span class="pf-like static" title="Curtidas recebidas">&#9829;&#xFE0E; <span class="js-likes-got">0</span></span>
+            <a class="pf-like" href="#vComments" title="Ver comentários">&#x1F4AC;&#xFE0E; <span id="oCmCount">0</span></a>
+            <button class="pf-btn" id="editBtn" type="button">✎ Editar perfil</button>
+          </div>
         </div>
         <blockquote class="pf-quote" id="vBio" hidden></blockquote>
         <div class="pf-tags" id="vTags"></div>
@@ -43,12 +47,12 @@
         <h2 class="pf-h2">✦ Minhas 3 AUs favoritas</h2>
         <div class="pf-podium" id="vAus"></div>
         <div id="vLists"></div>
-        <section id="vComments" hidden></section>
+        <section id="vComments" data-count="oCmCount" hidden></section>
         <div class="pf-stats">
           <div class="pf-stat"><b id="sFav">0</b><span>favoritas</span></div>
           <div class="pf-stat"><b id="sRead">0</b><span>lidas</span></div>
           <div class="pf-stat"><b id="sRate">0</b><span>avaliadas</span></div>
-          <div class="pf-stat"><b id="sLikesGot">0</b><span>curtidas recebidas</span></div>
+          <div class="pf-stat"><b id="sLikesGot" class="js-likes-got">0</b><span>curtidas recebidas</span></div>
           <div class="pf-stat"><b id="sLikedN">0</b><span>perfis curtidos</span></div>
         </div>
         <section id="vLiked" hidden></section>

@@ -7,6 +7,7 @@ window.jvComments = (function () {
     const load = () => A.client.rpc("get_profile_comments", { p_slug: slug }).then(({ data, error }) => {
       if (error || !data || !data.allowed) { box.hidden = true; return; }
       box.hidden = false; box.textContent = "";
+      const cnt = box.dataset.count && document.getElementById(box.dataset.count); if (cnt) cnt.textContent = data.items.length;
       box.append(el("h2", { className: "pf-h2" }, ["✦ Comentários", data.items.length ? el("span", { className: "pf-cm-total", textContent: String(data.items.length) }) : ""]));
 
       if (!data.logged_in) {
@@ -99,7 +100,7 @@ window.jvLikes = (function () {
   function mine(A, pub, refs) {
     return A.client.rpc("get_my_like_stats").then(({ data }) => {
       if (!data) return;
-      refs.got.textContent = data.received;
+      document.querySelectorAll(".js-likes-got").forEach(n => n.textContent = data.received);
       refs.n.textContent = data.liked.length;
       refs.box.textContent = "";
       refs.box.hidden = !data.liked.length;
