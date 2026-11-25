@@ -29,17 +29,19 @@
     <div class="pf-body">
       <!-- MODO VISUALIZAÇÃO -->
       <div class="pf-view">
+        <div class="pf-ownbtns">
+          <a class="pf-btn" id="viewPub" target="_blank" rel="noopener" hidden>👁 Ver perfil</a>
+          <button class="pf-btn" id="editBtn" type="button">✎ Editar perfil</button>
+        </div>
         <div class="pf-head">
           <div><div class="pf-namerow"><h1 id="vName"></h1><a class="pf-badge" id="vBadge" hidden></a></div><a class="pf-handle" id="vHandle" target="_blank" rel="noopener noreferrer" hidden></a><br><a class="pf-biolink" id="vLink" target="_blank" rel="noopener noreferrer nofollow ugc" hidden></a></div>
           <div class="pf-headside">
-            <span class="pf-like static" title="Curtidas recebidas">&#9829;&#xFE0E; <span class="js-likes-got">0</span></span>
-            <a class="pf-like" href="#vComments" title="Ver comentários">&#x1F4AC;&#xFE0E; <span id="oCmCount">0</span></a>
-            <button class="pf-btn" id="editBtn" type="button">✎ Editar perfil</button>
+            <span class="pf-like static" title="Curtidas recebidas">&#9829;&#xFE0E; <span class="js-likes-got" id="hLikes">0</span></span>
+            <a class="pf-like" id="cmChip" href="#vComments" title="Ver comentários">&#x1F4AC;&#xFE0E; <span id="oCmCount">0</span></a>
           </div>
         </div>
         <blockquote class="pf-quote" id="vBio" hidden></blockquote>
         <div class="pf-tags" id="vTags"></div>
-        <div class="pf-share" id="vShare" hidden><input id="shareUrl" type="text" readonly aria-label="Link do perfil"><button class="pf-btn" id="copyBtn" type="button">Copiar link</button></div>
         <section id="vIdentBox" hidden><h2 class="pf-h2">✦ Me identifico com:</h2><div class="pf-chips" id="vIdent"></div></section>
         <section class="pf-about" id="vAboutBox" hidden><h2 class="pf-h2">✦ Sobre mim</h2><div class="pf-aboutrow"><img id="aboutImg" alt="" hidden><p id="vAbout"></p></div></section>
         <div class="pf-spotify" id="vSpotify" hidden></div>
@@ -47,15 +49,16 @@
         <h2 class="pf-h2">✦ Minhas 3 AUs favoritas</h2>
         <div class="pf-podium" id="vAus"></div>
         <div id="vLists"></div>
-        <section id="vComments" data-count="oCmCount" hidden></section>
-        <div class="pf-stats">
-          <div class="pf-stat"><b id="sFav">0</b><span>favoritas</span></div>
-          <div class="pf-stat"><b id="sRead">0</b><span>lidas</span></div>
-          <div class="pf-stat"><b id="sRate">0</b><span>avaliadas</span></div>
-          <div class="pf-stat"><b id="sLikesGot" class="js-likes-got">0</b><span>curtidas recebidas</span></div>
-          <div class="pf-stat"><b id="sLikedN">0</b><span>perfis curtidos</span></div>
-        </div>
-        <section id="vLiked" hidden></section>
+        <section id="vStats" hidden><h2 class="pf-h2">✦ Estatísticas</h2>
+          <div class="pf-stats">
+            <div class="pf-stat" data-k="fav" hidden><b id="sFav">0</b><span>favoritas</span></div>
+            <div class="pf-stat" data-k="read" hidden><b id="sRead">0</b><span>lidas</span></div>
+            <div class="pf-stat" data-k="rated" hidden><b id="sRate">0</b><span>avaliadas</span></div>
+            <div class="pf-stat" data-k="likes" hidden><b id="sLikesGot" class="js-likes-got">0</b><span>curtidas recebidas</span></div>
+          </div>
+        </section>
+      <section id="vComments" data-count="oCmCount" hidden></section>
+        <div class="pf-share" id="vShare" hidden><input id="shareUrl" type="text" readonly aria-label="Link do perfil"><button class="pf-btn" id="copyBtn" type="button">Copiar link</button></div>
       </div>
 
       <!-- MODO EDIÇÃO -->
@@ -106,6 +109,14 @@
           <label class="pf-check"><input id="shL" type="checkbox"> Lendo</label>
           <label class="pf-check"><input id="shD" type="checkbox"> Concluídas</label>
           <p class="pf-hint">Aparecem só os títulos dessas listas e elas se atualizam sozinhas quando você abre o seu perfil. Notas e favoritos continuam privados.</p>
+        </div>
+        <div class="pf-onlycloud">
+          <label>Estatísticas no perfil público (opcional)</label>
+          <label class="pf-check"><input id="stFav" type="checkbox"> Favoritas</label>
+          <label class="pf-check"><input id="stRead" type="checkbox"> Lidas</label>
+          <label class="pf-check"><input id="stRate" type="checkbox"> Avaliadas</label>
+          <label class="pf-check"><input id="stLikes" type="checkbox"> Curtidas recebidas</label>
+          <p class="pf-hint">Aparece só o número, nunca quais obras. Os números se atualizam quando você abre o seu perfil.</p>
         </div>
         <label for="identSearch">Me identifico com <span class="pf-count" id="identCount"></span></label>
         <div class="pf-sel" id="identSel"></div>
@@ -225,10 +236,22 @@
     return out;
   }
   const savedColors = () => profile.theme_colors || (profile.theme_color ? { accent: profile.theme_color } : {});
-  if (!LOCAL) {
-      if (profile.slug) jvComments.mount($("vComments"), profile.slug, A, pubUrl);
-      jvLikes.mine(A, pubUrl, { got: $("sLikesGot"), n: $("sLikedN"), box: $("vLiked") });
-    }
+  const STATS = [["fav", "stFav"], ["read", "stRead"], ["rated", "stRate"], ["likes", "stLikes"]];
+  function statsSnapshot(keys) {
+    const c = {
+      fav: Object.keys(local("wenclair_favorites")).length,
+      read: Object.values(local("wenclair_status")).filter(s => s === "lido").length,
+      rated: Object.values(local("wenclair_ratings")).filter(Boolean).length
+    };
+    const out = {};
+    keys.forEach(k => out[k] = k === "likes" ? true : c[k]);
+    return out;
+  }
+  function mountExtras() {
+    if (LOCAL) return;
+    if (profile.slug) jvComments.mount($("vComments"), profile.slug, A, pubUrl, { manage: true });
+    else $("vComments").hidden = true;
+  }
 
   /* ---------- desenhar ---------- */
   function paintMedia() {
@@ -267,9 +290,18 @@
       el("small", { textContent: (a.author && a.author.display || "") + " · " + a.fandom })])));
     const share = $("vShare"); share.hidden = !(profile.is_public && profile.slug);
     if (!share.hidden) $("shareUrl").value = A.SITE_ROOT + "perfil/ver.html?u=" + profile.slug;
+    const vp = $("viewPub"); vp.hidden = !(profile.is_public && profile.slug);
+    if (!vp.hidden) vp.href = "ver.html?u=" + encodeURIComponent(profile.slug);
     $("sFav").textContent = Object.keys(local("wenclair_favorites")).length;
     $("sRead").textContent = Object.values(local("wenclair_status")).filter(s => s === "lido").length;
     $("sRate").textContent = Object.values(local("wenclair_ratings")).filter(Boolean).length;
+    /* mostra só o que está marcado, igual ao perfil público */
+    const ss = profile.shared_stats || {};
+    let anyStat = false;
+    document.querySelectorAll("#vStats .pf-stat").forEach(t => { const on = t.dataset.k in ss; t.hidden = !on; anyStat = anyStat || on; });
+    $("vStats").hidden = !anyStat;
+    $("hLikes").hidden = !("likes" in ss);
+    $("cmChip").hidden = !(profile.is_public && profile.slug && profile.allow_comments);
     paintMedia();
   }
 
@@ -323,6 +355,7 @@
     $("linkUrl").value = profile.link_url || ""; $("linkLabel").value = profile.link_label || "";
     $("about").value = profile.about || ""; $("spot").value = profile.spotify ? "https://open.spotify.com/" + profile.spotify : "";
     LISTS.forEach(([k, id]) => $(id).checked = !!(profile.shared_lists && Array.isArray(profile.shared_lists[k])));
+    STATS.forEach(([k, id]) => $(id).checked = !!(profile.shared_stats && k in profile.shared_stats));
     identIds = [...(profile.identifies || [])]; $("identSearch").value = ""; $("identRes").hidden = true; paintIdent(); if (identIds.length) ensureChars().then(paintIdent);
     colors = { ...savedColors() }; paintColors();
     $("slug").value = profile.slug || ""; $("pub").checked = !!profile.is_public; $("allowc").checked = !!profile.allow_comments; if (!LOCAL) jvComments.blocked($("blockedBox"), A);
@@ -403,6 +436,7 @@
     if (lk && !/^https?:\/\//i.test(lk)) lk = "https://" + lk;
     if (lk) { let ok = /^https?:\/\/[^\s]{3,290}$/i.test(lk); try { new URL(lk); } catch (e) { ok = false; } if (!ok) return msg("Link inválido. Use um endereço como https://seusite.com", "err"); }
     const listKeys = LISTS.filter(([, id]) => $(id).checked).map(([k]) => k);
+    const statKeys = STATS.filter(([, id]) => $(id).checked).map(([k]) => k);
     const spRaw = $("spot").value.trim(), spId = jvFx.spotifyId(spRaw);
     if (spRaw && !spId) return msg("Link do Spotify inválido. Copie o link em Compartilhar > Copiar link.", "err");
     $("save").disabled = true; msg("Salvando…");
@@ -414,6 +448,7 @@
         badge_text: $("badge").value.trim() || null, badge_author: $("badgeAu").value.trim().replace(/^@/, "") || null,
         theme_colors: Object.keys(colors).length ? colors : null, theme_color: colors.accent || null, spotify: spId || null,
         shared_lists: !LOCAL && listKeys.length ? snapshot(listKeys) : null,
+        shared_stats: !LOCAL && statKeys.length ? statsSnapshot(statKeys) : null,
         identifies: identIds.slice(0, 5),
         link_url: lk || null, link_label: $("linkLabel").value.trim() || null, media_path: profile.media_path || null };
       for (const k of Object.keys(pending)) {
@@ -423,7 +458,7 @@
       }
       if (LOCAL) localStorage.setItem("jv_local_profile", JSON.stringify(row));
       else { const { error } = await A.client.from("profiles").upsert(row, { onConflict: "user_id" }); if (error) throw error; }
-      profile = row; stopEdit();
+      profile = row; stopEdit(); mountExtras();
       try { localStorage.removeItem("jv_profile_cache"); } catch (e) {}
     } catch (e) { console.error(e); msg(e.code === "23505" ? "Esse nome de usuário já está em uso." : "Erro ao salvar: " + (e.message || e), "err"); }
     $("save").disabled = false;
@@ -450,11 +485,19 @@
         A.client.from("profiles").update({ shared_lists: snap }).eq("user_id", user.id).then(r => { if (r.error) console.error(r.error); });
       }
     }
+    if (!LOCAL && profile.shared_stats) {
+      const snapS = statsSnapshot(Object.keys(profile.shared_stats));
+      if (JSON.stringify(snapS) !== JSON.stringify(profile.shared_stats)) {
+        profile.shared_stats = snapS;
+        A.client.from("profiles").update({ shared_stats: snapS }).eq("user_id", user.id).then(r => { if (r.error) console.error(r.error); });
+      }
+    }
     const names = [...new Set(AUS.map(a => a.author && a.author.display).filter(Boolean).map(n => n.replace(/^@/, "")))];
     $("authorList").append(...names.map(n => el("option", { value: "@" + n })));
     $("shipList").append(...[...new Set(AUS.map(a => a.fandom))].map(f => el("option", { value: f })));
     $("loading").hidden = true; $("card").hidden = false; $("logout").hidden = false;
     paintView();
+    if (!LOCAL) { mountExtras(); jvLikes.mine(A, pubUrl, { box: document.createElement("div") }); }
   });
 
   ["name", "bio", "ship", "char", "slug"].forEach(i => $(i).addEventListener("input", () => { counters(); if (i === "name") paintMedia(); }));

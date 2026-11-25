@@ -3,7 +3,8 @@ window.jvComments = (function () {
   const el = (tag, props, kids) => { const n = Object.assign(document.createElement(tag), props || {}); (kids || []).forEach(k => n.append(k)); return n; };
   const MAX = 300;
 
-  function mount(box, slug, A, pubUrl) {
+  function mount(box, slug, A, pubUrl, opts) {
+    opts = opts || {};
     const load = () => A.client.rpc("get_profile_comments", { p_slug: slug }).then(({ data, error }) => {
       if (error || !data || !data.allowed) { box.hidden = true; return; }
       box.hidden = false; box.textContent = "";
@@ -42,10 +43,12 @@ window.jvComments = (function () {
           el("div", { className: "pf-cm-head" }, [who, el("small", { textContent: " · " + new Date(c.created_at).toLocaleDateString("pt-BR") })]),
           el("p", { textContent: c.body })])]);
         const actions = el("div", { className: "pf-cm-actions" });
-        if (c.can_delete) actions.append(el("button", { type: "button", className: "pf-link", textContent: "Apagar", onclick: async () => {
+        const canDelete = opts.manage ? c.can_delete : (c.can_delete && !data.is_owner);
+        const canBlock = opts.manage && data.is_owner && c.can_delete;
+        if (canDelete) actions.append(el("button", { type: "button", className: "pf-link", textContent: "Apagar", onclick: async () => {
           if (!confirm("Apagar este comentário?")) return;
           await A.client.rpc("delete_profile_comment", { p_id: c.id }); load(); } }));
-        if (data.is_owner && c.can_delete) actions.append(el("button", { type: "button", className: "pf-link", textContent: "Bloquear", onclick: async () => {
+        if (canBlock) actions.append(el("button", { type: "button", className: "pf-link", textContent: "Bloquear", onclick: async () => {
           if (!confirm("Bloquear " + name + "? Os comentários dessa pessoa aqui serão apagados e ela não poderá comentar de novo.")) return;
           await A.client.rpc("block_commenter", { p_comment_id: c.id }); load(); } }));
         row.lastChild.append(actions);
@@ -75,7 +78,8 @@ window.jvLikes = (function () {
   const el = (tag, props, kids) => { const n = Object.assign(document.createElement(tag), props || {}); (kids || []).forEach(k => n.append(k)); return n; };
 
   // botão ♥ no perfil público (ver.html)
-  function button(btn, slug, A) {
+    function button(btn, slug, A, opts) {
+    opts = opts || {};
     A.client.rpc("get_profile_likes", { p_slug: slug }).then(({ data, error }) => {
       if (error || !data) return;
       const paint = () => {
@@ -83,7 +87,9 @@ window.jvLikes = (function () {
         btn.classList.toggle("on", !!data.liked);
         btn.disabled = !!data.is_owner;
         btn.title = data.is_owner ? "Curtidas que seu perfil recebeu" : data.liked ? "Descurtir perfil" : "Curtir perfil";
-        btn.append(el("span", { textContent: data.liked ? "♥\uFE0E" : "♡\uFE0E" }), el("span", { textContent: String(data.count) }));
+        btn.append(el("span", { textContent: data.liked ? "♥\uFE0E" : "♡\uFE0E" }));
+        if (!opts.hideCount) btn.append(el("span", { textContent: String(data.count) }));
+        if (opts.onCount) opts.onCount(data.count);
       };
       paint();
       btn.onclick = async () => {
@@ -97,15 +103,15 @@ window.jvLikes = (function () {
   }
 
   // estatísticas na própria página: curtidas recebidas + lista de perfis curtidos
-  function mine(A, pub, refs) {
+    function mine(A, pub, refs) {
     return A.client.rpc("get_my_like_stats").then(({ data }) => {
       if (!data) return;
       document.querySelectorAll(".js-likes-got").forEach(n => n.textContent = data.received);
-      refs.n.textContent = data.liked.length;
+      if (refs.n) refs.n.textContent = data.liked.length;
       refs.box.textContent = "";
-      refs.box.hidden = !data.liked.length;
-      if (!data.liked.length) return;
-      refs.box.append(el("h2", { className: "pf-h2", textContent: "✦ Perfis que curti" }));
+      refs.box.hidden = false;
+      refs.box.append(el("h2", { className: "pf-h2", textContent: "✦ Perfis que curti (" + data.liked.length + ")" }));
+      if (!data.liked.length) { refs.box.append(el("p", { className: "pf-empty", textContent: "Você ainda não curtiu nenhum perfil." })); return; }
       const wrap = el("div", { className: "pf-liked" });
       data.liked.forEach(p => {
         const name = p.display_name || p.slug;

@@ -33,8 +33,9 @@
       <h2 class="pf-h2">✦ AUs favoritas</h2>
       <div class="pf-podium" id="vAus"></div>
       <div id="vLists"></div>
+      <section id="vStats" hidden><h2 class="pf-h2">✦ Estatísticas</h2><div class="pf-stats" id="vStatsGrid"></div></section>
       <section id="vComments" hidden></section>
-      <a class="pf-btn main pf-cta" href="../login/login.html">Criar meu perfil ✦</a>
+      <a class="pf-btn main pf-cta" id="vCta" href="../login/login.html" hidden>Criar meu perfil ✦</a>
     </div>
   </section>
   <p class="pf-msg" id="loading">Carregando…</p>
@@ -55,6 +56,7 @@
   const A = window.jvAuth;
   if (!A) return fail("Perfil indisponível no momento.");
   jvFx.userSearch(A);
+  A.ready.then(u => { $("vCta").hidden = !!(u || localStorage.getItem("jv_local")); });
   const slug = (new URLSearchParams(location.search).get("u") || "").toLowerCase();
   if (!/^[a-z0-9_]{3,20}$/.test(slug)) return fail("Link de perfil inválido.");
 
@@ -86,7 +88,16 @@
     jvFx.lists($("vLists"), p.shared_lists, id => (typeof aus !== "undefined" ? aus : []).find(a => a.id === id));
     if ((p.identifies || []).length) jvFx.characters().then(ch => jvFx.idents($("vIdentBox"), $("vIdent"), p.identifies, ch));
     jvComments.mount($("vComments"), p.slug, A, pub);
-    jvLikes.button($("vLike"), p.slug, A);
+        const ss = p.shared_stats || {};
+    const tile = (label, v) => {
+      const b = el("b", { textContent: String(v) });
+      $("vStatsGrid").append(el("div", { className: "pf-stat" }, [b, el("span", { textContent: label })]));
+      $("vStats").hidden = false;
+      return b;
+    };
+    [["fav", "favoritas"], ["read", "lidas"], ["rated", "avaliadas"]].forEach(([k, l]) => { if (k in ss) tile(l, ss[k]); });
+    const likesB = ss.likes ? tile("curtidas recebidas", 0) : null;
+    jvLikes.button($("vLike"), p.slug, A, { hideCount: !ss.likes, onCount: n => { if (likesB) likesB.textContent = n; } });
     $("loading").hidden = true; $("card").hidden = false;
   });
 })();

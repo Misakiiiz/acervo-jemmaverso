@@ -239,3 +239,8 @@ button,.btn,.home-link,.archive-link,.about-link{min-height:44px}
 
 .inactive-note{margin:0 0 14px;padding:10px 14px;border:1px solid #fda29b;border-radius:12px;background:#fee4e2;color:#912018;font-size:13px;line-height:1.45}
 .inactive-note a{color:#7a271a;font-weight:600;text-decoration:underline}
+
+.liked-list{display:flex;flex-wrap:wrap;gap:10px}
+.liked-list a{display:flex;align-items:center;gap:10px;padding:6px 16px 6px 6px;border:1px solid var(--line);border-radius:999px;color:var(--accent);text-decoration:none;font-size:.88rem}
+.liked-list a:hover{border-color:var(--accent)}
+.liked-list img,.liked-list span{width:32px;height:32px;border-radius:50%;object-fit:cover;display:flex;align-items:center;justify-content:center;background:var(--panel);font-size:.85rem}

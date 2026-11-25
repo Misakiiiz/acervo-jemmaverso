@@ -1,3 +1,21 @@
+let likeData = null;
+
+function paintLikes(){
+    const got = document.getElementById("stLikesGot"), n = document.getElementById("stLikedN"), box = document.getElementById("stLiked");
+    if (!got) return;
+    if (!likeData){ box.hidden = true; return; }
+    const A = window.jvAuth;
+    const pub = p => A.client.storage.from("profile-media").getPublicUrl(p).data.publicUrl;
+    got.textContent = likeData.received;
+    n.textContent = likeData.liked.length;
+    const cards = likeData.liked.map(p => {
+        const raw = p.display_name || p.slug;
+        const av = p.avatar_path ? `<img src="${esc(pub(p.avatar_path))}" alt="">` : `<span>${esc(raw[0].toUpperCase())}</span>`;
+        return `<a href="../perfil/ver.html?u=${encodeURIComponent(p.slug)}">${av}<b>${esc(raw)}</b></a>`;
+    }).join("");
+    box.hidden = false;
+    box.innerHTML = `<h2>✦ Perfis que curti</h2>` + (cards ? `<div class="liked-list">${cards}</div>` : `<p class="empty">${t("stats.none")}</p>`);
+}
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
 function countBy(list, fn){
@@ -41,6 +59,9 @@ function render(){
         <div class="stat"><b>${Object.keys(favorites).length}</b><span>${t("nav.favorites").replace("♥ ", "")}</span></div>
         <div class="stat"><b>${avg}</b><span>${t("stats.avg")}</span></div>
         <div class="stat"><b>${authors.size}</b><span>${t("stats.authors")}</span></div>
+        <div class="stat"><b>${rated.length}</b><span>avaliadas</span></div>
+        <div class="stat"><b id="stLikesGot">–</b><span>curtidas recebidas</span></div>
+        <div class="stat"><b id="stLikedN">–</b><span>perfis curtidos</span></div>
     </div>
     <div class="panels">
         <section class="panel wide"><h2>${t("stats.progress")} · ${pct}%</h2>${bars([[t("stats.read"), done.length, ""], [t("nav.reading"), reading.length, ""], [t("nav.paused"), paused.length, ""]], total)}</section>
@@ -51,8 +72,21 @@ function render(){
         <section class="panel"><h2>${t("stats.tags")}</h2>${bars(tagRows)}</section>
         <section class="panel"><h2>${t("stats.topRated")}</h2>${list(top, true)}</section>
         <section class="panel"><h2>${t("stats.favs")}</h2>${list(favs, false)}</section>
+        <section class="panel wide" id="stLiked" hidden></section>
     </div>`;
 }
 
+const origRender = render;
+render = function(){ origRender(); paintLikes(); };
+
 render();
 document.getElementById("languageSelector").addEventListener("change", render);
+
+if (window.jvAuth) {
+    window.jvAuth.ready.then(u => {
+        if (!u) return;
+        window.jvAuth.client.rpc("get_my_like_stats").then(({ data }) => {
+            if (data) { likeData = data; paintLikes(); }
+        });
+    });
+}

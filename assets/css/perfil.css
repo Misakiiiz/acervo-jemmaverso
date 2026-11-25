@@ -174,3 +174,46 @@ a.pf-like{text-decoration:none}
 @media(max-width:560px){
   .pf-headside{order:-1;width:100%}
 }
+
+.pf-tabs{display:flex;gap:6px;margin:24px 0 8px;border-bottom:1px solid var(--line)}
+.pf-tab{background:none;border:0;border-bottom:2px solid transparent;margin-bottom:-1px;padding:10px 16px;font:600 .92rem Poppins,sans-serif;color:var(--muted);cursor:pointer}
+.pf-tab.on{color:var(--accent);border-bottom-color:var(--accent)}
+
+a.pf-btn{display:inline-block;text-decoration:none}
+.pf-form{padding:20px 22px}
+.pf-tabs,.pf-tab{display:none}
+/* botões Ver/Editar perfil no espaço à direita do avatar */
+.pf-body{position:relative}
+.pf-ownbtns{position:absolute;top:12px;right:24px;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+@media(max-width:560px){
+  .pf-ownbtns{right:12px;gap:6px}
+  .pf-ownbtns .pf-btn{padding:.45rem .8rem;font-size:.8rem}
+}
+/* ===== Responsivo (celular) ===== */
+@media(max-width:560px){
+  .pf-page{padding:14px 10px 50px}
+  .pf-avatar{width:92px;height:92px;left:16px;bottom:-46px;font-size:1.9rem}
+  .pf-body{padding:58px 16px 22px}
+
+  /* Ver perfil / Editar perfil: linha própria abaixo do avatar, lado a lado */
+  .pf-ownbtns{position:static;display:flex;width:100%;margin:0 0 10px;gap:8px}
+  .pf-ownbtns .pf-btn{flex:1;text-align:center;padding:.55rem .5rem;font-size:.82rem}
+
+  /* curtidas e comentários à direita, acima do nome */
+  .pf-head{gap:6px}
+  .pf-headside{order:-1;width:100%;justify-content:flex-end;margin:0 0 4px}
+  .pf-head h1{font-size:1.35rem}
+
+  .pf-podium{grid-template-columns:1fr}
+  .pf-stat{min-width:calc(50% - 6px)}
+  .pf-aboutrow img{width:96px;height:96px}
+  .pf-share{flex-direction:column}
+
+  /* edição */
+  .pf-form{padding:16px 14px}
+  .pf-colors{grid-template-columns:1fr}
+  .pf-crow{flex-wrap:wrap}
+  .pf-crow span{flex:1 1 100%}
+  .pf-form .pf-crow .pf-hex{flex:1}
+  .pf-actions .pf-btn{flex:1}
+}
