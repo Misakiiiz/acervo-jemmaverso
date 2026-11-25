@@ -7,7 +7,7 @@ window.jvComments = (function () {
     const load = () => A.client.rpc("get_profile_comments", { p_slug: slug }).then(({ data, error }) => {
       if (error || !data || !data.allowed) { box.hidden = true; return; }
       box.hidden = false; box.textContent = "";
-      box.append(el("h2", { className: "pf-h2", textContent: "✦ Comentários" }));
+      box.append(el("h2", { className: "pf-h2" }, ["✦ Comentários", data.items.length ? el("span", { className: "pf-cm-total", textContent: String(data.items.length) }) : ""]));
 
       if (!data.logged_in) {
         box.append(el("p", { className: "pf-hint" }, ["Para comentar, ", el("a", { href: "../login/login.html", textContent: "entre na sua conta" }), "."]));
@@ -27,14 +27,14 @@ window.jvComments = (function () {
           load();
         });
         box.append(el("p", { className: "pf-hint", textContent: "Seja gentil: é um espaço de fãs. Comentários não podem ser editados, só apagados." }),
-          ta, el("div", { className: "pf-cm-row" }, [count, send]), msg);
+          el("div", { className: "pf-cm-compose" }, [ta, el("div", { className: "pf-cm-row" }, [count, send])]), msg);
       }
 
       if (!data.items.length) box.append(el("p", { className: "pf-empty", textContent: "Ainda não há comentários." }));
       data.items.forEach(c => {
         const name = c.display_name || "Leitor(a)";
         const av = c.avatar_path ? el("img", { className: "pf-cm-av", alt: "", src: pubUrl(c.avatar_path) }) : el("span", { className: "pf-cm-av", textContent: name[0].toUpperCase() });
-        const who = c.slug ? el("a", { href: "ver.html?u=" + encodeURIComponent(c.slug), textContent: name }) : el("b", { textContent: name });
+        const who = c.slug ? el("a", { className: "pf-cm-name", href: "ver.html?u=" + encodeURIComponent(c.slug), textContent: name }) : el("b", { className: "pf-cm-name", textContent: name });
         const row = el("div", { className: "pf-cm" }, [av, el("div", { className: "pf-cm-main" }, [
           el("div", { className: "pf-cm-head" }, [who, el("small", { textContent: " · " + new Date(c.created_at).toLocaleDateString("pt-BR") })]),
           el("p", { textContent: c.body })])]);

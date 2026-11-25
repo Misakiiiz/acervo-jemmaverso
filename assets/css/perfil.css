@@ -112,13 +112,43 @@ body.pf-hasbg .pf-top a,body.pf-hasbg .pf-link{color:#fff;text-shadow:0 1px 4px 
 .pf-feat-btn{width:26px;height:26px;border-radius:50%;border:0;background:rgba(255,255,255,.2);color:#fff;cursor:pointer;font-size:.62rem;line-height:1}
 .pf-res .pf-hint{padding:.5rem .7rem;margin:0}
 
-/* Comentários no perfil */
-.pf-cm-text{width:100%;box-sizing:border-box;resize:vertical;min-height:72px;font:inherit}
-.pf-cm-row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:6px 0 10px}
-.pf-cm{display:flex;gap:10px;padding:10px 0;border-top:1px solid rgba(128,128,128,.25)}
-.pf-cm-av{flex:0 0 38px;width:38px;height:38px;border-radius:50%;object-fit:cover;display:flex;align-items:center;justify-content:center;background:rgba(128,128,128,.3);font-weight:600}
+/* ===== Comentários no perfil ===== */
+#vComments{margin-top:28px}
+#vComments .pf-h2{display:flex;align-items:center;gap:10px}
+.pf-cm-total{font:600 .72rem Nunito,Poppins,sans-serif;padding:.15rem .6rem;border-radius:999px;color:var(--on-accent,#17101f);background:linear-gradient(135deg,var(--accent),var(--accent2,var(--accent)))}
+#vComments .pf-hint{font:400 .82rem/1.5 Nunito,Poppins,sans-serif;color:var(--muted);margin:0 0 12px}
+#vComments .pf-hint a{color:var(--accent);font-weight:700;text-decoration:none;border-bottom:1px dashed color-mix(in srgb,var(--accent) 60%,transparent)}
+#vComments .pf-hint a:hover{border-bottom-style:solid}
+#vComments .pf-empty{font:italic 400 .95rem Nunito,Poppins,sans-serif;text-align:center;padding:22px 10px;color:var(--muted);border:1px dashed var(--line);border-radius:16px}
+
+/* caixa de escrever: usa as cores do perfil, sem retângulo branco */
+.pf-cm-compose{background:color-mix(in srgb,var(--card) 70%,transparent);border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin-bottom:18px;transition:border-color .2s,box-shadow .2s;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.pf-cm-compose:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
+.pf-cm-text{display:block;width:100%;box-sizing:border-box;resize:none;min-height:70px;padding:0;border:0;outline:0;background:transparent;color:var(--text);caret-color:var(--accent);font:400 .96rem/1.6 Nunito,Poppins,sans-serif}
+.pf-cm-text::placeholder{color:var(--muted);opacity:.75;font-style:italic}
+.pf-cm-row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:8px;padding-top:10px;border-top:1px dashed var(--line)}
+.pf-cm-row .pf-count{float:none;font:600 .74rem Nunito,Poppins,sans-serif;color:var(--muted)}
+.pf-cm-row .pf-btn{padding:.45rem 1.2rem;border-radius:999px;font:700 .82rem Nunito,Poppins,sans-serif;transition:transform .15s,filter .15s}
+.pf-cm-row .pf-btn:hover{transform:translateY(-1px);filter:brightness(1.08)}
+.pf-cm-compose + .pf-msg{margin:-8px 0 14px;color:#ff8a8a}
+
+/* cada comentário */
+.pf-cm{display:flex;gap:12px;margin-bottom:10px;padding:14px 16px;background:color-mix(in srgb,var(--card) 65%,transparent);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:16px;transition:border-color .2s,transform .2s}
+.pf-cm:hover{border-color:color-mix(in srgb,var(--accent) 55%,var(--line));border-left-color:var(--accent)}
+.pf-cm-av{flex:0 0 42px;width:42px;height:42px;border-radius:50%;object-fit:cover;display:flex;align-items:center;justify-content:center;background:var(--card);color:var(--accent);font:600 1.05rem Cinzel,serif;box-shadow:0 0 0 2px var(--panel),0 0 0 4px var(--accent)}
 .pf-cm-main{min-width:0;flex:1}
-.pf-cm-head small{opacity:.7}
-.pf-cm-main p{margin:4px 0;overflow-wrap:anywhere;white-space:pre-wrap}
-.pf-cm-actions{display:flex;gap:12px}
-.pf-link{background:none;border:0;padding:0;font:inherit;font-size:.85em;color:inherit;opacity:.75;text-decoration:underline;cursor:pointer}
+.pf-cm-head{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 8px}
+.pf-cm-name{font:700 .95rem Nunito,Poppins,sans-serif;color:var(--accent);text-decoration:none;word-break:break-word}
+a.pf-cm-name:hover{text-decoration:underline;text-underline-offset:3px}
+.pf-cm-head small{font:400 .74rem Nunito,Poppins,sans-serif;color:var(--muted);opacity:1}
+.pf-cm-main p{margin:6px 0 4px;color:var(--text);font:400 .95rem/1.6 Nunito,Poppins,sans-serif;overflow-wrap:anywhere;white-space:pre-wrap}
+.pf-cm-main p a{color:var(--accent)}
+.pf-cm-actions{display:flex;gap:14px;margin-top:6px}
+.pf-cm-actions:empty{display:none}
+.pf-cm-actions .pf-link{font:600 .74rem Nunito,Poppins,sans-serif;color:var(--muted);opacity:1;text-decoration:none;letter-spacing:.2px}
+.pf-cm-actions .pf-link:hover{color:var(--accent)}
+.pf-cm-actions .pf-link:last-child:not(:first-child):hover{color:#ff8a8a}
+
+/* quando o perfil tem imagem de fundo */
+body.pf-hasbg .pf-cm,body.pf-hasbg .pf-cm-compose{background:color-mix(in srgb,var(--card) 45%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+@media(max-width:520px){.pf-cm{padding:12px;gap:10px}.pf-cm-av{flex-basis:36px;width:36px;height:36px}}
